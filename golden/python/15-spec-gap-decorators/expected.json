@@ -1,0 +1,7 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "spec_gap": "Python decorators: does `@trace` (bare decorator) emit a call edge `shop.routes -> shop.routes.trace` (applied at definition time), or is it part of the function head (not a call)? For `@route(\"/home\")`, is `route(...)` an ordinary call with caller = the module `shop.routes` (or the decorated function `shop.routes.home`?), and is the application of the returned `wrap` a callback edge? Which line: the decorator line or the def line?",
+  "edges": [],
+  "notes": "Decorators are not covered by any SPEC rule; `@route(\"/home\")` contains a written call, `@trace` does not, and both apply a function at definition time."
+}

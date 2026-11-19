@@ -1,0 +1,59 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". An ID is never invented: a medium or high callee that names a member of a scanned module or type (`mod.T#f`, `mod.f`) is defined there, or is inherited from a base outside the scan. **high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition). **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. **low**: a guess \u2014 receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan. **unknown**: a dynamic call (function value, callback, closure, function pointer).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "zoo.Animal#speak",
+      "callee": "zoo.Animal#sound",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "zoo/Animals.groovy",
+      "line": 5
+    },
+    {
+      "caller": "zoo.Dog#describe",
+      "callee": "zoo.Animal#describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "zoo/Animals.groovy",
+      "line": 19
+    },
+    {
+      "caller": "zoo.Dog#describe",
+      "callee": "zoo.Animal#speak",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "zoo/Animals.groovy",
+      "line": 20
+    },
+    {
+      "caller": "zoo.Keeper#visit",
+      "callee": "zoo.Animal#speak",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "zoo/Animals.groovy",
+      "line": 26
+    },
+    {
+      "caller": "zoo.Worker#go",
+      "callee": "zoo.Worker#start",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "zoo/Animals.groovy",
+      "line": 32
+    },
+    {
+      "caller": "zoo.Worker#run",
+      "callee": ".run",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "zoo/Animals.groovy",
+      "line": 36
+    }
+  ],
+  "nodes_include": [
+    "zoo.Animal#speak",
+    "zoo.Animal#describe"
+  ],
+  "notes": "speak is defined only on the scanned superclass Animal: this.speak() and the typed d.speak() are zoo.Animal#speak (self rule; C2 forbids the invented zoo.Dog#speak). super.describe() with the superclass in the scan is zoo.Animal#describe. Worker extends java.lang.Thread (outside the scan): bare start() is inherited from an external base, medium; `super.run()` with the superclass outside the scan is the computed receiver `.run`, low. No constructor is written, so no superclass-constructor edge. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

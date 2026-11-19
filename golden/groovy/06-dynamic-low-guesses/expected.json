@@ -1,0 +1,66 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. Silence in the graph means no call, or a `coverage` note. Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). **Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` \u2014 left as a `metadata.insert` low guess it is wrong. **high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition). **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. **low**: a guess \u2014 receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan. **unknown**: a dynamic call (function value, callback, closure, function pointer).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "core.Maker#make",
+      "callee": "java.lang.Object#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "core/Dyn.groovy",
+      "line": 5
+    },
+    {
+      "caller": "core.Dyn#go",
+      "callee": "obj.launch",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "core/Dyn.groovy",
+      "line": 11
+    },
+    {
+      "caller": "core.Dyn#go",
+      "callee": "core.Maker#make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Dyn.groovy",
+      "line": 12
+    },
+    {
+      "caller": "core.Dyn#go",
+      "callee": "x.fire",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "core/Dyn.groovy",
+      "line": 13
+    },
+    {
+      "caller": "core.Dyn#go",
+      "callee": "core.Maker#make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Dyn.groovy",
+      "line": 14
+    },
+    {
+      "caller": "core.Dyn#go",
+      "callee": "java.lang.Object#toString",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "core/Dyn.groovy",
+      "line": 14
+    },
+    {
+      "caller": "core.Dyn#go",
+      "callee": "undefinedHelper",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "core/Dyn.groovy",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "core.Maker#make"
+  ],
+  "notes": "obj is an untyped parameter: its calls stay low recv.m guesses and must be emitted (C4). x is a `def` local bound to `m.make()`, whose declared return type is Object: a def local bound to a call takes a concrete declared return type (Decisions 2026-11-16), but Object defines no fire, so Groovy dispatches x.fire() dynamically on the runtime object and it stays a low guess (edges unchanged). `m.make().toString()`: the receiver is a call of a parameterless method whose declared return type (Object) is written in the scan, so it names java.lang.Object (Decisions 2026-11-09), medium. undefinedHelper is a bare name not defined anywhere in the scan: low, bare name (C2 forbids inventing core.Dyn#undefinedHelper). call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

@@ -1,0 +1,42 @@
+{
+  "rule": "Anonymous subclass instantiation (`new Iface() {…}`, Scala `new Trait {…}`): no constructor edge when the named type is an interface/trait (it has no constructor); when it is a class (including abstract), `Type#<init>`, constructor, as usual. Calls inside the body fold into the enclosing function as before. A local bound directly to a function literal (`const f = () => …`, `local function f`, `let f x = …`, `where f = …`, local `fun`/`def`/`func`, a Rust `fn` item inside a function body, a PHP `$f = function`/`fn`, a C++ `auto f = [..]`, a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty.",
+  "source": "KNOWN_GAP: anonymous interface implementations are given constructor edges",
+  "edges": [
+    {
+      "caller": "core.Spawner#make",
+      "callee": "core.Spawner#helper",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Anon.groovy",
+      "line": 19
+    },
+    {
+      "caller": "core.Spawner#make",
+      "callee": "core.Spawner#helper",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Anon.groovy",
+      "line": 24
+    },
+    {
+      "caller": "core.Spawner#make",
+      "callee": "core.Task#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "core/Anon.groovy",
+      "line": 27
+    },
+    {
+      "caller": "core.Spawner#make",
+      "callee": "core.Spawner#helper",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Anon.groovy",
+      "line": 29
+    }
+  ],
+  "nodes_include": [
+    "core.Spawner#helper"
+  ],
+  "notes": "`new Runnable() {…}` (java.lang interface) and `new Greeter() {…}` (scanned interface) emit no constructor edge: an interface has no constructor. `new Task() {…}` subclasses an abstract class: core.Task#<init>, constructor, high. The anonymous classes' members fold into core.Spawner#make; helper() there is the enclosing Spawner's member. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

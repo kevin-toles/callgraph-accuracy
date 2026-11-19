@@ -1,0 +1,42 @@
+{
+  "rule": "Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). | **C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.poke",
+      "callee": "w.write",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "app.zig",
+      "line": 14
+    },
+    {
+      "caller": "app.poke",
+      "callee": "inner.flush",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "app.zig",
+      "line": 15
+    },
+    {
+      "caller": "app.poke",
+      "callee": "app.makePoint",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 16
+    },
+    {
+      "caller": "app.poke",
+      "callee": "app.Point#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 16
+    }
+  ],
+  "nodes_include": [
+    "app.makePoint"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). C4 case: `w` is `anytype`, an unconstrained type variable \u2192 stays low; `w.write` and `w.inner.flush` (LAST receiver segment `inner.flush`) cannot be resolved and must still be emitted as low guesses. `makePoint(2)` takes an argument, so the parameterless-member rule does not apply and its result is a computed receiver \u2192 `.len`, low, although Point#len exists."
+}

@@ -1,0 +1,51 @@
+{
+  "rule": "Bare names resolve through local bindings, the module, import lists (with `T (..)` fields and hiding), unqualified imports of scanned modules (following `module M` re-exports and export lists), the Prelude (`Prelude.show`, medium) and the one unlisted external import; qualified imports `Map.size` medium.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Html.render",
+      "callee": "Prelude.concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Html.hs",
+      "line": 4
+    },
+    {
+      "caller": "Html.frame",
+      "callee": "Prelude.concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Html.hs",
+      "line": 7
+    },
+    {
+      "caller": "Plain.render",
+      "callee": "Prelude.reverse",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Plain.hs",
+      "line": 4
+    },
+    {
+      "caller": "Page.page",
+      "callee": "Html.frame",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Page.hs",
+      "line": 7
+    },
+    {
+      "caller": "Page.page",
+      "callee": "Plain.render",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Page.hs",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "Html.frame",
+    "Plain.render"
+  ],
+  "notes": "`import Html hiding (render)` removes Html's `render` from scope; `import Plain (render)` lists it from Plain. So bare `render` in Page resolves to `Plain.render`, and bare `frame` comes from the unqualified import of the scanned module Html: `Html.frame`. Both are defined in the scan: high."
+}

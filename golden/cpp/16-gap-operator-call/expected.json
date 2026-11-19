@@ -1,0 +1,51 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown. Decisions (2026-10-29): each picks what the code does at runtime",
+  "source": "KNOWN_GAP: cpp: operator() on typed objects is reported as a callback",
+  "edges": [
+    {
+      "caller": "fx.apply",
+      "callee": "fx.Adder#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "functor.cpp",
+      "line": 16
+    },
+    {
+      "caller": "fx.apply",
+      "callee": "fx.Adder#operator()",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "functor.cpp",
+      "line": 17
+    },
+    {
+      "caller": "fx.apply",
+      "callee": "fx.Adder#operator()",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "functor.cpp",
+      "line": 17
+    },
+    {
+      "caller": "fx.apply",
+      "callee": "fx.Adder#operator()",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "functor.cpp",
+      "line": 17
+    },
+    {
+      "caller": "fx.apply",
+      "callee": "fx.Adder#operator()",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "functor.cpp",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "fx.Adder#operator()",
+    "fx.Adder#<init>"
+  ],
+  "notes": "add (parameter typed const Adder&), h->adder (field declared Adder, reached through a Holder* parameter) and local (local declared Adder) are typed receivers (decision A), and the call operator they invoke is the member operator() defined on the in-scan class fx::Adder. At runtime each call is a static call of Adder::operator() — no function value is involved — so the callback rule (a variable 'holding a function (callback, closure, fn pointer, delegate)') does not apply; the callee is fx.Adder#operator(), method, high, like the explicit add.operator()(2). Contrast cpp/06-callbacks, where std::function and function pointers hold a function value. Adder(v) is a constructor call. The member name is written as C++ spells it, 'operator()'."
+}

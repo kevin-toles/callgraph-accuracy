@@ -1,0 +1,50 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Pipe.process",
+      "callee": "String.split",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/pipe.ex",
+      "line": 4
+    },
+    {
+      "caller": "MyApp.Pipe.process",
+      "callee": "Enum.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/pipe.ex",
+      "line": 5
+    },
+    {
+      "caller": "MyApp.Pipe.process",
+      "callee": "Enum.filter",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/pipe.ex",
+      "line": 6
+    },
+    {
+      "caller": "MyApp.Pipe.process",
+      "callee": "MyApp.Pipe.keep?",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/pipe.ex",
+      "line": 6
+    },
+    {
+      "caller": "MyApp.Pipe.process",
+      "callee": "Enum.join",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/pipe.ex",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "MyApp.Pipe.keep?"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. The pipeline starts on line 3 (`text`); each stage's call is on its own line. `&String.trim/1` is a capture, not a call. `keep?(s)` is inside an anonymous fn passed as an argument: it folds into `MyApp.Pipe.process`."
+}

@@ -1,0 +1,26 @@
+{
+  "rule": "A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). | Generic/template type arguments are dropped from every ID (`HashSet#<init>`). | Body-less member declarations of scanned types are defined in the scan (high)",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.Label",
+      "callee": "example.com/m.Namer#Name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 10
+    },
+    {
+      "caller": "example.com/m.Show",
+      "callee": "fmt.Stringer#String",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 14
+    }
+  ],
+  "nodes_include": [
+    "example.com/m.Namer#Name"
+  ],
+  "notes": "x has type parameter T whose declared bound is Namer (in the scan, method declared without body: high) or fmt.Stringer (outside the scan: medium). Label and Show are never instantiated, so no concrete type flows into x and there are no VTA low edges. Type arguments do not appear in IDs (Label, not Label[T])."
+}

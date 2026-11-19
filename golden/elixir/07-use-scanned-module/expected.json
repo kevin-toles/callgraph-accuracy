@@ -1,0 +1,27 @@
+{
+  "rule": "Elixir: ... A `use`d module's injected imports and aliases resolve through its source (the scan, dependency sources, the standard library); with one import known to export the name, that import is the target.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Widget.build",
+      "callee": "MyApp.DSL.Registry.add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/widget.ex",
+      "line": 5
+    },
+    {
+      "caller": "MyApp.Widget.build",
+      "callee": "MyApp.DSL.Helpers.tag",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/widget.ex",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "MyApp.DSL.Registry.add",
+    "MyApp.DSL.Helpers.tag"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. `use MyApp.DSL` injects `import MyApp.DSL.Helpers` and `alias MyApp.DSL.Registry` (dsl.ex, in the scan). So bare `tag` is `MyApp.DSL.Helpers.tag` and `Registry.add` is `MyApp.DSL.Registry.add` (not the standard library's `Registry`). `use`, `import` and `alias` are module dependencies / compile-time expansion, not runtime calls (C3); the quote block in dsl.ex contains only those declarations, so it emits nothing."
+}

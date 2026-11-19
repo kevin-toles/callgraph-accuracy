@@ -1,0 +1,51 @@
+{
+  "rule": "a receiver typed `id<P>` names the protocol, `P#sel` (medium unless P is in the scan). | **Body-less member declarations of scanned types are defined in the scan (high)** | Dot-syntax property access is not a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Host#notify:copier:",
+      "callee": "Greeter#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Host.m",
+      "line": 15
+    },
+    {
+      "caller": "Host#notify:copier:",
+      "callee": "Greeter#greetName:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Host.m",
+      "line": 16
+    },
+    {
+      "caller": "Host#notify:copier:",
+      "callee": "Greeter#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Host.m",
+      "line": 17
+    },
+    {
+      "caller": "Host#notify:copier:",
+      "callee": "Greeter#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Host.m",
+      "line": 19
+    },
+    {
+      "caller": "Host#notify:copier:",
+      "callee": "NSCopying#copyWithZone:",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Host.m",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "Greeter#greet",
+    "Greeter#greetName:"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. Parameter, property (`self.delegate`, dot access not a call) and local typed `id<Greeter>` name the protocol. Greeter is in the scan and declares the selectors without bodies \u2192 high, and C1 requires the body-less declarations in `nodes`. `id<NSCopying>`: protocol outside the scan \u2192 `NSCopying#copyWithZone:` medium."
+}

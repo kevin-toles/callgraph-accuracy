@@ -1,0 +1,68 @@
+{
+  "rule": "Method: `Type#member`. Nested types are dotted: `Outer.Inner#m`. Some languages prefix a module/package qualifier with dots (see per-language notes). `self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. Constructor / initializer call: `Type#<init>`. Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). top-level `file.fun` (file basename); nested modules/functors dotted (`file.Make.connect`); local function lets `outer.f`, local value lets fold into the enclosing binding; module-level code's caller is the module.",
+  "source": "KNOWN_GAP: class methods (#m) have no caller IDs and no call edges",
+  "edges": [
+    {
+      "caller": "objs.counter#incr",
+      "callee": "Stdlib.succ",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "objs.ml",
+      "line": 5
+    },
+    {
+      "caller": "objs.counter#incr_twice",
+      "callee": "objs.counter#incr",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "objs.ml",
+      "line": 8
+    },
+    {
+      "caller": "objs.counter#incr_twice",
+      "callee": "objs.counter#incr",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "objs.ml",
+      "line": 9
+    },
+    {
+      "caller": "objs.run",
+      "callee": "objs.counter#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "objs.ml",
+      "line": 15
+    },
+    {
+      "caller": "objs.run",
+      "callee": "objs.counter#incr_twice",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "objs.ml",
+      "line": 16
+    },
+    {
+      "caller": "objs.run",
+      "callee": "Stdlib.print_int",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "objs.ml",
+      "line": 17
+    },
+    {
+      "caller": "objs.run",
+      "callee": "objs.counter#get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "objs.ml",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "objs.counter#incr",
+    "objs.counter#incr_twice",
+    "objs.counter#get"
+  ],
+  "notes": "An OCaml class is a type; its methods take the general method ID `Type#member` with the OCaml file-module qualifier prefixed with a dot: `objs.counter#incr`. Method bodies are callers under those IDs. `self#incr` is a self call → `objs.counter#incr`, method, high (self rule). `new counter` is a constructor call → `objs.counter#<init>`, constructor, high. `c` is bound by `= new counter`, so decision A types it: `c#incr_twice` / `c#get` → `objs.counter#incr_twice` / `objs.counter#get`, method, high. `n <- succ n` is instance-variable assignment (language construct); only `succ` is a call. `val mutable n = 0` and `method get = n` contain no calls."
+}

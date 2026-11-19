@@ -1,0 +1,39 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. Silence in the graph means no call, or a `coverage` note. **Typing reaches only declarations in the scan**: decision A and the parameterless-member rule use declared types written in the scanned source (including vendored code). A receiver whose type is only knowable from a library's signatures outside the scan (`project.tasks.named`, `entrySet().removeIf` on a JDK/Gradle type) stays a low guess, and that is correct. Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` → `client.get`; `a.b.c()` → `b.c`). Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` — a leading dot means \"receiver unknown\".",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Guess#go",
+      "callee": "java.util.ArrayList#iterator",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/Guess.scala",
+      "line": 7
+    },
+    {
+      "caller": "app.Guess#go",
+      "callee": "it.next",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "app/Guess.scala",
+      "line": 8
+    },
+    {
+      "caller": "app.Guess#go",
+      "callee": "java.util.ArrayList#get",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/Guess.scala",
+      "line": 9
+    },
+    {
+      "caller": "app.Guess#go",
+      "callee": ".length",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "app/Guess.scala",
+      "line": 9
+    }
+  ],
+  "notes": "xs is a parameter typed by its explicit import, so its own calls are medium. `it` has no declared type; its type is knowable only from the JDK's signature of iterator(), outside the scan, so it.next() stays a low recv.m guess (Decisions 2026-11-09) and must still be emitted (C4). `.length()` is called on a call result (xs.get(0)) whose type is again only in the JDK: computed receiver `.length`, low. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

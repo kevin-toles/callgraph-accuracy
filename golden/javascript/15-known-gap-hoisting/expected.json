@@ -1,0 +1,53 @@
+{
+  "rule": "A top-level binding has one ID, `mod.name`, from its own file and from every importer, per C1. That covers `const`/`let`/`var`/`export const`, a function declaration and a class. A call through it uses that ID everywhere, never the bare name in its own file. | Top-level / file-level code (outside any function or type): the caller is the file's module ID. | A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func` | is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "KNOWN_GAP: hoisted declarations and var X; X = function forms are under-resolved",
+  "edges": [
+    {
+      "caller": "boot",
+      "callee": "boot.main",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "boot.js",
+      "line": 1
+    },
+    {
+      "caller": "boot.main",
+      "callee": "boot.compute",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "boot.js",
+      "line": 4
+    },
+    {
+      "caller": "boot.main",
+      "callee": "boot.main.finish",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "boot.js",
+      "line": 5
+    },
+    {
+      "caller": "boot.main.finish",
+      "callee": "boot.compute",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "boot.js",
+      "line": 8
+    },
+    {
+      "caller": "boot.Late#go",
+      "callee": "boot.compute",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "boot.js",
+      "line": 18
+    }
+  ],
+  "nodes_include": [
+    "boot.main",
+    "boot.compute",
+    "boot.main.finish",
+    "boot.Late#go"
+  ],
+  "notes": "Function declarations are hoisted: `main()` on line 1 runs `boot.main` although the declaration is on line 3; `compute` is called before its declaration; nested `finish` is called (line 5) before its declaration (line 7) and is the named nested function `boot.main.finish`. The module-level binding rule gives a function declaration one ID, `mod.name`, wherever it is referenced (C1); resolution does not depend on source order (C2)."
+}

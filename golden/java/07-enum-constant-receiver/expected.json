@@ -1,0 +1,47 @@
+{
+  "rule": "An enum constant `E.C` has type `E`.",
+  "source": "KNOWN_GAP: enum constants used as receivers are left untyped",
+  "edges": [
+    {
+      "caller": "com.acme.level.Level#<clinit>",
+      "callee": "com.acme.level.Level#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/level/Level.java",
+      "line": 4
+    },
+    {
+      "caller": "com.acme.level.Level#<clinit>",
+      "callee": "com.acme.level.Level#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/level/Level.java",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.level.Level#max",
+      "callee": "com.acme.level.Level#weight",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/level/Level.java",
+      "line": 18
+    },
+    {
+      "caller": "com.acme.level.Alert#score",
+      "callee": "com.acme.level.Level#weight",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/level/Alert.java",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.level.Alert#score",
+      "callee": "com.acme.level.Level#weight",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/level/Alert.java",
+      "line": 5
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. `Level.HIGH` and `Level.LOW` have type Level (decision A: 'An enum constant `E.C` has type `E`'), so `.weight()` on them is Level#weight, high, not `HIGH.weight` low. Inside the enum the constant is written bare (`HIGH.weight()`); it is the same constant Level.HIGH, type Level. Two calls on Alert.java:5 give two identical edges (multiset)."
+}

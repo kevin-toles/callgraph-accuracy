@@ -1,0 +1,60 @@
+{
+  "rule": "top-level `file.fun` (file basename); nested modules/functors dotted (`file.Make.connect`); local function lets `outer.f`, local value lets fold into the enclosing binding; module-level code's caller is the module. Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown. **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shapes.area",
+      "callee": "Float.mul",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/shapes.ml",
+      "line": 1
+    },
+    {
+      "caller": "shapes.perimeter",
+      "callee": "Float.mul",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/shapes.ml",
+      "line": 3
+    },
+    {
+      "caller": "main.direct",
+      "callee": "shapes.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "bin/main.ml",
+      "line": 1
+    },
+    {
+      "caller": "main.opened",
+      "callee": "shapes.perimeter",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "bin/main.ml",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": "Stdlib.print_float",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "bin/main.ml",
+      "line": 7
+    },
+    {
+      "caller": "main",
+      "callee": "main.direct",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "bin/main.ml",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "shapes.area",
+    "shapes.perimeter",
+    "main.direct"
+  ],
+  "notes": "The dune library `geomlib` wraps lib/shapes.ml as `Geomlib.Shapes`. Calls through the wrapper (`Geomlib.Shapes.area`, and `Shapes.perimeter` after `open Geomlib`) resolve to the defining file's IDs, which use the file basename: `shapes.area`, `shapes.perimeter`, high (OCaml note: dune library wrappers; C1). The dune files are not OCaml source."
+}

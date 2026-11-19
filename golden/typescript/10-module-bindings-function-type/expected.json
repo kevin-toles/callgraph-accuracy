@@ -1,0 +1,62 @@
+{
+  "rule": "A top-level binding has one ID, `mod.name`, from its own file and from every importer, per C1. That covers `const`/`let`/`var`/`export const`, a function declaration and a class. A call through it uses that ID everywhere, never the bare name in its own file. | **Function type.** The binding's type annotation or an `as` cast of its initializer is a function type (`camelize: (str: string) => string`, `as typeof _createVNode`). Callee `mod.name`, direct, medium. | Medium, not high: the tool matched a binding, not a function body. | **Alias.** The initializer, after removing parentheses, `as`, `satisfies` and `!`, is an identifier or member path that names a function (`isArray = Array.isArray`, `render = baseRender as RootRenderFunction`). The call resolves to that function's ID, as Lua/Zig aliases do. | A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "vnode.createDev",
+      "callee": "vnode.createImpl",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "vnode.ts",
+      "line": 5
+    },
+    {
+      "caller": "vnode.render",
+      "callee": "vnode.onTick",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "vnode.ts",
+      "line": 14
+    },
+    {
+      "caller": "vnode.render",
+      "callee": "vnode.createVNode",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "vnode.ts",
+      "line": 15
+    },
+    {
+      "caller": "app",
+      "callee": "vnode.setTick",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.ts",
+      "line": 3
+    },
+    {
+      "caller": "app",
+      "callee": "vnode.onTick",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.ts",
+      "line": 4
+    },
+    {
+      "caller": "app",
+      "callee": "vnode.createVNode",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.ts",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "vnode.createVNode",
+    "vnode.onTick",
+    "vnode.setTick",
+    "vnode.createImpl",
+    "vnode.render"
+  ],
+  "notes": "`createVNode = (dev ? createDev : createImpl) as typeof createImpl`: after removing the parentheses and `as`, the initializer is a conditional expression, not an identifier, so the alias rule does not apply; the `as typeof` cast is function-type evidence -> `vnode.createVNode`, direct, medium. `onTick: (n: number) => void` has a function-type annotation (no initializer; assigned inside setTick) -> `vnode.onTick`, direct, medium. Both in the defining file and the importer. `onTick = fn` is an assignment, `void n` an operator; `process.env.NODE_ENV` is field access. The arrow passed to setTick on app.ts line 3 contains no call."
+}

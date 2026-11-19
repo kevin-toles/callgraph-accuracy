@@ -1,0 +1,42 @@
+{
+  "rule": "Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown. **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "order.greet",
+      "callee": "Stdlib.print_endline",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "order.ml",
+      "line": 1
+    },
+    {
+      "caller": "order.print_endline",
+      "callee": "Stdlib.print_string",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "order.ml",
+      "line": 3
+    },
+    {
+      "caller": "order.print_endline",
+      "callee": "String.uppercase_ascii",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "order.ml",
+      "line": 3
+    },
+    {
+      "caller": "order.shout",
+      "callee": "order.print_endline",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "order.ml",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "order.print_endline"
+  ],
+  "notes": "Names resolve in definition order: `print_endline` in `greet` precedes the file's own `print_endline` definition, so it is `Stdlib.print_endline`, medium; the same name in `shout`, after the definition, is `order.print_endline`, high."
+}

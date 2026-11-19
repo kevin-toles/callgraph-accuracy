@@ -1,0 +1,7 @@
+{
+  "rule": "**low**: a guess \u2014 receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan. | **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. | A free-function prototype whose definition is not in the scan (a C header declaring a library function) is still medium. | function-like macros \u2192 call_type macro (high if `#define`d in the scan).",
+  "source": "SPEC",
+  "spec_gap": "A bare call to a C function or function-like macro that is declared only in a system/SDK header outside the scan (NSLog, printf via <stdio.h>, the Foundation macro MAX): is the function call `NSLog`/`printf` direct LOW ('a bare name not found in the scan') or MEDIUM ('an import' / the prototype rule, whose wording covers only prototypes in scanned headers)? And is `MAX` reported as call_type macro (its true kind, medium by the gtest precedent) although its #define is not visible to the scan, or as an ordinary bare call?",
+  "edges": [],
+  "notes": "Every ObjC/C file calls such functions; the tier decides a large share of edges. Other cases in this corpus avoid SDK free functions and SDK macros for that reason."
+}

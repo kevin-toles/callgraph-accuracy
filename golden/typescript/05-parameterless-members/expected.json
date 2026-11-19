@@ -1,0 +1,36 @@
+{
+  "rule": "**Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` \u2014 left as a `metadata.insert` low guess it is wrong. | Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.App#boot",
+      "callee": "app.Db#save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.ts",
+      "line": 25
+    },
+    {
+      "caller": "app.App#boot",
+      "callee": "app.App#config",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.ts",
+      "line": 25
+    },
+    {
+      "caller": "app.App#boot",
+      "callee": "app.Config#load",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.ts",
+      "line": 25
+    }
+  ],
+  "nodes_include": [
+    "app.Db#save",
+    "app.Config#load",
+    "app.App#config"
+  ],
+  "notes": "`this.store` is a property getter declared `: Db`, so `this.store.save(...)` names `app.Db#save` (not `store.save`, low). `this.config()` is a call of a parameterless method declared `: Config`, so `.load()` on it names `app.Config#load` (not `.load`, low). Reading the getter `this.store` is field access without a written call: no edge to `App#store`."
+}

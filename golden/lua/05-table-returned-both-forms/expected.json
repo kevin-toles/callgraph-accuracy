@@ -1,0 +1,85 @@
+{
+  "rule": "Lua functions stored on a table. `function T.f()`, `function T:f()` and `T.f = function` name the function when `T` has a static identity. Both forms get the same ID: the module's returned table: `mod#f`; ... Calls `T.f()` and `T:f()` on such a table resolve to that ID (high when defined).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "counter#new",
+      "callee": "_G#setmetatable",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "counter.lua",
+      "line": 4
+    },
+    {
+      "caller": "counter#incr",
+      "callee": "counter#value",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "counter.lua",
+      "line": 9
+    },
+    {
+      "caller": "counter#reset",
+      "callee": "counter#new",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "counter.lua",
+      "line": 17
+    },
+    {
+      "caller": "counter#reset",
+      "callee": "counter#value",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "counter.lua",
+      "line": 17
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "counter#new",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "c.incr",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "main.lua",
+      "line": 3
+    },
+    {
+      "caller": "main",
+      "callee": "counter#reset",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 4
+    },
+    {
+      "caller": "main",
+      "callee": "counter#incr",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "counter#new",
+    "counter#incr",
+    "counter#value",
+    "counter#reset"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. Counter is the returned table, so `function Counter.new`, `function Counter:incr`, `Counter.value = function` and `Counter.reset = function` are all `counter#...`. `self:value()` inside `function Counter:incr` is a self call on the enclosing table: `counter#value` ('self.m() / this.m() ... -> Type#m'). `c` holds a call result (no static identity), so `c:incr()` stays `c.incr`, low. `{ __index = Counter }` and `self.n = self.n + 1` are data/field access."
+}

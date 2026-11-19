@@ -1,0 +1,67 @@
+{
+  "rule": "**Rust**: no module prefix: `Type#method` (impl and trait methods), free functions bare; module paths keep `::` (`std::env::var`); `Type::assoc` \u2192 `Type#assoc`. | `crate::` paths and the package's own crate name resolve like module paths.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "clamp",
+      "callee": "helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": "clamp",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 14
+    },
+    {
+      "caller": "main",
+      "callee": "clamp",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 15
+    },
+    {
+      "caller": "main",
+      "callee": "std::env::var",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 16
+    },
+    {
+      "caller": "main",
+      "callee": "std::env::var",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 17
+    },
+    {
+      "caller": "main",
+      "callee": "String#from",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 18
+    },
+    {
+      "caller": "main",
+      "callee": "std::process::exit",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 19
+    }
+  ],
+  "nodes_include": [
+    "clamp",
+    "helper"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Free functions are bare even inside `mod util` (clamp, helper); util::clamp and crate::util::clamp both resolve to the one definition (C1). `use std::env` makes env::var the std path std::env::var, medium (named statically, not in the scan). String::from \u2192 String#from (Type::assoc, no module prefix), medium. `use` is not a call. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

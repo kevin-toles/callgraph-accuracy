@@ -1,0 +1,124 @@
+[
+ {
+  "id": "js-external-default-import-members",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(m?[jt]sx?|cjs|mjs|cts|mts)$",
+   "old_callee": "\\.default\\.",
+   "old": "medium/method",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13: an external default import names the module; its members are the module's)",
+  "note": "import path from \"node:path\"; path.join(...) was node:path.default.join (medium/method), now node:path.join (medium/direct), as SPEC's packages-named-as-written rule gives (h-mcp-servers, s-vue, s-snarkjs, s-stripe-node, s-pdf-js, s-realtime, s-apisix, h-uptime-kuma, s-dafny-vscode). Test: typescript ExternalDefaultImportMembersAreTheModules."
+ },
+ {
+  "id": "rust-std-root-macro-prelude-id",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^(std|core|alloc)::\\w+!$",
+   "new_callee": "^\\w+!$",
+   "old": "medium/macro",
+   "new": "medium/macro"
+  },
+  "disposition": "implementation defect fixed (C1: a std-root macro brought in by use keeps its prelude ID)",
+  "note": "use std::{collections::HashSet, vec}; vec![] was std::vec!, while the same macro unimported is vec!: one macro, two IDs. Now vec! / assert_eq! everywhere (s-delta-rs, h-rtic). Test: rust StdRootMacroThroughUseKeepsItsPreludeID."
+ },
+ {
+  "id": "rust-std-root-macro-cross-pairing",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^(std::(env|vec)!|std::path::(Path|PathBuf)#(new|from)|table\\.write)$",
+   "new_callee": "^((env|vec)!|(Path|PathBuf)#(new|from)|DeltaTable#write)$"
+  },
+  "disposition": "gate pairing artifact of rust-std-root-macro-prelude-id, rust-type-path-strip and the let-bound/enum-variant typing on one line",
+  "note": "Two edges on one line changed callee each (std::env! -> env!, std::path::Path#new -> Path#new; std::vec! -> vec!, table.write -> DeltaTable#write) and the gate paired them crosswise (s-rust-gpu main.rs:8/57, s-delta-rs write/mod.rs:801)."
+ },
+ {
+  "id": "rust-enum-variant-and-literal-receivers",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^(Retry|Image)#",
+   "new_callee": "^(Header|SpirvType)#",
+   "old": "medium/method",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (2026-11-13: rust/13 enum-variant, struct-literal and tuple-struct receivers type their value)",
+  "note": "let header = Header::Retry { .. }; header.encode(buf) was Retry#encode (the variant named as a type), now Header#encode (s-quinn endpoint.rs:746); Ty::Image { .. }.def() was Image#def, now SpirvType#def (s-rust-gpu abi.rs:890). Test: rust EnumVariantAndLiteralReceiversAreTheirType; golden rust/13 now passes."
+ },
+ {
+  "id": "rust-enum-variant-let-bound",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^Write#clone$",
+   "new_callee": "^DeltaOperation#clone$",
+   "old": "medium/method",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (rust/13: a variant names its enum's type)",
+  "note": "operation = DeltaOperation::Write { .. }; operation.clone() named the variant Write as a type (s-delta-rs write/mod.rs:628)."
+ },
+ {
+  "id": "csharp-const-no-implicit-edge",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.cs$",
+   "old": "high/implicit"
+  },
+  "disposition": "implementation defect fixed (2026-11-13: a const field is a compile-time constant with no static-initializer code)",
+  "note": "const string k_Digit = \"\u2026\" had an implicit <clinit> edge; C# compiles consts into their uses (s-unity-cloud-reference-project, s-xr-interaction-examples, s-particular-nservicebus.rabbitmq, h-framerecorder, h-uptime-kuma index.cs). Test: csharp ConstFieldsHaveNoImplicitEdge."
+ },
+ {
+  "id": "cpp-statement-macro-runs-callers",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "MVKPipeline\\.mm$",
+   "caller": "^(mvkAdjustFormatVectorToSize|MVKGraphicsPipeline#newMTLTess(Control|Raster)StageDescriptor|MVKGraphicsPipeline#initMTLRenderPipelineState|MVKPipelineCache#\\w+)$"
+  },
+  "disposition": "implementation defect fixed (2026-11-14: runs of semicolon-less statement macros with empty arguments no longer send error recovery past the function's closing brace)",
+  "note": "MVK_ADJUST_FORMAT_CASE(1, UChar, ) / (1, Char, ) in mvkAdjustFormatVectorToSize swallowed newMTLTessControlStageDescriptor and newMTLTessRasterStageDescriptor: their calls had that function as caller, their heads were call edges, and their callers' edges to them were medium. Now each method owns its calls (s-moltenvk reviews v15/v16 pattern P4). Tests: cpp/objc ConsecutiveEmptyArgMacroStatements, cpp LoneAllCapsLinesAreNotStatements."
+ },
+ {
+  "id": "cpp-wasm-own-unique-ptr",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "(wasm\\.hh|wasm-v8\\.cc|hostref\\.cc|[a-z-]+\\.cc)$",
+   "callee": "^(std\\.unique_ptr#(<init>|get|release)|wasm\\.own|wasm\\.vec#copy)$"
+  },
+  "disposition": "ruling SPEC Decisions 2026-11-12 typed call results / smart pointers; implementation defect fixed (C2: wasm.#get, wasm.Ref#release were malformed or invented)",
+  "note": "wasm::own<T> is a template alias of std::unique_ptr<T>: own<T>(p) constructs a unique_ptr (std.unique_ptr#<init>), and .get()/.release() on an own<\u2026> are unique_ptr's (h-wabt wasm-c-api). vec<T>::copy is the scanned template's member."
+ },
+ {
+  "id": "cpp-destructor-ctor-caller",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "wasm-v8\\.cc$",
+   "caller": "^wasm\\.(\\w+#(<init>|~\\w+)|~\\w+)$"
+  },
+  "disposition": "implementation defect fixed (C7 caller: a constructor's and destructor's calls were attributed to a malformed wasm.~T)",
+  "note": "GlobalTypeImpl(own<ValType>& t, \u2026) : ExternTypeImpl(\u2026) and ~GlobalTypeImpl() { stats.free(\u2026) } in wasm-v8.cc: callers are now T#<init> / T#~T (h-wabt). The constructors' own calls (std::move of their arguments) are now edges of T#<init>."
+ },
+ {
+  "id": "cpp-destructor-ctor-caller-removed",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "wasm-v8\\.cc$",
+   "old_caller": "^wasm\\.~\\w+$"
+  },
+  "disposition": "implementation defect fixed (half of cpp-destructor-ctor-caller)",
+  "note": "The member-initializer name instance in ~FrameImpl's malformed caller was a non-call (h-wabt wasm-v8.cc:1185)."
+ }
+]

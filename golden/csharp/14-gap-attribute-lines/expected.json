@@ -1,0 +1,23 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. | C3 ... one of these, which emit no edge: a module dependency (an import declaration; the binding carries it), data construction or a pattern, a declaration, or a reference without a call. | C7 Complete edges. Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules.",
+  "source": "KNOWN_GAP: edges on attribute lines",
+  "edges": [
+    {
+      "caller": "App.Job#Legacy",
+      "callee": "App.Job#Execute",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Job.cs",
+      "line": 11
+    },
+    {
+      "caller": "App.Job#Execute",
+      "callee": "System.Console#WriteLine",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Job.cs",
+      "line": 17
+    }
+  ],
+  "notes": "Attribute applications ([Serializable], [Obsolete(...)], [DebuggerStepThrough]) are declarative metadata on a declaration; no code runs at that point, so they are declarations, not calls: no edge on lines 3, 8 or 14. nameof and typeof are compile-time language constructs (like sizeof): no edge. The method calls below the attributes are reported on their own lines (C7), not on the attribute or declaration line."
+}

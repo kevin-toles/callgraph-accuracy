@@ -1,0 +1,43 @@
+{
+  "rule": "Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). An empty caller or `<global>` is a wrong caller. Free function: its name (with the language's module qualifier where it has one).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Installer#install",
+      "callee": "banner",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "bin/setup.rb",
+      "line": 11
+    },
+    {
+      "caller": "bin/setup",
+      "callee": "banner",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "bin/setup.rb",
+      "line": 15
+    },
+    {
+      "caller": "bin/setup",
+      "callee": "Installer#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "bin/setup.rb",
+      "line": 16
+    },
+    {
+      "caller": "bin/setup",
+      "callee": ".install",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "bin/setup.rb",
+      "line": 16
+    }
+  ],
+  "nodes_include": [
+    "banner",
+    "Installer#<init>"
+  ],
+  "notes": "Top-level code in bin/setup.rb has caller `bin/setup` (Ruby has no module qualifier: file path below the scan root without extension). A top-level `def` is a free function: its bare name `banner` (Ruby has no qualifier), high from both the top level and from inside Installer#install (it is not a member of Installer; it resolves to the scanned free function). `.install` is on a call result -> computed, low."
+}

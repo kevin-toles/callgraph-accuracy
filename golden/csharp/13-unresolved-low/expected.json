@@ -1,0 +1,39 @@
+{
+  "rule": "C4 Unresolved references are preserved. A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. | Typing reaches only declarations in the scan: ... A receiver whose type is only knowable from a library's signatures outside the scan (`project.tasks.named`, `entrySet().removeIf` on a JDK/Gradle type) stays a low guess, and that is correct.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Reader#First",
+      "callee": "System.IO.File#OpenText",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Reader.cs",
+      "line": 11
+    },
+    {
+      "caller": "App.Reader#First",
+      "callee": "r.ReadLine",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Reader.cs",
+      "line": 12
+    },
+    {
+      "caller": "App.Reader#First",
+      "callee": "App.Reader#Lookup",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Reader.cs",
+      "line": 13
+    },
+    {
+      "caller": "App.Reader#First",
+      "callee": "System.String#Trim",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Reader.cs",
+      "line": 13
+    }
+  ],
+  "notes": "`var r = System.IO.File.OpenText(path)` gives r a type knowable only from a library signature outside the scan: r.ReadLine() is `recv.member`, low (Decisions 2026-11-09; not promoted to System.IO.StreamReader#ReadLine, C4/C5). Lookup(1).Trim() is a call on the result of a call with an argument: computed receiver `.Trim`, low. File.OpenText is written fully qualified: System.IO.File#OpenText, medium."
+}

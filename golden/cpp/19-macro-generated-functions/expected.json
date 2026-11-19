@@ -1,0 +1,64 @@
+{
+  "rule": "Generated functions cover C/C++/ObjC macros (SPEC Decisions 2026-11-12, widened to nested expansions): a scanned function-like macro invoked with literal arguments (identifiers, numbers, an empty argument, a lone * or &) whose expansion defines a function, directly or through other scanned macros it invokes with still-literal arguments, defines that function (## pasted); a call of it is named at medium. An expression argument (a + b) is not expanded: the call stays a low guess.",
+  "source": "h-wabt re-review (2026-11-12): third_party/wasm-c-api/src/wasm-c.cc WASM_DEFINE_OWN / WASM_DEFINE_TYPE / WASM_DEFINE_VEC_BASE",
+  "edges": [
+    {
+      "caller": "wasm-c",
+      "callee": "WASM_DEFINE_OWN",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "wasm-c.cc",
+      "line": 18
+    },
+    {
+      "caller": "wasm-c",
+      "callee": "WASM_DEFINE_TYPE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "wasm-c.cc",
+      "line": 19
+    },
+    {
+      "caller": "wasm-c",
+      "callee": "WASM_DEFINE_LATER",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "wasm-c.cc",
+      "line": 20
+    },
+    {
+      "caller": "use",
+      "callee": "hide_config",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "wasm-c.cc",
+      "line": 23
+    },
+    {
+      "caller": "use",
+      "callee": "hide_valtype",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "wasm-c.cc",
+      "line": 24
+    },
+    {
+      "caller": "use",
+      "callee": "hide_valtype_vec",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "wasm-c.cc",
+      "line": 25
+    },
+    {
+      "caller": "use",
+      "callee": "hide_later",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "wasm-c.cc",
+      "line": 26
+    }
+  ],
+  "nodes_include": [],
+  "notes": "Ruling of 2026-11-12 (1c, widened)."
+}

@@ -1,0 +1,39 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | C2 ... An ID is never invented: a medium or high callee that names a member of a scanned module or type (`mod.T#f`, `mod.f`) is defined there, or is inherited from a base outside the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.run",
+      "callee": "example.com/m.Base#Hello",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 16
+    },
+    {
+      "caller": "example.com/m.run",
+      "callee": "example.com/m.Derived#ID",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 17
+    },
+    {
+      "caller": "example.com/m.run",
+      "callee": "example.com/m.Base#ID",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 18
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.run",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 23
+    }
+  ],
+  "notes": "Hello is defined only on the embedded Base (in the scan) and promoted to Derived; at runtime Base.Hello runs, and Derived#Hello would be an invented ID (C2), so the callee is Base#Hello, the Go analogue of the superclass rule. Derived's own ID shadows Base's: Derived#ID. d.Base.ID() goes through the embedded field of declared type Base (decision A): Base#ID."
+}

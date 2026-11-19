@@ -1,0 +1,94 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer \u2192 `Type#field`; C# property accessor \u2192 `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter \u2192 `Type#x=`; `static {}` block \u2192 `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. | `implicit`: an execution edge the language runs without a written call \u2014 `Type#<clinit>` \u2192 `Type#field` (static initializer), `Type#<init>` \u2192 `Type#field` (instance field initializer). Line = the field's line. | Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) \u2192 `Parent#<init>`, constructor. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | module = the file's path below the scan root without extension and trailing `/index` (`src/chat` for src/chat/index.ts; basenames collide across directories): `src/app.f`, `src/app.C#m`, `#<init>`/`#<clinit>`/`#field` as in Java.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "base.Base#describe",
+      "callee": "base.Base#tag",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "base.ts",
+      "line": 4
+    },
+    {
+      "caller": "derived.Derived#instances",
+      "callee": "derived.Derived#init",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "derived.ts",
+      "line": 8
+    },
+    {
+      "caller": "derived.Derived#<clinit>",
+      "callee": "derived.Derived#instances",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "derived.ts",
+      "line": 8
+    },
+    {
+      "caller": "derived.Derived#weight",
+      "callee": "derived.seed",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "derived.ts",
+      "line": 9
+    },
+    {
+      "caller": "derived.Derived#<init>",
+      "callee": "derived.Derived#weight",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "derived.ts",
+      "line": 9
+    },
+    {
+      "caller": "derived.Derived#<clinit>",
+      "callee": "derived.seed",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "derived.ts",
+      "line": 11
+    },
+    {
+      "caller": "derived.Derived#<init>",
+      "callee": "base.Base#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "derived.ts",
+      "line": 14
+    },
+    {
+      "caller": "derived.Derived#init",
+      "callee": "derived.seed",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "derived.ts",
+      "line": 17
+    },
+    {
+      "caller": "derived.Derived#tag",
+      "callee": "base.Base#tag",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "derived.ts",
+      "line": 20
+    },
+    {
+      "caller": "derived.Derived#show",
+      "callee": "base.Base#describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "derived.ts",
+      "line": 23
+    }
+  ],
+  "nodes_include": [
+    "base.Base#<init>",
+    "base.Base#tag",
+    "base.Base#describe",
+    "derived.Derived#init",
+    "derived.seed"
+  ],
+  "notes": "Static field `instances` and instance field `weight` have caller `Type#field` and implicit edges from `<clinit>`/`<init>` on the field's line (implicit edges given high: both ends defined in scan; SPEC names no tier for them). The `static {}` block's caller is `Derived#<clinit>`. `Derived.init()` calls a static method of a scanned class -> `derived.Derived#init` (Method: `Type#member`; call_type method, as a call on a type). `super(id)` -> `base.Base#<init>`. `super.tag()` with the superclass in the scan -> `base.Base#tag`. `this.describe()` is defined only on the in-scan superclass -> `base.Base#describe`. `this.tag()` in Base#describe names the enclosing type `base.Base#tag`. `this.id` is field access."
+}

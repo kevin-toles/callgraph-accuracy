@@ -1,0 +1,76 @@
+{
+  "rule": "**Body-less member declarations of scanned types are defined in the scan (high)**: a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Greet#hello",
+      "callee": "Greet#name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 5
+    },
+    {
+      "caller": "Dog#name",
+      "callee": "String#from",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 13
+    },
+    {
+      "caller": "speak",
+      "callee": "Greet#name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 18
+    },
+    {
+      "caller": "speak",
+      "callee": "Greet#hello",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 19
+    },
+    {
+      "caller": "speak",
+      "callee": "Greet#hello",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 20
+    },
+    {
+      "caller": "speak",
+      "callee": "Dog#name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 21
+    },
+    {
+      "caller": "main",
+      "callee": "speak",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 25
+    },
+    {
+      "caller": "main",
+      "callee": "Box#new",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 25
+    }
+  ],
+  "nodes_include": [
+    "Greet#name",
+    "Greet#hello",
+    "Dog#name"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Trait methods are Trait#m (Greet#name body-less, Greet#hello default body); impl methods are Type#m (Dog#name). In the default method, self is the trait \u2192 Greet#name, high (body-less in a scanned trait). &dyn Greet and Box<dyn Greet> name the pointee Greet. dog: Dog \u2192 Dog#name (Dog defines it); hello is defined only on the scanned trait, so dog.hello() is Greet#hello (the superclass rule; Dog#hello would be an invented ID, C2). Unit-struct expressions `Dog`/`&Dog` are data construction. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

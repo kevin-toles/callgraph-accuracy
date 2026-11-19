@@ -1,0 +1,60 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`. **high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition). **C / Objective-C**: function-like macros → call_type macro (high if `#define`d in the scan). C functions bare;",
+  "source": "KNOWN_GAP: c: definitions in .inl files and static inline header functions are under-resolved",
+  "edges": [
+    {
+      "caller": "vec_len2",
+      "callee": "clamp_unit",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "vec.h",
+      "line": 14
+    },
+    {
+      "caller": "vec_len2",
+      "callee": "clamp_unit",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "vec.h",
+      "line": 14
+    },
+    {
+      "caller": "vec_dot",
+      "callee": "vec_len2",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "vec.inl",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "vec_dot",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": "clamp_unit",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 5
+    },
+    {
+      "caller": "other",
+      "callee": "vec_len2",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "other.c",
+      "line": 4
+    }
+  ],
+  "nodes_include": [
+    "clamp_unit",
+    "vec_len2",
+    "vec_dot"
+  ],
+  "notes": "clamp_unit and vec_len2 are static inline functions with bodies in the scanned header vec.h; vec_dot has its body in vec.inl, included by vec.h. All three are defined in the scanned source, so calls to them are high (SPEC high tier), and C1 gives each exactly one bare ID even though the header is included by two translation units (main.c, other.c). Calls inside the header/.inl bodies have the inline function as caller."
+}

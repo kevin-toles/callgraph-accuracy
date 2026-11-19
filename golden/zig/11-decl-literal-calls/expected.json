@@ -1,0 +1,34 @@
+{
+  "rule": "a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | **C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped",
+  "source": "KNOWN_GAP: calls in file-level const initializers and some decl-literal forms (return .init(), .field = .x()) are not emitted",
+  "edges": [
+    {
+      "caller": "app.makePoint",
+      "callee": "app.Point#init",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 15
+    },
+    {
+      "caller": "app.makeLine",
+      "callee": "app.Point#init",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 19
+    },
+    {
+      "caller": "app.makeLine",
+      "callee": "app.Point#init",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 22
+    }
+  ],
+  "nodes_include": [
+    "app.Point#init"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). A decl literal `.init(x)` calls the `init` declared on its result type (Zig 0.14+). The result type is given by a declaration: the function's declared return type (`return .init(1)` in a fn returning Point), the local's declared type (`p: Point`), and the field's declared type (`Line.end: Point`). By decision A (a type given by a declaration) and runtime semantics each is `app.Point#init`, high. At minimum C4 forbids dropping them; a `.init` low guess would be an under-resolution, not a drop. The outer `.{ \u2026 }` literal is data construction."
+}

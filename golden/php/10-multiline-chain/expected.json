@@ -1,0 +1,31 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Report#rows",
+      "callee": "db.table",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "App/Report.php",
+      "line": 11
+    },
+    {
+      "caller": "App.Report#rows",
+      "callee": ".where",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "App/Report.php",
+      "line": 12
+    },
+    {
+      "caller": "App.Report#rows",
+      "callee": ".get",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "App/Report.php",
+      "line": 13
+    }
+  ],
+  "notes": "$db is an untyped property \u2192 db.table (last receiver segment), low. The later links are on call results \u2192 .where/.get, low. Each on its own name's line (C7). call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

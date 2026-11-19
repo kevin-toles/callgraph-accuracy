@@ -1,0 +1,145 @@
+{
+ "c": {
+  "gaps": [
+   "X-macros defined by the including file are not expanded (behaviour not yet decided in SPEC)"
+  ]
+ },
+ "cpp": {
+  "gaps": [
+   "operator() on typed objects is reported as a callback",
+   "function-local typedefs and namespace-member calls (DirectX::XM\u2026) are under-resolved",
+   "some namespace-qualified free-function calls are missed (calls into a nested namespace, ::global calls, an overload calling another)",
+   "delegating constructor calls (: Circle(\u2026)) get no edge",
+   "calls through a function-pointer parameter written (*op)() get no edge",
+   "calls in instance field initializers have the file as caller instead of Type#field, and the implicit <init> edge is missing",
+   "a call through a reference parameter to a method declared in a header is missed",
+   "calls through a pointer-to-member ((w.*method)()) get no edge"
+  ]
+ },
+ "csharp": {
+  "gaps": [
+   "?. calls and target-typed new() are missed",
+   "delegate fields and => getters are under-resolved",
+   "receivers bound by is-patterns (x is Item matched) stay low",
+   "type parameters with a where-bound are named T#m, not the bound",
+   "a lambda bound to a local is not a named nested function",
+   "calls on a call result whose declared return type is in the scan stay .m low"
+  ]
+ },
+ "elixir": {
+  "gaps": [
+   "a nested defmodule alias applies before its defmodule line (aliases are lexical, in source order)"
+  ]
+ },
+ "go": {
+  "gaps": [
+   "packages that fail to type-check are not graphed (reported in coverage)",
+   "range-over-func loop bodies (for x := range seq) get no edges (behaviour not yet decided in SPEC)",
+   "methods of some generic types get no edges, and calls into scanned generics are medium",
+   "calls in package-level var initializers get no edges",
+   "a call through a method value (bark := d.Bark; bark()) is named Dog#Bark medium instead of the callback rule"
+  ],
+  "note": "precision is high; the gaps are missing edges, not wrong ones"
+ },
+ "groovy": {
+  "gaps": [
+   "properties declared by getters and typed field chains are left as low recv.m",
+   "type parameters with a bound are named T#m, not the bound",
+   "a bare call not defined anywhere in the scan is Type#m medium instead of a low guess",
+   "enum constant declarations get no Enum#<clinit> \u2192 Enum#<init> edge"
+  ]
+ },
+ "haskell": {
+  "gaps": [
+   "operator applications are not emitted (behaviour not yet decided in SPEC)"
+  ]
+ },
+ "java": {
+  "gaps": []
+ },
+ "javascript": {
+  "gaps": []
+ },
+ "kotlin": {
+  "gaps": [
+   "companion operator invoke and factory functions named like a type are reported as constructors",
+   "secondary-constructor delegation : this(\u2026) gets no edge",
+   "secondary-constructor : super(\u2026) / : this(\u2026) delegation gets no edge"
+  ],
+  "note": "files the grammar cannot parse are reported as partial coverage (syntax_error)"
+ },
+ "lua": {
+  "gaps": []
+ },
+ "objc": {
+  "gaps": [
+   "typedef aliases of class types are not expanded; @catch parameters are untyped",
+   "receivers that are parameterless message results stay .m low",
+   "receivers typed id<P> by a property or ivar stay low",
+   "[[T alloc] init] in .mm class methods gives .init low; file-scope macro uses in .m get no edge",
+   "a C function call in another .m file is missed"
+  ]
+ },
+ "ocaml": {
+  "gaps": [
+   "class methods (#m) have no caller IDs and no call edges",
+   "operators are not emitted (behaviour not yet decided in SPEC)",
+   "calls through a record field holding a function (t.on_event x) get no edge"
+  ]
+ },
+ "php": {
+  "gaps": [
+   "methods from traits resolve to the using class at medium",
+   "parent::m() with a parent outside the scan becomes parent.m",
+   "receivers that are parameterless method results with a declared return type stay .m low",
+   "receivers typed by $x = new T at file top level stay low",
+   "PHP first-class callable syntax $this->m(...) is reported as a call",
+   "anonymous-class members are named as methods of the enclosing class instead of folding; no constructor edge for new class extends Base",
+   "enum-case receivers (Suit::Hearts->color()) stay .m low"
+  ]
+ },
+ "python": {
+  "gaps": [
+   "callable attributes set by a superclass or tuple assignment are under-resolved",
+   "a lambda bound to a local is not a named nested function (callee is a callback, body folds)"
+  ]
+ },
+ "ruby": {
+  "gaps": [
+   ".call on a Proc or lambda is a method call, not a callback",
+   "methods inside Const = Struct.new do \u2026 end blocks get the enclosing class as caller",
+   "bare new in class methods is not Type#<init>; recv::Const receivers are glued into the type ID",
+   "a call of a top-level def is #name medium instead of the free function",
+   "code in a class body has the class as caller instead of the file"
+  ]
+ },
+ "rust": {
+  "gaps": [
+   "receivers bound by match/if-let patterns, turbofish calls and user Deref impls are under-typed",
+   "calls through an fn-pointer field ((self.on_click)()) get no edge"
+  ]
+ },
+ "scala": {
+  "gaps": [
+   "calls written without parentheses are never emitted",
+   "symbolic and infix operator calls are never emitted",
+   "a bare call of a member inherited from an external base is a low bare name"
+  ]
+ },
+ "typescript": {
+  "gaps": [
+   "function-valued properties called as this.f() are reported as methods",
+   "getters and parameterless methods used as receivers stay low"
+  ]
+ },
+ "zig": {
+  "gaps": [
+   "static calls on instantiated generic types (std.AutoHashMap(K, V).init) are .m low",
+   "calls in file-level const initializers and some decl-literal forms (return .init(), .field = .x()) are not emitted",
+   "struct { fn g }.g local function aliases are reported as callbacks (behaviour not yet decided in SPEC)",
+   "function-local const aliases of functions are callbacks, not their target",
+   "receivers typed by an optional capture or file-scope var stay low",
+   "calls through function-pointer fields are methods (T#cb) instead of callbacks"
+  ]
+ }
+}

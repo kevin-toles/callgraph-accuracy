@@ -1,0 +1,123 @@
+{
+  "rule": "Lua: Builtins `_G#pairs`, standard library `string#sub` (medium). Other `obj:f()` -> `obj.f`. | Lua / Zig: a local or const alias of a function (`local insert = table.insert`, `const assert = std.debug.assert`) resolves to its target. | Call on a computed receiver (call result, index, literal, ...): `.member`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main.collect",
+      "callee": "_G#ipairs",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 8
+    },
+    {
+      "caller": "main.collect",
+      "callee": "table#insert",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 9
+    },
+    {
+      "caller": "main.collect",
+      "callee": "_G#tostring",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 9
+    },
+    {
+      "caller": "main.collect",
+      "callee": "_G#print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 11
+    },
+    {
+      "caller": "main.collect",
+      "callee": "string#format",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 11
+    },
+    {
+      "caller": "main.collect",
+      "callee": "table#concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 12
+    },
+    {
+      "caller": "main.collect",
+      "callee": "math#floor",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 12
+    },
+    {
+      "caller": "main.collect",
+      "callee": "os#time",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 12
+    },
+    {
+      "caller": "main",
+      "callee": "fmt#pad",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 15
+    },
+    {
+      "caller": "main",
+      "callee": "label.upper",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "main.lua",
+      "line": 16
+    },
+    {
+      "caller": "main",
+      "callee": ".rep",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "main.lua",
+      "line": 17
+    },
+    {
+      "caller": "main",
+      "callee": "main.collect",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 18
+    },
+    {
+      "caller": "fmt#pad",
+      "callee": "string#rep",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "fmt.lua",
+      "line": 4
+    }
+  ],
+  "nodes_include": [
+    "fmt#pad",
+    "main.collect"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. Lines 3-4 only read fields (`table.insert`, `fmt.pad`): no call (Not calls: 'field access without a call'). `insert(...)` resolves through the alias to `table#insert` (medium, stdlib) and `pad(...)` to the scanned `fmt#pad` (high). `#out` is the length operator, `..` concatenation: no edges. `label` holds a call result of unknown type, so `label:upper()` is `label.upper`, low. `(\"-\"):rep(3)` has a literal receiver: `.rep`, low."
+}

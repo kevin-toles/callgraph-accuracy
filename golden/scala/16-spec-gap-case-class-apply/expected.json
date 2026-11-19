@@ -1,0 +1,7 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. Constructor / initializer call: `Type#<init>`.",
+  "source": "SPEC",
+  "spec_gap": "Is `Point(0, 0)` on a case class a call? At runtime it invokes the compiler-synthesized companion `Point.apply`, which runs `new Point(...)`. Options: (a) data construction, no edge (like Rust `Some(x)`); (b) `app.Point#<init>`, constructor; (c) `app.Point#apply`, method — and if (c), is it high although `apply` has no definition written in the scan (C2 forbids invented IDs)?",
+  "edges": [],
+  "notes": "Scala case-class construction without `new` is common in every Scala codebase; SPEC lists data construction only by Rust/Haskell examples."
+}

@@ -1,0 +1,43 @@
+{
+  "rule": "A record generates no runtime functions, unlike macros that do (`defdelegate`, `defexception`), whose generated functions are call targets.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Finder.error",
+      "callee": "MyApp.NotFound.exception",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/finder.ex",
+      "line": 3
+    },
+    {
+      "caller": "MyApp.Finder.error",
+      "callee": "Kernel.inspect",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/finder.ex",
+      "line": 3
+    },
+    {
+      "caller": "MyApp.Finder.error",
+      "callee": "MyApp.NotFound.message",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/finder.ex",
+      "line": 4
+    },
+    {
+      "caller": "MyApp.Finder.text",
+      "callee": "Exception.message",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/finder.ex",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "MyApp.NotFound.exception",
+    "MyApp.NotFound.message"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. Bare Kernel functions resolve to the auto-imported Kernel (Elixir decision: 'with one import known to export the name, that import is the target'): `Kernel.<name>`, medium. `defexception [:message]` generates `exception/1` and, because the struct has a :message field, `message/1` (Elixir's documented default). They are defined in the scan, so calls to them are high and both are nodes (C1: a definition that edges reach is listed in nodes). `defexception` itself is a declaration, like defstruct: no edge. `Exception.message/1` is the standard library: medium."
+}

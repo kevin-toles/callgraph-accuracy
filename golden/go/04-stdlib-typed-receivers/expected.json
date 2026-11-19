@@ -1,0 +1,79 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | Typing reaches only declarations in the scan: decision A and the parameterless-member rule use declared types written in the scanned source (including vendored code).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.Counter#Add",
+      "callee": "sync.Mutex#Lock",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 15
+    },
+    {
+      "caller": "example.com/m.Counter#Add",
+      "callee": "sync.Mutex#Unlock",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 16
+    },
+    {
+      "caller": "example.com/m.Counter#Remaining",
+      "callee": "strings.Reader#Len",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 21
+    },
+    {
+      "caller": "example.com/m.build",
+      "callee": "strings.Builder#WriteString",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 27
+    },
+    {
+      "caller": "example.com/m.build",
+      "callee": "strings.Builder#String",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 29
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Counter#Add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 34
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Counter#Add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 35
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Counter#Remaining",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 36
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.build",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 37
+    }
+  ],
+  "notes": "Fields mu (sync.Mutex) and r (*strings.Reader) and the local `var sb strings.Builder` have declared types written in the scanned source, so calls on them name the external type (decision A, medium because the type is not defined in the scan). A deferred call (defer c.mu.Unlock()) and a goroutine call (go c.Add(2)) are ordinary calls on their lines; is_async is not compared. c.total += n is field access, not a call."
+}

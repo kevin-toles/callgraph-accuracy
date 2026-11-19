@@ -1,0 +1,63 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` → `client.get`; `a.b.c()` → `b.c`). Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` — a leading dot means \"receiver unknown\".",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shop.query.build",
+      "callee": "query.filter",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/query.py",
+      "line": 4
+    },
+    {
+      "caller": "shop.query.build",
+      "callee": ".order_by",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/query.py",
+      "line": 5
+    },
+    {
+      "caller": "shop.query.build",
+      "callee": ".limit",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/query.py",
+      "line": 6
+    },
+    {
+      "caller": "shop.query.nested",
+      "callee": "session.execute",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/query.py",
+      "line": 11
+    },
+    {
+      "caller": "shop.query.nested",
+      "callee": "shop.query.build",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shop/query.py",
+      "line": 12
+    },
+    {
+      "caller": "shop.query.nested",
+      "callee": "session.query",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/query.py",
+      "line": 13
+    },
+    {
+      "caller": "shop.query.nested",
+      "callee": ".all",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/query.py",
+      "line": 15
+    }
+  ],
+  "notes": "Each chain link is on the line of its own method name (4, 5, 6), not line 2/3 where the expression starts. `.order_by`/`.limit`/`.all` are called on call results -> computed `.m`, low. `query`/`session` are parameters of unknown type -> `recv.m`, low."
+}

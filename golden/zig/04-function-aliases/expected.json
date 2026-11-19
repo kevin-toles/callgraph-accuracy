@@ -1,0 +1,42 @@
+{
+  "rule": "**Lua / Zig**: a local or const alias of a function (`local insert = table.insert`, `const assert = std.debug.assert`) resolves to its target. | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.run",
+      "callee": "std.debug.assert",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 11
+    },
+    {
+      "caller": "app.run",
+      "callee": "std.debug.print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 12
+    },
+    {
+      "caller": "app.run",
+      "callee": "app.increment",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 14
+    },
+    {
+      "caller": "app.run",
+      "callee": "app.increment",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 14
+    }
+  ],
+  "nodes_include": [
+    "app.increment"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). File-level const aliases `assert`, `print` (of std functions) and `bump` (of a scanned function), and the local const alias `inc`, resolve to their targets (Decision 2026-10-29 Lua/Zig), so `inc(bump(v))` is two edges to `app.increment`, high, on the line where the alias names are written; neither is a callback. The alias declarations themselves are not calls."
+}

@@ -1,0 +1,59 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) -> callee is the variable's name, `call_type` callback, confidence unknown. | A local bound directly to a function literal (`const f = () => ...`, ...) is a named nested function: ID `outer.f` (Python form), and calls to it are high. | Not calls: passing a method reference",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Funcs.run",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "lib/funcs.ex",
+      "line": 3
+    },
+    {
+      "caller": "MyApp.Funcs.local_fn.double",
+      "callee": "MyApp.Funcs.twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/funcs.ex",
+      "line": 7
+    },
+    {
+      "caller": "MyApp.Funcs.local_fn",
+      "callee": "MyApp.Funcs.local_fn.double",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/funcs.ex",
+      "line": 8
+    },
+    {
+      "caller": "MyApp.Funcs.caps",
+      "callee": "Enum.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/funcs.ex",
+      "line": 12
+    },
+    {
+      "caller": "MyApp.Funcs.caps",
+      "callee": "Enum.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/funcs.ex",
+      "line": 13
+    },
+    {
+      "caller": "MyApp.Funcs.dyn",
+      "callee": "Kernel.apply",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/funcs.ex",
+      "line": 16
+    }
+  ],
+  "nodes_include": [
+    "MyApp.Funcs.twice",
+    "MyApp.Funcs.local_fn.double"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. Bare Kernel functions resolve to the auto-imported Kernel (Elixir decision: 'with one import known to export the name, that import is the target'): `Kernel.<name>`, medium. `f` is a parameter holding a function: `f.(x)` is callback/unknown with callee `f`. `double = fn y -> ... end` binds a local directly to a function literal, so it is the named nested function `MyApp.Funcs.local_fn.double`: the `twice` call in its body has that caller and `double.(x)` is high. `&twice/1` and `&String.upcase/1` are captures (references), not calls. `apply/3` is a call of Kernel.apply; the dynamic target it reaches is not a written call."
+}

@@ -1,0 +1,84 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func` | is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. | Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty. | Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | Globals: `JSON.stringify`, `globalThis.parseInt` (medium). | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\".",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "tasks.Queue#drain.each",
+      "callee": "tasks.log",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "tasks.ts",
+      "line": 6
+    },
+    {
+      "caller": "tasks.Queue#drain.each",
+      "callee": "onDone",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "tasks.ts",
+      "line": 7
+    },
+    {
+      "caller": "tasks.Queue#drain.finish",
+      "callee": "tasks.Queue#drain.each",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "tasks.ts",
+      "line": 10
+    },
+    {
+      "caller": "tasks.Queue#drain",
+      "callee": "tasks.Queue#drain.each",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "tasks.ts",
+      "line": 12
+    },
+    {
+      "caller": "tasks.Queue#drain",
+      "callee": ".map",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "tasks.ts",
+      "line": 13
+    },
+    {
+      "caller": "tasks.Queue#drain",
+      "callee": "tasks.log",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "tasks.ts",
+      "line": 13
+    },
+    {
+      "caller": "tasks.Queue#drain",
+      "callee": "tasks.Queue#drain.finish",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "tasks.ts",
+      "line": 14
+    },
+    {
+      "caller": "tasks.schedule",
+      "callee": "globalThis.setTimeout",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "tasks.ts",
+      "line": 19
+    },
+    {
+      "caller": "tasks.schedule",
+      "callee": "cb",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "tasks.ts",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "tasks.Queue#drain.each",
+    "tasks.Queue#drain.finish",
+    "tasks.log"
+  ],
+  "notes": "`const each = (...) => {...}` and the local `function finish` inside a method are named nested functions `tasks.Queue#drain.each` / `tasks.Queue#drain.finish`, called high. `onDone` is a parameter of drain captured by `each` -> callback, unknown, caller `tasks.Queue#drain.each`. The arrow passed to `[1].map` folds into drain; `[1]` is a literal receiver -> `.map`, low. `setTimeout` is a bare global function -> `globalThis.setTimeout`, medium (named like the SPEC's `globalThis.parseInt`); `cb` passed to it is a reference, `cb()` is a callback call. A function type on the parameter (`cb: () => void`) does not change the callback rule: the module-level function-type rule applies to top-level bindings only."
+}

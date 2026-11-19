@@ -1,0 +1,42 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. Silence in the graph means no call, or a `coverage` note. **low**: a guess — receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "net.dispatch",
+      "callee": "net.checksum",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "dispatch.cpp",
+      "line": 10
+    },
+    {
+      "caller": "net.dispatch",
+      "callee": "frobnicate",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "dispatch.cpp",
+      "line": 11
+    },
+    {
+      "caller": "net.dispatch",
+      "callee": "net_external_hook",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "dispatch.cpp",
+      "line": 11
+    },
+    {
+      "caller": "net.send",
+      "callee": "net.checksum",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "dispatch.cpp",
+      "line": 14
+    }
+  ],
+  "nodes_include": [
+    "net.checksum"
+  ],
+  "notes": "frobnicate and net_external_hook are dependent calls in a template body that no declaration in the scan (or anywhere) provides; C4 requires them as bare-name low guesses, never dropped and never promoted to a namespace-qualified resolved ID (not net.frobnicate). checksum(msg) is found by ordinary lookup at the template definition → net.checksum, high. 'struct Packet { int id; }' and the field access p.id are not calls."
+}

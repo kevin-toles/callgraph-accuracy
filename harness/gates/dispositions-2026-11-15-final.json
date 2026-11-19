@@ -1,0 +1,89 @@
+[
+ {
+  "id": "zig-typed-receivers-round4#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.zig$",
+   "old": "low/method",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (2026-11-14: Zig receivers typed by index expressions, same-file call results, file-level consts and switch-prong captures; decision A, typed call results)",
+  "note": "items[i].m(), const x = sameFileFn(); x.m(), .tag => |v| v.m() and file-level const receivers were receiver guesses (low/method), now the declared type's member (h-roc, s-renderer, s-config, s-input). A file that is itself a struct names its functions file.fn (direct). Reviewed: h-roc v17 99.44 / v18 98.6, s-renderer v16 98.41 / v17 99.07, s-config v12 98.69 / v13 98.9, s-input v10 98.4 / v11 98.4. Tests: zig receiver_round4_contract_test.go IndexAndCaptureReceivers."
+ },
+ {
+  "id": "zig-typed-receivers-round4#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.zig$",
+   "old": "low/method",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-14: Zig receivers typed by index expressions, same-file call results, file-level consts and switch-prong captures; decision A, typed call results)",
+  "note": "items[i].m(), const x = sameFileFn(); x.m(), .tag => |v| v.m() and file-level const receivers were receiver guesses (low/method), now the declared type's member (h-roc, s-renderer, s-config, s-input). A file that is itself a struct names its functions file.fn (direct). Reviewed: h-roc v17 99.44 / v18 98.6, s-renderer v16 98.41 / v17 99.07, s-config v12 98.69 / v13 98.9, s-input v10 98.4 / v11 98.4. Tests: zig receiver_round4_contract_test.go IndexAndCaptureReceivers."
+ },
+ {
+  "id": "zig-typed-receivers-round4#3",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.zig$",
+   "old": "low/method",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (2026-11-14: Zig receivers typed by index expressions, same-file call results, file-level consts and switch-prong captures; decision A, typed call results)",
+  "note": "items[i].m(), const x = sameFileFn(); x.m(), .tag => |v| v.m() and file-level const receivers were receiver guesses (low/method), now the declared type's member (h-roc, s-renderer, s-config, s-input). A file that is itself a struct names its functions file.fn (direct). Reviewed: h-roc v17 99.44 / v18 98.6, s-renderer v16 98.41 / v17 99.07, s-config v12 98.69 / v13 98.9, s-input v10 98.4 / v11 98.4. Tests: zig receiver_round4_contract_test.go IndexAndCaptureReceivers."
+ },
+ {
+  "id": "zig-anonymous-struct-field-no-shadow",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.zig$",
+   "old_callee": "^objc\\.c\\.id#",
+   "new_callee": "^objc\\.Object#",
+   "old": "medium/method",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (2026-11-14: a field of an anonymous struct passed as a call argument no longer shadows the file's field of that name)",
+  "note": "self.layer.layer.getProperty(...) in Metal.zig: IOSurfaceLayer's file field is layer: objc.Object (IOSurfaceLayer.zig:19); line 92's layer: objc.c.id belongs to an anonymous struct argument. Test: zig AnonymousStructFieldDoesNotShadowFileField."
+ },
+ {
+  "id": "zig-typed-medium-to-high#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.zig$",
+   "old": "medium/method",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (same Zig receiver typing as zig-typed-receivers-round4)",
+  "note": "h-roc: types.varResolvesToFunction (module path guess, medium) is now store.Store#varResolvesToFunction (the typed receiver's member, high); can.explicitRootDefByName is now Can.explicitRootDefByName (the imported file-struct's function)."
+ },
+ {
+  "id": "zig-typed-medium-to-high#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.zig$",
+   "old": "medium/method",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (same Zig receiver typing as zig-typed-receivers-round4)",
+  "note": "h-roc: types.varResolvesToFunction (module path guess, medium) is now store.Store#varResolvesToFunction (the typed receiver's member, high); can.explicitRootDefByName is now Can.explicitRootDefByName (the imported file-struct's function)."
+ },
+ {
+  "id": "zig-generic-wrapper-member-known-residual",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "lower\\.zig$",
+   "new_callee": "^ast\\.",
+   "old": "low/method",
+   "new": "medium/direct"
+  },
+  "disposition": "known defect, not fixed (backlog): a member reached through an in-scan generic wrapper (ProgramList(..) returning GuardedList.List(..)) is credited to the wrapper's file (zig/18 territory, C2)",
+  "note": "lambda_mono/lower.zig:80-82 program.field_access_segments.appendAssumeCapacity went from a receiver guess to ast.appendAssumeCapacity (4 edges); solved_lir_lower.zig:9904 const_fn_evidence.deinit became ast.deinit the same way (2 edges). The method is GuardedList.List's. h-roc v18 counted this class (W1, 838 edges) as wrong and still passed (98.6%); logged in the backlog, not dispositioned as correct."
+ }
+]

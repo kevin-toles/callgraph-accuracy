@@ -1,0 +1,43 @@
+{
+  "rule": "Scope is everything the tool scans, except paths with a segment named exactly `test`, `tests`, `spec`, `examples` or `docs`. | C4 Unresolved references are preserved. A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID.",
+  "source": "KNOWN_GAP: packages that fail to type-check are not graphed (reported in coverage)",
+  "edges": [
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m/broken.Run",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 6
+    },
+    {
+      "caller": "example.com/m/broken.Run",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "broken/run.go",
+      "line": 9
+    },
+    {
+      "caller": "example.com/m/broken.Run",
+      "callee": "example.com/m/broken.helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "broken/run.go",
+      "line": 9
+    },
+    {
+      "caller": "example.com/m/broken.Run",
+      "callee": "missing",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "broken/run.go",
+      "line": 10
+    }
+  ],
+  "nodes_include": [
+    "example.com/m/broken.Run",
+    "example.com/m/broken.helper"
+  ],
+  "notes": "Package broken has two type errors (a string assigned to an int; the undefined function missing). SPEC's scope covers every scanned file and its ID/tier rules decide each call independently of type errors: fmt.Println (medium), helper defined in the scan (high), and missing, a bare name not found in the scan (low, C4: never dropped). main's call to broken.Run resolves to the scanned definition (high). Per the gap, a coverage note alone does not produce these edges; SPEC requires them."
+}

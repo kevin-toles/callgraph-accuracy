@@ -1,0 +1,43 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Derived#run",
+      "callee": "Derived#derivedWork",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Derived.m",
+      "line": 21
+    },
+    {
+      "caller": "Derived#run",
+      "callee": "Base#baseWork",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Derived.m",
+      "line": 22
+    },
+    {
+      "caller": "Derived#run",
+      "callee": "Base#baseWork",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Derived.m",
+      "line": 23
+    },
+    {
+      "caller": "Derived#run",
+      "callee": "Derived#description",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Derived.m",
+      "line": 24
+    }
+  ],
+  "nodes_include": [
+    "Base#baseWork",
+    "Derived#derivedWork"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. `baseWork` is defined only on the scanned superclass \u2192 `Base#baseWork`. `super` is a computed receiver only when the superclass is not in the scan; here Base is scanned and defines baseWork \u2192 `Base#baseWork` high. `description` is defined by neither scanned class; it is inherited from NSObject outside the scan \u2192 enclosing type `Derived#description`, medium (tier rule; C2 'inherited from a base outside the scan')."
+}

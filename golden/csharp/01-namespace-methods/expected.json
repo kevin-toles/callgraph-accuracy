@@ -1,0 +1,52 @@
+{
+  "rule": "Java / Kotlin / C# / Groovy / Scala: package/namespace-qualified: `com.x.C#m`; an external type is qualified through its explicit import. | Method: `Type#member`. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. | Overloads share one ID.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Calculator#Twice",
+      "callee": "App.Calculator#Add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Calculator.cs",
+      "line": 13
+    },
+    {
+      "caller": "App.Calculator#Run",
+      "callee": "App.Calculator#Twice",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Calculator.cs",
+      "line": 18
+    },
+    {
+      "caller": "App.Calculator#Run",
+      "callee": "App.Calculator#Add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Calculator.cs",
+      "line": 19
+    },
+    {
+      "caller": "App.Calculator#Run",
+      "callee": "System.Console#WriteLine",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Calculator.cs",
+      "line": 20
+    },
+    {
+      "caller": "App.Calculator#Run",
+      "callee": "App.MathUtil#Square",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Calculator.cs",
+      "line": 21
+    }
+  ],
+  "nodes_include": [
+    "App.Calculator#Add",
+    "App.Calculator#Twice",
+    "App.MathUtil#Square"
+  ],
+  "notes": "File-scoped `namespace App;` qualifies every type. Both Add overloads are App.Calculator#Add. Bare Add(...) and this.Twice(...) are members of the enclosing type. System.Console.WriteLine is written fully qualified, so the external type is System.Console (medium: not defined in the scan). Static calls on a scanned class (MathUtil.Square) are Type#m, high. All calls of methods use call_type method."
+}

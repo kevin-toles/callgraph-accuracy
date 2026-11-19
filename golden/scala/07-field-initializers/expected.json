@@ -1,0 +1,52 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer → `Type#field`; C# property accessor → `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter → `Type#x=`; `static {}` block → `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. `implicit`: an execution edge the language runs without a written call — `Type#<clinit>` → `Type#field` (static initializer), `Type#<init>` → `Type#field` (instance field initializer). Line = the field's line. Generic/template type arguments are dropped from every ID (`HashSet#<init>`). Overloads share one ID. Companion-object members flatten onto the class.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Config#size",
+      "callee": "app.Config#compute",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Config.scala",
+      "line": 4
+    },
+    {
+      "caller": "app.Config#<init>",
+      "callee": "app.Config#size",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "app/Config.scala",
+      "line": 4
+    },
+    {
+      "caller": "app.Config#label",
+      "callee": "app.Config#describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Config.scala",
+      "line": 5
+    },
+    {
+      "caller": "app.Config#defaults",
+      "callee": "app.Config#compute",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Config.scala",
+      "line": 11
+    },
+    {
+      "caller": "app.Config#<clinit>",
+      "callee": "app.Config#defaults",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "app/Config.scala",
+      "line": 11
+    }
+  ],
+  "nodes_include": [
+    "app.Config#compute",
+    "app.Config#size",
+    "app.Config#defaults"
+  ],
+  "notes": "A class-body val initializer's caller is Type#field and the non-lazy one gets an implicit edge from app.Config#<init> on the field's line; the lazy val gets no implicit edge. The companion object's members flatten onto class Config, so its val is app.Config#defaults. Because flattening makes it a member of the class that runs once per type, not per instance, its implicit edge comes from app.Config#<clinit> (the static initializer), not from the class's instance <init>. Implicit edges are high because the field is defined in the scan. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

@@ -1,0 +1,27 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. | Dot-syntax property access is not a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Probe#check",
+      "callee": "Probe#respondsToSelector:",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Probe.m",
+      "line": 30
+    },
+    {
+      "caller": "Probe#check",
+      "callee": "apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Probe.m",
+      "line": 31
+    }
+  ],
+  "nodes_include": [
+    "apply",
+    "helper"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. No edge for: dot-syntax property set `self.name = \u2026` and get `self.count` (Decision 2026-10-29: not a call, even though the runtime sends the accessor), struct initializer `{1, 2}` (data construction), `sizeof` (language construct), the C cast, `@selector(check)` (a method reference without a call), passing `helper` as a function pointer, the block literal bound to `unused` that is never invoked (a definition, not a call), @interface/@property declarations. respondsToSelector: is inherited from NSObject outside the scan \u2192 `Probe#respondsToSelector:` medium."
+}

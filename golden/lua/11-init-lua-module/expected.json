@@ -1,0 +1,68 @@
+{
+  "rule": "Lua: module = the name the scan's `require` strings give the file (`core.common` for data/core/common.lua; ambiguous matches go to the require root that explains the most requires ...). Functions on the module's returned table are `mod#fn`",
+  "source": "KNOWN_GAP: init.lua module naming",
+  "edges": [
+    {
+      "caller": "core#start",
+      "callee": "core#loop",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core/init.lua",
+      "line": 4
+    },
+    {
+      "caller": "core.view",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "core/view.lua",
+      "line": 1
+    },
+    {
+      "caller": "core.view#draw",
+      "callee": "core#loop",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core/view.lua",
+      "line": 6
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "core#start",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 3
+    },
+    {
+      "caller": "main",
+      "callee": "core.view#draw",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 4
+    }
+  ],
+  "nodes_include": [
+    "core#start",
+    "core#loop",
+    "core.view#draw"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. The require strings name core/init.lua `core` (`require \"core\"` loads `?/init.lua` through package.path's `./?/init.lua` template, Lua 5.2+ default and lite-xl's path), not `core.init`. So its returned-table functions are `core#start` / `core#loop`, reached from its own file and from view.lua and main.lua (C1). core/view.lua is required as \"core.view\": `core.view#draw`, and its top-level require has caller `core.view`."
+}

@@ -1,0 +1,74 @@
+{
+  "rule": "C4 Unresolved references are preserved. A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. | A `require` whose argument is not a literal leaves its bindings unresolved (low guesses), per C4. | names bound from it resolve to the defining module, using its IDs when it is scanned and the specifier as written when it is not",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "loader",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "loader.lua",
+      "line": 2
+    },
+    {
+      "caller": "loader",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "loader.lua",
+      "line": 3
+    },
+    {
+      "caller": "loader.load",
+      "callee": "extra.setup",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "loader.lua",
+      "line": 6
+    },
+    {
+      "caller": "loader.load",
+      "callee": "json#decode",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "loader.lua",
+      "line": 7
+    },
+    {
+      "caller": "loader.load",
+      "callee": "target.apply",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "loader.lua",
+      "line": 8
+    },
+    {
+      "caller": "loader.load",
+      "callee": "undefined_global",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "loader.lua",
+      "line": 9
+    },
+    {
+      "caller": "loader",
+      "callee": "loader.load",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "loader.lua",
+      "line": 13
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    }
+  ],
+  "nodes_include": [
+    "loader.load"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. `require(name)` with a non-literal argument is still a loader invocation (line 2) but `extra` stays unresolved: `extra.setup`, low. `json` is a literal require of a module not in the scan: the specifier as written takes the module's place in the Lua module-table ID form `mod#fn` (as `string#sub` does for the stdlib), `json#decode`, medium. `cfg.target:apply` uses the last receiver segment: `target.apply`, low. `undefined_global` is a bare name not found in the scan: low, kept per C4. `load` is the file's local function (it shadows the builtin), so line 13 is `loader.load`, high, with caller `loader` (module-level code). Line 1 `..` is an operator."
+}

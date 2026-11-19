@@ -1,0 +1,7 @@
+{
+  "rule": "**low**: a guess \u2014 receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan. | Free function: its name (with the language's module qualifier where it has one).",
+  "source": "SPEC",
+  "spec_gap": "Inside `namespace App;`, an unqualified call to a global builtin (`strtoupper($s)`, no `App\\strtoupper` in the scan): is the callee `strtoupper` (the runtime fallback target) or `App.strtoupper` (the namespace-qualified name as written), and is it low (a bare name not found in the scan) or medium (a statically named library function, as Python's `builtins.len` and Lua's `_G#pairs` are)?",
+  "edges": [],
+  "notes": "PHP resolves an unqualified function call in a namespace first as App\\strtoupper, then falls back to the global strtoupper. SPEC gives PHP no builtin rule."
+}

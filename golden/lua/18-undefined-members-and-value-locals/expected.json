@@ -1,0 +1,171 @@
+{
+  "rule": "An ID is never invented (C2): a member that no scanned table in the receiver's closed hierarchy defines or assigns stays a low receiver guess (self.isAbsolute, utils.dump on a module populated at runtime, an alias c of such a member). A function stored in a property and called with a dot (self.encode(f)) is a call through that property (callback), as is a local bound to a field of a parameter (local handler = state.exception). The first name of a forward declaration is that local function even when a nested function reassigns its own local of the same name; a module's own calls through its returned table's field aliases (URL.format = format) are the local function; external two-step and inline require chains (local bundle = luvi.bundle, require('luvi').path.join) name the module's member.",
+  "source": "h-luvit re-review v9 (2026-11-12): luvit deps/path, deps/utils, deps/url.lua, deps/stream/stream_readable.lua, deps/require.lua, deps/repl.lua, deps/http.lua, deps/json.lua",
+  "edges": [
+    {
+      "caller": "path",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "deps/path.lua",
+      "line": 1
+    },
+    {
+      "caller": "path",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "deps/path.lua",
+      "line": 2
+    },
+    {
+      "caller": "path",
+      "callee": "core.Object#extend",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "deps/path.lua",
+      "line": 3
+    },
+    {
+      "caller": "path.Path#split",
+      "callee": "self.isAbsolute",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "deps/path.lua",
+      "line": 8
+    },
+    {
+      "caller": "path.Path#split",
+      "callee": "core.Object#extend",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "deps/path.lua",
+      "line": 9
+    },
+    {
+      "caller": "path.Path#split",
+      "callee": "encode",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "deps/path.lua",
+      "line": 10
+    },
+    {
+      "caller": "path.Path#split",
+      "callee": "utils.dump",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "deps/path.lua",
+      "line": 11
+    },
+    {
+      "caller": "path.Path#split",
+      "callee": "utils.bind",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "deps/path.lua",
+      "line": 12
+    },
+    {
+      "caller": "path.Path#split",
+      "callee": "handler",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "deps/path.lua",
+      "line": 14
+    },
+    {
+      "caller": "path",
+      "callee": "core.Object#extend",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "deps/path.lua",
+      "line": 16
+    },
+    {
+      "caller": "repl",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "deps/repl.lua",
+      "line": 1
+    },
+    {
+      "caller": "repl",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "deps/repl.lua",
+      "line": 3
+    },
+    {
+      "caller": "repl",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "deps/repl.lua",
+      "line": 4
+    },
+    {
+      "caller": "repl.start",
+      "callee": "luvi.bundle#readfile",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "deps/repl.lua",
+      "line": 6
+    },
+    {
+      "caller": "repl.start",
+      "callee": "luvi.path#join",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "deps/repl.lua",
+      "line": 7
+    },
+    {
+      "caller": "repl.start",
+      "callee": "c",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "deps/repl.lua",
+      "line": 8
+    },
+    {
+      "caller": "url.parse",
+      "callee": "url.format",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "deps/url.lua",
+      "line": 6
+    },
+    {
+      "caller": "url.parse",
+      "callee": "url.len",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "deps/url.lua",
+      "line": 7
+    },
+    {
+      "caller": "utils",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "deps/utils.lua",
+      "line": 2
+    },
+    {
+      "caller": "utils",
+      "callee": "_G#pairs",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "deps/utils.lua",
+      "line": 3
+    }
+  ],
+  "nodes_include": [
+    "url.format",
+    "url.len"
+  ],
+  "notes": "Fixed defects of the 2026-11-12 cycle (P1-P5 of the h-luvit v9 review)."
+}

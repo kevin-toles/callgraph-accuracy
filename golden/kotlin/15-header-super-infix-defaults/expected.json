@@ -1,0 +1,59 @@
+{
+  "rule": "Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, ...) \u2192 `Parent#<init>`, constructor. ... Code outside a method body: the caller is its location. ... **C7 Complete edges.** Caller and callee are never empty.",
+  "source": "KNOWN_GAP: superclass constructor calls in class headers and infix calls are not emitted; constructor default values get an empty caller",
+  "edges": [
+    {
+      "caller": "com.acme.vec.Vec#<init>",
+      "callee": "com.acme.vec.Base#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/vec/Vec.kt",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.vec.Vec#<init>",
+      "callee": "com.acme.vec.name",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "com/acme/vec/Vec.kt",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.vec.Vec#scaled",
+      "callee": "com.acme.vec.defaultK",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "com/acme/vec/Vec.kt",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.vec.Vec#scaled",
+      "callee": "com.acme.vec.Vec#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/vec/Vec.kt",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.vec.Svc#<init>",
+      "callee": "com.acme.vec.Clock#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/vec/Vec.kt",
+      "line": 17
+    },
+    {
+      "caller": "com.acme.vec.Svc#use",
+      "callee": "com.acme.vec.Vec#dot",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/vec/Vec.kt",
+      "line": 19
+    }
+  ],
+  "nodes_include": [
+    "com.acme.vec.Base#<init>",
+    "com.acme.vec.Vec#dot"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. Line 7: the supertype-list call `: Base(name())` is Vec's superclass constructor call (the `: base(...)` form), run by Vec's primary constructor: Vec#<init> \u2192 Base#<init>, constructor. The argument `name()` is evaluated in the same place, so its caller is also Vec#<init>. Line 19: `a dot b` is an infix call of the member `infix fun dot`; `a` is a Vec parameter: Vec#dot, method, on the line of `dot`. Line 17: the default value `Clock()` of the primary-constructor parameter `clock` (not a property) is evaluated by the constructor, so its location is Svc#<init>; never an empty caller (C7). Line 10: a function parameter's default `defaultK()` has its function as caller, Vec#scaled, alongside the body's `Vec(x * k)`. Base and Clock have no written constructor; in-scan class, high."
+}

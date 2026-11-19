@@ -1,0 +1,39 @@
+{
+  "rule": "Generic/template type arguments are dropped from every ID (`HashSet#<init>`). | **Zig**: file-qualified: `file.Struct#fn`, `file.fn`; `@import` bindings make `std.x.y` medium. | a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "KNOWN_GAP: static calls on instantiated generic types (std.AutoHashMap(K, V).init) are .m low",
+  "edges": [
+    {
+      "caller": "app.build",
+      "callee": "std.AutoHashMap#init",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 4
+    },
+    {
+      "caller": "app.build",
+      "callee": "std.AutoHashMap#deinit",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 5
+    },
+    {
+      "caller": "app.build",
+      "callee": "std.AutoHashMap#put",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 6
+    },
+    {
+      "caller": "app.build",
+      "callee": "std.AutoHashMap#count",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 7
+    }
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). `std.AutoHashMap(u32, u32)` is a generic type with its type arguments; the arguments are dropped from the ID, so `std.AutoHashMap(u32, u32).init(alloc)` is a static call `Type.m()` on the named std type \u2192 `std.AutoHashMap#init`, medium (named statically through the @import binding, not defined in the scan). The instantiation itself is treated as a type expression (its arguments are the dropped type arguments), so it emits no edge of its own. `map` is declared with the same type \u2192 `std.AutoHashMap#deinit/#put/#count`, medium. `.m` low would be wrong: the receiver is a named type, not a computed value. `defer` and `try` are not calls."
+}

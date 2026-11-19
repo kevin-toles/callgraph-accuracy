@@ -1,0 +1,39 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. Silence in the graph means no call, or a `coverage` note. **C7 Complete edges.** Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules. **low**: a guess \u2014 receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Legacy#run",
+      "callee": "prepare_env",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "lib/legacy.rb",
+      "line": 3
+    },
+    {
+      "caller": "Legacy#run",
+      "callee": "job.execute",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/legacy.rb",
+      "line": 4
+    },
+    {
+      "caller": "lib/legacy",
+      "callee": "Kernel#puts",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "lib/legacy.rb",
+      "line": 8
+    },
+    {
+      "caller": "lib/legacy",
+      "callee": "bootstrap",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "lib/legacy.rb",
+      "line": 9
+    }
+  ],
+  "notes": "C4: `prepare_env`, `puts` and `bootstrap` are bare names not found in the scan -> bare-name low guesses (tier low: \"a bare name not found in the scan\"), never dropped. Legacy has no written external superclass/include/reopen, so the Ruby note's `Scope#m` medium rule does not apply (it lists only external superclass, include, reopened external class and computed superclass). SPEC gives Ruby no builtin/Kernel naming rule, so `puts` is an unresolved bare name. C7: file-level calls have the non-empty caller `lib/legacy`."
+}

@@ -1,0 +1,55 @@
+{
+  "rule": "**Ruby**: `Outer.Inner#method` (constants dotted); `Foo.new` → `Foo#<init>`; constants resolve lexically. A class whose ancestry reaches outside the scan — an external superclass or include, a reopened external class (`class ActiveSupport::TestCase`), or a computed superclass expression (`< Devise.parent_controller.constantize`) — names bare calls not defined by any scanned ancestor `Scope#m`, medium. **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Widget#publish",
+      "callee": "Widget#validate_all",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/models/widget.rb",
+      "line": 3
+    },
+    {
+      "caller": "Widget#publish",
+      "callee": "Widget#save_now",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/models/widget.rb",
+      "line": 4
+    },
+    {
+      "caller": "Widget#publish",
+      "callee": "Widget#format_name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/models/widget.rb",
+      "line": 5
+    },
+    {
+      "caller": "ActiveSupport.Notifier#ping",
+      "callee": "ActiveSupport.Notifier#instrument",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/ext/notifier.rb",
+      "line": 3
+    },
+    {
+      "caller": "app/controllers/pages_controller",
+      "callee": "Config#parent_class",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/controllers/pages_controller.rb",
+      "line": 7
+    },
+    {
+      "caller": "PagesController#show",
+      "callee": "PagesController#render_page",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/controllers/pages_controller.rb",
+      "line": 9
+    }
+  ],
+  "notes": "Three ways ancestry reaches outside the scan (Ruby note): an external superclass (`< ActiveRecord::Base`), a reopened external class (`class ActiveSupport::Notifier`, ActiveSupport not in scan; constants dotted), and a computed superclass expression (`< Config.parent_class`). Bare calls not defined by a scanned ancestor -> `Scope#m`, medium; `self.save_now` is `self.m()` inherited from a base outside the scan -> `Widget#save_now`, medium. `format_name` is defined in the class -> high. The superclass expression is evaluated by the file-level `class` statement, so `Config.parent_class` has caller `app/controllers/pages_controller`. Constant references (`Object`, `ActiveRecord::Base`) are not calls."
+}

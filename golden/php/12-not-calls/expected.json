@@ -1,0 +1,15 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Form#check",
+      "callee": "App.Form#valid",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Form.php",
+      "line": 21
+    }
+  ],
+  "notes": "isset/empty/unset/list/array/echo are language constructs; (int) is a cast; Form::class, self::MAX and $this->data are constant/field access; [$this, 'valid'] and the first-class-callable syntax $this->valid(...) create a reference to the method without calling it (passing a method reference). instanceof is an operator. Property and constant declarations are not calls. Only the final $this->valid(...) call is an edge."
+}

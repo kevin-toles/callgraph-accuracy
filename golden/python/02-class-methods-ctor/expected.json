@@ -1,0 +1,76 @@
+{
+  "rule": "**Python**: module-qualified IDs from the package structure (directories with `__init__.py`): `pkg.mod.f`, `pkg.mod.C#m`, `pkg.mod.C#<init>`, nested functions `pkg.mod.f.inner` / `pkg.mod.C#m.inner`; module-level code's caller is the module name, class-body code's caller is `pkg.mod.C`. Imports (relative, aliased, star, re-exported via `__init__.py`) resolve to the defining module. Builtins are `builtins.len` (medium). Constructor / initializer call: `Type#<init>`. `self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. Code outside a method body: the caller is its location. Field/val initializer → `Type#field`; C# property accessor → `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter → `Type#x=`; `static {}` block → `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shop.cart.Cart",
+      "callee": "shop.cart.make_defaults",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shop/cart.py",
+      "line": 6
+    },
+    {
+      "caller": "shop.cart.Cart#<init>",
+      "callee": "shop.cart.Cart#reset",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/cart.py",
+      "line": 11
+    },
+    {
+      "caller": "shop.cart.Cart#add",
+      "callee": "shop.cart.Cart#validate",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/cart.py",
+      "line": 17
+    },
+    {
+      "caller": "shop.cart.Cart#add",
+      "callee": "shop.cart.Cart#count",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/cart.py",
+      "line": 18
+    },
+    {
+      "caller": "shop.cart.Cart#validate",
+      "callee": "builtins.isinstance",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "shop/cart.py",
+      "line": 21
+    },
+    {
+      "caller": "shop.cart.Cart#count",
+      "callee": "builtins.len",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "shop/cart.py",
+      "line": 24
+    },
+    {
+      "caller": "shop.cart.checkout",
+      "callee": "shop.cart.Cart#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shop/cart.py",
+      "line": 28
+    },
+    {
+      "caller": "shop.cart.checkout",
+      "callee": "shop.cart.Cart#count",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/cart.py",
+      "line": 29
+    }
+  ],
+  "nodes_include": [
+    "shop.cart.Cart#<init>",
+    "shop.cart.Cart#reset",
+    "shop.cart.Cart#count"
+  ],
+  "notes": "Class-body code (`DEFAULTS = make_defaults()`) has caller `shop.cart.Cart` per the Python note; the Python note overrides the generic `Type#field` form, so there is no `Cart#DEFAULTS` caller and no implicit edge. `__init__` is the definition behind `shop.cart.Cart#<init>` (Python note lists `pkg.mod.C#<init>` as the ID form; C1 requires the high constructor edge's callee to be that node), so code inside it has caller `shop.cart.Cart#<init>`. `Cart(owner)` -> constructor, high (class and __init__ defined in scan). `Cart.count(cart)` is `Type.m()` -> `Type#m`, method, high. Attribute assignments/reads (`self.items`) are field access, not calls."
+}

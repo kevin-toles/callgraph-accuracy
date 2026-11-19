@@ -1,0 +1,86 @@
+{
+  "rule": "TS namespaces and named object literals (bound at the top level or exported) nest with dots (`mod.ns.f`, `mod.obj.f`); the object `module.exports`/`export default` is, is the module (`mod.f`); `module.exports = fn` is `mod.default`. | A top-level binding has one ID, `mod.name`, from its own file and from every importer, per C1. That covers `const`/`let`/`var`/`export const`, a function declaration and a class. A call through it uses that ID everywhere, never the bare name in its own file. | A `require(...)` call (JS) or `require \"m\"` (Lua) is an invocation of the loader: callee `require` (JS) or `_G#require` (Lua), medium, direct, on its line. The edge is not the module dependency. | The binding carries the dependency: names bound from it resolve to the defining module, using its IDs when it is scanned and the specifier as written when it is not (`node:http.createServer`, medium). A `require` whose argument is not a literal leaves its bindings unresolved (low guesses), per C4. An ESM `import` declaration is not a call. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) \u2192 `Parent#<init>`, constructor. | Receivers typed by a declaration or `= new Foo()` (decision A) give `Foo#m` (medium). | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "KNOWN_GAP: module.exports = Class and inherited methods are under-resolved",
+  "edges": [
+    {
+      "caller": "base.Base#greet",
+      "callee": "base.Base#label",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "base.js",
+      "line": 6
+    },
+    {
+      "caller": "child",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "child.js",
+      "line": 1
+    },
+    {
+      "caller": "child.Child#<init>",
+      "callee": "base.Base#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "child.js",
+      "line": 5
+    },
+    {
+      "caller": "child.Child#run",
+      "callee": "base.Base#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "child.js",
+      "line": 8
+    },
+    {
+      "caller": "main",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.js",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "child.Child#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 3
+    },
+    {
+      "caller": "main",
+      "callee": "child.Child#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 4
+    },
+    {
+      "caller": "main",
+      "callee": "base.Base#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": "base.Base#label",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "base.Base#<init>",
+    "base.Base#greet",
+    "base.Base#label",
+    "child.Child#<init>",
+    "child.Child#run"
+  ],
+  "notes": "`module.exports = Base` exports an already-declared class. The class declaration is a top-level binding with one ID, `base.Base` (module-level bindings cover 'a class'); C1 forbids a second ID, so the `mod.default` name for `module.exports = fn` applies to a function value written there, not to an identifier naming a declared class. The `require` bindings `Base`/`Child` therefore resolve to `base.Base`/`child.Child`. `super(name)` -> `base.Base#<init>` (constructor, high). `this.greet()` in Child and `c.greet()`/`c.label()` on `c = new Child(...)` reach methods defined only on the in-scan superclass -> `base.Base#greet`/`base.Base#label` (Superclass#m rule, applied to the typed receiver `c` as well as to `this`). Typed-receiver confidence: the JS/TS note says decision A gives `Foo#m` '(medium)', but decision A itself says 'high if defined in the scan, else medium' and the high tier is 'defined in the scanned source'; the class is defined in src/, so high. IDs carry the module qualifier (`mod.Foo#m`), per the module rule and C1."
+}

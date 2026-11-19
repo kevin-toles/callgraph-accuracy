@@ -1,0 +1,87 @@
+{
+  "rule": "**Body-less member declarations of scanned types are defined in the scan (high)**: a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are. | A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`. | Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) \u2192 `Parent#<init>`, constructor.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "store.Job#run",
+      "callee": "store.Job#execute",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "store.ts",
+      "line": 10
+    },
+    {
+      "caller": "store.Job#run",
+      "callee": "store.Job#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "store.ts",
+      "line": 11
+    },
+    {
+      "caller": "worker.CopyJob#<init>",
+      "callee": "store.Job#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "worker.ts",
+      "line": 5
+    },
+    {
+      "caller": "worker.CopyJob#execute",
+      "callee": "store.Store#put",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "worker.ts",
+      "line": 8
+    },
+    {
+      "caller": "worker.CopyJob#execute",
+      "callee": "store.Store#get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "worker.ts",
+      "line": 8
+    },
+    {
+      "caller": "worker.kick",
+      "callee": "store.Job#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "worker.ts",
+      "line": 13
+    },
+    {
+      "caller": "worker.kick",
+      "callee": "store.Job#execute",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "worker.ts",
+      "line": 14
+    },
+    {
+      "caller": "worker.kick",
+      "callee": "store.Store#put",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "worker.ts",
+      "line": 15
+    },
+    {
+      "caller": "worker.kick",
+      "callee": "store.Store#get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "worker.ts",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "store.Store#get",
+    "store.Store#put",
+    "store.Job#execute",
+    "store.Job#run",
+    "store.Job#<init>",
+    "store.Job#log"
+  ],
+  "notes": "`Store` is an interface and `Job#execute` is abstract; both are body-less member declarations of scanned types, so calls resolving to them are high and the declarations are listed in nodes (C1). `this.execute()` in Job#run names the enclosing type, `store.Job#execute`. `this.dst`/`this.src` are constructor parameter properties typed `Store`; `j: Job`, `s: Store` are typed parameters (decision A). `super()` reaches Job's explicit (protected) constructor -> `store.Job#<init>`. `import { type Store, Job }` is not a call."
+}

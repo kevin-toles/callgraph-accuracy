@@ -1,0 +1,35 @@
+{
+  "rule": "**Objective-C++ (.mm)**: C++ constructs follow the C++ rules (`Cls::m` definitions, member calls, constructors); message sends follow the ObjC rules. | a receiver typed `id<P>` names the protocol, `P#sel` (medium unless P is in the scan). | **C++**: namespace-qualified with dots: `ns.Class#method`, `ns.func`; `Class::static()` \u2192 `Class#static`; template arguments dropped.",
+  "source": "KNOWN_GAP: message sends inside C++ functions of .mm files do not use the receiver's declared id<P> type (left low)",
+  "edges": [
+    {
+      "caller": "ui.announce",
+      "callee": "Greeter#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Bridge.mm",
+      "line": 11
+    },
+    {
+      "caller": "ui.announce",
+      "callee": "Greeter#greetName:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Bridge.mm",
+      "line": 12
+    },
+    {
+      "caller": "ui.Host#ping",
+      "callee": "Greeter#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Bridge.mm",
+      "line": 21
+    }
+  ],
+  "nodes_include": [
+    "Greeter#greet",
+    "Greeter#greetName:"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. The callers are C++ functions, named by the C++ rules: free function `ui.announce`, out-of-line member `ui.Host#ping`. The message sends follow the ObjC rules, so a parameter declared `id<Greeter>` names the protocol; Greeter is in the scan and declares the selectors without bodies \u2192 high (Decision 2026-11-09 body-less declarations). `g.greet` low would be wrong."
+}

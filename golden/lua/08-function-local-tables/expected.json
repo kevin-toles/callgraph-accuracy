@@ -1,0 +1,67 @@
+{
+  "rule": "a local inside a function that is bound to a table constructor (`local T = {}` or `local T = { ... }`) and never reassigned in its scope: `mod.T#f`. Every such table of that name in a file shares the ID, as overloads do. Calls `T.f()` and `T:f()` on such a table resolve to that ID (high when defined).",
+  "source": "KNOWN_GAP: forward-declared locals and function-local tables are under-resolved",
+  "edges": [
+    {
+      "caller": "builder.T#finish",
+      "callee": "builder.T#step",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "builder.lua",
+      "line": 9
+    },
+    {
+      "caller": "builder#build",
+      "callee": "builder.T#finish",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "builder.lua",
+      "line": 11
+    },
+    {
+      "caller": "builder#build",
+      "callee": "builder.T#step",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "builder.lua",
+      "line": 11
+    },
+    {
+      "caller": "builder#other",
+      "callee": "builder.T#step",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "builder.lua",
+      "line": 19
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "builder#build",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "builder#other",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 3
+    }
+  ],
+  "nodes_include": [
+    "builder.T#step",
+    "builder.T#finish"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. Both functions bind a local `T` to a table constructor (`{}` in build, `{ size = 0 }` in other) and never reassign it, so `function T.step` (build), `T.finish = function` (build) and `function T:step` (other) are `builder.T#step` / `builder.T#finish`; the two `step` definitions share one ID ('as overloads do'). The enclosing function is not part of the ID (`mod.T#f`). `self.size` is field access."
+}

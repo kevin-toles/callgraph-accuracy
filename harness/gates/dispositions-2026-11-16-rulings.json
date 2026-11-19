@@ -1,0 +1,90 @@
+[
+ {
+  "id": "jvm-compile-time-constants-no-implicit-edge",
+  "kind": "removed",
+  "language": "*",
+  "match": {"file": "\\.(java|kt|kts)$", "old": "high/implicit"},
+  "disposition": "ruling 2026-11-16 (SPEC Decisions: Java/Kotlin compile-time constants): a static final (or interface) field of primitive/String type with a constant initializer, and a Kotlin const val, is inlined by the compiler and gets no implicit <clinit> edge",
+  "note": "Every removed edge checked by constcheck.py against its declaration (static && final|interface, constant type, constant expression). Tests: java constant_fields_contract_test.go CompileTimeConstantsHaveNoImplicitEdge, kotlin const_val_contract_test.go ConstValHasNoImplicitEdge."
+ },
+ {
+  "id": "java-interface-field-initializer-implicit-edge-added",
+  "kind": "added",
+  "language": "*",
+  "match": {"file": "\\.java$", "new": "high/implicit"},
+  "disposition": "ruling 2026-11-16 (same decision): an interface field is implicitly static final; a non-constant one (e.g. FailablePredicate FALSE = t -> false) is initialized in <clinit> and gets the implicit edge, as a class's static field does",
+  "note": "commons-lang function/ interfaces (43 edges): constant_declaration is now registered as a defined member and caller."
+ },
+ {
+  "id": "java-interface-field-initializer-caller-moved",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "\\.java$", "old": "medium/method", "new": "high/implicit"},
+  "disposition": "ruling 2026-11-16 (same decision): a call in an interface field initializer is the field's, reached from <clinit> through the implicit edge",
+  "note": "FailableConsumer NOP = Function.identity()::apply: <clinit> → FailableConsumer#NOP (implicit) and NOP → Function#identity (method, medium)."
+ },
+ {
+  "id": "java-interface-field-initializer-call-added",
+  "kind": "added",
+  "language": "*",
+  "match": {"file": "\\.java$", "new": "medium/method", "caller": "#NOP$"},
+  "disposition": "ruling 2026-11-16 (same decision): see java-interface-field-initializer-caller-moved",
+  "note": "FailableConsumer.java:40."
+ },
+ {
+  "id": "java-static-field-initializer-caller-moved",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "TestConf\\.java$", "old": "high/method", "new": "high/implicit"},
+  "disposition": "ruling 2026-11-16 (same decision): an interface field initializer's call is the field's",
+  "note": "s-orc TestConf (interface) Configuration conf = getNewConf(): <clinit> → TestConf#conf (implicit), TestConf#conf → TestConf#getNewConf (method)."
+ },
+ {
+  "id": "java-static-field-initializer-call-added",
+  "kind": "added",
+  "language": "*",
+  "match": {"file": "TestConf\\.java$", "new": "high/method", "caller": "#conf$"},
+  "disposition": "ruling 2026-11-16 (same decision): see java-static-field-initializer-caller-moved",
+  "note": "TestConf.java:29."
+ },
+ {
+  "id": "groovy-def-local-typed-by-call-medium",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "\\.groovy$", "old": "low/method", "new": "medium/method"},
+  "disposition": "ruling 2026-11-16 (SPEC Decisions: Groovy def locals): a def local bound once to a call with a declared return type takes that type; an out-of-scan type's member is medium",
+  "note": "def applicationContext = initializer.configure() (ApplicationContext), def keyToolClass = getKeyToolClass() (Class). Reassigned locals and Object/def/void/generic returns stay untyped (low). Test: groovy letbound_def_contract_test.go DefLocalBoundToTypedCall."
+ },
+ {
+  "id": "groovy-def-local-typed-by-call-high",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "\\.groovy$", "old": "low/method", "new": "high/method"},
+  "disposition": "ruling 2026-11-16 (SPEC Decisions: Groovy def locals): an in-scan type's member is high",
+  "note": "def initializer = makeInitializer(...) (MongoDbDataStoreSpringInitializer) → initializer.configure() is MongoDbDataStoreSpringInitializer#configure."
+ },
+ {
+  "id": "rust-crate-impl-for-smart-pointer-high",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "delta-rs/.*\\.rs$", "old": "high/method", "new": "high/method", "old_callee": "^LogStore#", "new_callee": "^Arc#"},
+  "disposition": "ruling 2026-11-16 (SPEC Decisions: Rust smart pointers): a crate impl for the pointer itself (impl<T: LogStore + ?Sized> LogStore for Arc<T>) is the callee before the deref",
+  "note": "Arc<dyn LogStore>.object_store() resolves to Arc#object_store. Test: rust pointer_impl_contract_test.go CrateImplForArcWinsWhenBoundHolds."
+ },
+ {
+  "id": "rust-type-param-bound-through-crate-impl",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "delta-rs/.*\\.rs$", "old": "medium/method", "new": "high/method", "old_callee": "^T#", "new_callee": "^LogStore#"},
+  "disposition": "ruling 2026-11-16 (same decision): ?Sized is not a bound, so T: LogStore + ?Sized is bounded by LogStore",
+  "note": "logstore/mod.rs (15): self.m() inside impl<T: LogStore + ?Sized> LogStore for Arc<T> is LogStore#m."
+ },
+ {
+  "id": "rust-type-param-bound-through-crate-impl-medium",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "delta-rs/.*\\.rs$", "old": "medium/method", "new": "medium/method", "old_callee": "^T#"},
+  "disposition": "ruling 2026-11-16 (same decision): a T receiver bounded by a trait now names the bound's or the pointer's member rather than T",
+  "note": "session.rs T: Session → Session#runtime_env; engine_ext.rs → ArrowEngineData#try_from_engine_data; mod.rs → Arc#new. Out-of-scan bounds stay medium."
+ }
+]

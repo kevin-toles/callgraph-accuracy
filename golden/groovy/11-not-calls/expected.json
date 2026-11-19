@@ -1,0 +1,23 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "core.Ops#go",
+      "callee": "core.Ops#visit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/NotCalls.groovy",
+      "line": 15
+    },
+    {
+      "caller": "core.Ops#go",
+      "callee": "core.Ops#visit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/NotCalls.groovy",
+      "line": 16
+    }
+  ],
+  "notes": "`this.&handle` (method pointer) and `this::handle` (method reference) pass a method without calling it. `(Rec) o` is a cast. `r.total` reads a public field (an explicit modifier makes it a field, not a property): field access without a call. Method and class heads are declarations. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

@@ -1,0 +1,59 @@
+{
+  "rule": "**Rust constructors type their binding**: `let x = T { .. }` and `let x = T::new(..)` / `T::default()` / `T::with_capacity(..)` give `x` type T; an in-scan associated function gives its declared return type (`-> Self`/`-> T`). | Generic/template type arguments are dropped from every ID (`HashSet#<init>`).",
+  "source": "KNOWN_GAP: receivers bound by match/if-let patterns, turbofish calls and user Deref impls are under-typed (turbofish part)",
+  "edges": [
+    {
+      "caller": "Stack#new",
+      "callee": "Vec#new",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 7
+    },
+    {
+      "caller": "Stack#push",
+      "callee": "Vec#push",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 11
+    },
+    {
+      "caller": "main",
+      "callee": "Stack#new",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 16
+    },
+    {
+      "caller": "main",
+      "callee": "Stack#push",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 17
+    },
+    {
+      "caller": "main",
+      "callee": "Vec#with_capacity",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 18
+    },
+    {
+      "caller": "main",
+      "callee": "Vec#push",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 19
+    }
+  ],
+  "nodes_include": [
+    "Stack#new",
+    "Stack#push"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Stack::<u8>::new() is T::new(..) with a turbofish; the generic argument is dropped, so the binding s has type Stack \u2192 Stack#push high (and Stack::new is in scan, -> Self). Vec::<u8>::with_capacity(4) types v as Vec \u2192 Vec#push medium. s.push / v.push low guesses are wrong. Field items: Vec<T> \u2192 Vec#push. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

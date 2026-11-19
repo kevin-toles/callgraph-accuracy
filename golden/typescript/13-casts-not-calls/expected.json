@@ -1,0 +1,26 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. | **Body-less member declarations of scanned types are defined in the scan (high)**: a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are. | Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | Import statements are not calls.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "types.measure",
+      "callee": "types.Shape#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "types.ts",
+      "line": 19
+    },
+    {
+      "caller": "types.measure",
+      "callee": "types.Shape#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "types.ts",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "types.Shape#area"
+  ],
+  "notes": "Only two calls: `sh!.area()` and `sh2.area()`, both on locals declared `: Shape` -> `types.Shape#area` (interface method of a scanned type, high). Not calls: `import type` (line 1), the enum and its member read `Mode.Fast` (lines 3-6, 17), the interface and its method signature (8-10), the type alias with `ReturnType<typeof measure>` (12, a type position, not a call of measure), the casts `s as Shape` / `<Shape>s` / `sh!` (15, 16, 19), the method reference `sh.area` without a call (18), and the field read `o.level` (20)."
+}

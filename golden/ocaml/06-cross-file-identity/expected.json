@@ -1,0 +1,109 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`. Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "geom.area",
+      "callee": "Float.mul",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "geom.ml",
+      "line": 1
+    },
+    {
+      "caller": "geom.perimeter",
+      "callee": "Float.mul",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "geom.ml",
+      "line": 3
+    },
+    {
+      "caller": "geom.scaled",
+      "callee": "geom.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "geom.ml",
+      "line": 5
+    },
+    {
+      "caller": "geom.scaled",
+      "callee": "Float.succ",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "geom.ml",
+      "line": 5
+    },
+    {
+      "caller": "report.line",
+      "callee": "Printf.sprintf",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "report.ml",
+      "line": 3
+    },
+    {
+      "caller": "report.line",
+      "callee": "geom.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "report.ml",
+      "line": 3
+    },
+    {
+      "caller": "report.both",
+      "callee": "geom.perimeter",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "report.ml",
+      "line": 7
+    },
+    {
+      "caller": "report.paren",
+      "callee": "geom.scaled",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "report.ml",
+      "line": 9
+    },
+    {
+      "caller": "main",
+      "callee": "Stdlib.print_float",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.ml",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "geom.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ml",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "Stdlib.print_endline",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.ml",
+      "line": 3
+    },
+    {
+      "caller": "main",
+      "callee": "report.line",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ml",
+      "line": 3
+    }
+  ],
+  "nodes_include": [
+    "geom.area",
+    "geom.perimeter",
+    "geom.scaled",
+    "report.line"
+  ],
+  "notes": "C1: `geom.area` is called bare in its own file (`scaled`), bare through `open Geom` in report.ml, and qualified as `Geom.area` in main.ml; all three use the one ID `geom.area` (file basename), high. `let open Geom in perimeter r` and `Geom.(scaled r)` are local opens of a scanned module: `geom.perimeter`, `geom.scaled`. `Printf.sprintf` is external and qualified: medium."
+}

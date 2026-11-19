@@ -1,0 +1,79 @@
+{
+  "rule": "C4 Unresolved references are preserved. A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. | Typing reaches only declarations in the scan: ... A receiver whose type is only knowable from a library's signatures outside the scan (`project.tasks.named`, `entrySet().removeIf` on a JDK/Gradle type) stays a low guess, and that is correct.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.main",
+      "callee": "strings.NewReader",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 10
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 11
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "strings.Reader#Len",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 11
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 12
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "time.Now",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 12
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "time.Time#Unix",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 12
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 13
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "strings.NewReader",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 13
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "strings.Reader#Size",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 13
+    }
+  ],
+  "notes": "r's type comes only from the signature of strings.NewReader, which is outside the scan, so r.Len() is a call on a receiver of unknown type: `recv.member` = r.Len, low (Decisions 2026-11-09 'Typing reaches only declarations in the scan'; C4). time.Now().Unix() and strings.NewReader(\"x\").Size() are calls on call results (computed receivers) whose declared types are outside the scan, so the parameterless-member rule does not apply: `.Unix`, `.Size`, low. They must be emitted, not dropped, and not promoted to time.Time#Unix / strings.Reader#Size (C4, C5)."
+}

@@ -1,0 +1,83 @@
+{
+  "rule": "module = the `module` header (else the file name); top-level functions, class methods and record fields `Module.f` instance methods `Module.Class.Type.m` **Body-less member declarations of scanned types are defined in the scan (high)**: a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Doc.prettyAll",
+      "callee": "Prelude.unwords",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Doc.hs",
+      "line": 6
+    },
+    {
+      "caller": "Doc.prettyAll",
+      "callee": "Prelude.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Doc.hs",
+      "line": 6
+    },
+    {
+      "caller": "Doc.Pretty.Color.pretty",
+      "callee": "Prelude.reverse",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Doc.hs",
+      "line": 12
+    },
+    {
+      "caller": "Doc.Show.Box.show",
+      "callee": "Prelude.unwords",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Doc.hs",
+      "line": 17
+    },
+    {
+      "caller": "Doc.Show.Box.show",
+      "callee": "Prelude.show",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Doc.hs",
+      "line": 17
+    },
+    {
+      "caller": "Doc.shout",
+      "callee": "Prelude.concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Doc.hs",
+      "line": 20
+    },
+    {
+      "caller": "Doc.shout",
+      "callee": "Doc.pretty",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Doc.hs",
+      "line": 20
+    },
+    {
+      "caller": "Doc.shout",
+      "callee": "Doc.prettyAll",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Doc.hs",
+      "line": 20
+    },
+    {
+      "caller": "Doc.shout",
+      "callee": "Prelude.show",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Doc.hs",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "Doc.pretty",
+    "Doc.prettyAll"
+  ],
+  "notes": "Class methods are `Module.f`: the default method body `prettyAll xs = ...` has caller `Doc.prettyAll`. Instance method bodies have callers `Module.Class.Type.m`: `Doc.Pretty.Color.pretty` (both equations share one ID) and `Doc.Show.Box.show`. A bare call of a class method resolves to the class method ID, not an instance: `pretty c` → `Doc.pretty`, high (body-less declaration of a scanned class, Decisions 2026-11-09); `show n` and `show (Box 2)` → `Prelude.show`, medium (the class is the Prelude's, even though one instance is in the scan; the Haskell note names `Prelude.show`). `pretty` passed to `map` is not a call. `Box 2`, `(Box n)` and `[c, c]` are data construction/patterns: no edge."
+}

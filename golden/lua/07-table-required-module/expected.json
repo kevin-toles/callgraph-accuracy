@@ -1,0 +1,84 @@
+{
+  "rule": "Lua functions stored on a table. ... Both forms get the same ID: ... a required module: that module's ID; ... Calls `T.f()` and `T:f()` on such a table resolve to that ID (high when defined).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "ext",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "ext.lua",
+      "line": 1
+    },
+    {
+      "caller": "base#shout",
+      "callee": "string#upper",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "ext.lua",
+      "line": 4
+    },
+    {
+      "caller": "base#shout",
+      "callee": "base#hello",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "ext.lua",
+      "line": 4
+    },
+    {
+      "caller": "base#whisper",
+      "callee": "string#lower",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "ext.lua",
+      "line": 8
+    },
+    {
+      "caller": "base#whisper",
+      "callee": "base#hello",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "ext.lua",
+      "line": 8
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "base#shout",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 3
+    },
+    {
+      "caller": "main",
+      "callee": "base#whisper",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 4
+    }
+  ],
+  "nodes_include": [
+    "base#hello",
+    "base#shout",
+    "base#whisper"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. In ext.lua `base` is bound to `require \"base\"`, so `function base.shout` and `base.whisper = function` take base's ID: `base#shout`, `base#whisper` (not `ext#...`: ext.lua returns `true`, so no returned-table rule competes). main.lua's own `base` binding reaches them: high (C1). `string.upper`/`string.lower` are stdlib, medium."
+}

@@ -1,0 +1,7 @@
+{
+  "rule": "Lua: ... `X = Base:extend()` is a superclass. | A table without a static identity gives no name: a parameter, a reassigned local, a local bound to a call result or other expression, a computed index.",
+  "source": "SPEC",
+  "spec_gap": "Does a top-level `local X = Base:extend()` (a local bound to a call result) have a static identity, so `function X:m()` is `mod#m` (or `mod.X#m`) and `self:m()` for a member defined only on Base resolves to Base's ID per the superclass rule, or does the 2026-11-10 'local bound to a call result' clause make it nameless (methods fold into the module, calls `X.m` low)? And what is `X.super.new(self)`: `object#new` (superclass constructor-like call), `super.new` low, or a callback?",
+  "edges": [],
+  "notes": "view.lua line 3 `local View = Object:extend()` is a top-level local bound to a call result. The Lua note treats `X = Base:extend()` as a class with superclass Base, which implies View's methods are `view#new`/`view#draw` and `self:describe()` (line 11) resolves to the superclass member `object#describe` (high), with `View.super.new(self)` (line 6) presumably `object#new`. The 2026-11-10 ruling lists 'a local bound to a call result' among tables with no static identity (functions fold into the enclosing scope, calls stay `View.draw`, low) without limiting that to function-local tables."
+}

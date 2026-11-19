@@ -1,0 +1,61 @@
+{
+  "rule": "Imports, `require`, re-exports (`export *`, `export * as`) and workspace packages (package.json `exports`) resolve to the defining module; packages outside the scan are named as written (`node:http.createServer`, `zod.z.object`, medium). | module = the file's path below the scan root without extension and trailing `/index` (`src/chat` for src/chat/index.ts; basenames collide across directories): `src/app.f`, `src/app.C#m`, `#<init>`/`#<clinit>`/`#field` as in Java. | Vendored and third-party code (`external/`, `vendor/`, `third_party/`, `Pods/`) | Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "packages/strutil/lib/pad.padLeft",
+      "callee": "s.padStart",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "packages/strutil/lib/pad.js",
+      "line": 2
+    },
+    {
+      "caller": "packages/strutil/lib/casing.upper",
+      "callee": "s.toUpperCase",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "packages/strutil/lib/casing.js",
+      "line": 2
+    },
+    {
+      "caller": "vendor/left.leftPad",
+      "callee": "s.padStart",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "vendor/left.js",
+      "line": 2
+    },
+    {
+      "caller": "app/run.run",
+      "callee": "packages/strutil/lib/casing.upper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/run.js",
+      "line": 5
+    },
+    {
+      "caller": "app/run.run",
+      "callee": "packages/strutil/lib/pad.padLeft",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/run.js",
+      "line": 5
+    },
+    {
+      "caller": "app/run.run",
+      "callee": "vendor/left.leftPad",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/run.js",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "packages/strutil/lib/pad.padLeft",
+    "packages/strutil/lib/casing.upper",
+    "vendor/left.leftPad",
+    "app/run.run"
+  ],
+  "notes": "`@acme/strutil` is a workspace package (packages/strutil/package.json `exports`: ./lib/main.js); main.js re-exports pad.js with `export *` and casing.js with `export * as casing`. Both resolve to the defining modules (`packages/strutil/lib/pad`, `packages/strutil/lib/casing`), not to the package name or the re-exporting file. `casing.upper(...)` is a namespace-object function -> direct. vendor/left.js is in scope (Decisions 2026-11-09) and judged like any other code. main.js only re-exports: no edges."
+}

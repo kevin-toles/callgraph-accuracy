@@ -1,0 +1,74 @@
+[
+ {
+  "id": "groovy-reassigned-def-new-untyped",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$",
+   "old": "medium/method",
+   "new": "low/method"
+  },
+  "disposition": "SPEC Groovy def ruling (line 166): a def local assigned again after its declaration is not typed; def x = new T(...) reassigned later (x = T.get(...), x = new File(...)) leaves x.m() a low guess",
+  "note": "U5. Every changed callee is <local>.m where the local is a def bound to new T() and reassigned in the same scope (spot-checked EnumCollectionSpec i = Teacher3.findByName, SimpleHasManySpec book = Book.get, MainClassFinder rootClassesDir = new File). Test: groovy ReassignedDefLocalBoundToNewIsUntyped."
+ },
+ {
+  "id": "groovy-reassigned-def-new-untyped-high",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$",
+   "old": "high/method",
+   "new": "low/method"
+  },
+  "disposition": "same ruling, scanned type: CircularEmbeddedListSpec t (def t = new Tree(), reassigned) t.items",
+  "note": "U5, 1 edge."
+ },
+ {
+  "id": "ocaml-open-sees-only-interface-values",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.ml$",
+   "old": "high/direct",
+   "new": "high/direct"
+  },
+  "disposition": "SPEC OCaml open/.mli visibility: an open M exposes only the values M's .mli declares (or includes); a later open whose .mli hides the name does not shadow an earlier open that exports it",
+  "note": "R11/R9/R10. Members verified: btype.mli:263 re-exports snapshot/backtrack and open Btype follows open Types; format_doc; Stdlib print_*; out_type.reset; decl.known_id (open Decl after open Ident); pinterp.mk_empty_env; R11 moves typing.add_pdecl->pmodule, expr.cty_ghostify->ity, theory.add_tdecl->task, string_split.index_from->string (stdune string.ml include Stdlib.StringLabels; string_split.mli hides index_from), translclass.lfunction->lambda, pinterp.mk_cntr_ctx->pinterp_core. Test: ocaml OpenSeesOnlyTheInterfacesValues."
+ },
+ {
+  "id": "ocaml-open-format-qualified-medium",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.ml$",
+   "old": "low/direct",
+   "new": "medium/direct",
+   "new_callee": "^Format\\."
+  },
+  "disposition": "bare Format function under open Format resolves to the external Format.f (medium) instead of a bare low guess",
+  "note": "spark2014 pp.ml/doc_html.ml x59, all under open Format."
+ },
+ {
+  "id": "ocaml-functor-param-eval-medium",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "memo\\.ml$",
+   "old": "high/direct",
+   "new": "medium/direct",
+   "new_callee": "^Function\\.eval$"
+  },
+  "disposition": "eval inside Poly(Function) after open Function is the functor parameter's value (medium), not a hidden core.eval",
+  "note": "h-dune memo.ml:373."
+ },
+ {
+  "id": "groovy-dotted-return-member-head",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "(MongoClientOptionsBuilder|MongoClientOptionsBuilderSpec|config/MongoCollection)\\.groovy$"
+  },
+  "disposition": "a method head with a dotted return type and no modifier/annotation (Query.Order getSort() {, MongoClientSettings.Builder build() {) is a method declaration: the declaration-line non-call edges go, its body's calls take it as caller, and calls of it resolve (builder.build() high, its Builder result typed)",
+  "note": "U6 repairMemberHeads (length-preserving marker over the head line's blanks, reparse, kept only where it parses as function_definition). 9 edges, all checked. Test: groovy DottedReturnTypeMethodDeclaration."
+ }
+]

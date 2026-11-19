@@ -1,0 +1,93 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func`, a Rust `fn` item inside a function body, a PHP `$f = function`/`fn`, a C++ `auto f = [..]`, a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Engine#run.step",
+      "callee": "Engine#fire",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 5
+    },
+    {
+      "caller": "Engine#run",
+      "callee": "Engine#run.step",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 6
+    },
+    {
+      "caller": "Engine#run",
+      "callee": "Vec#iter",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 7
+    },
+    {
+      "caller": "Engine#run",
+      "callee": ".for_each",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 7
+    },
+    {
+      "caller": "Engine#run",
+      "callee": "Engine#fire",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 7
+    },
+    {
+      "caller": "outer.add",
+      "callee": "outer.inner",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 17
+    },
+    {
+      "caller": "outer",
+      "callee": "outer.add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 18
+    },
+    {
+      "caller": "main",
+      "callee": "vec!",
+      "call_type": "macro",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 23
+    },
+    {
+      "caller": "main",
+      "callee": "Engine#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 24
+    },
+    {
+      "caller": "main",
+      "callee": "outer",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 25
+    }
+  ],
+  "nodes_include": [
+    "Engine#run.step",
+    "outer.add",
+    "outer.inner",
+    "Engine#fire"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Closures bound to a let (step, add) and the nested fn item inner are named nested functions: Engine#run.step, outer.add, outer.inner; calls to them are high, direct, and calls in their bodies have them as caller. The anonymous closure passed to for_each folds into Engine#run. xs: &Vec<i32> \u2192 Vec#iter medium (container is its own type, generics dropped); its result is a call result whose type is only knowable from std \u2192 .for_each low. `e: Engine` types e. vec! is a std macro \u2192 macro, medium; macro ID is the name without `!`. `*x` is a dereference, not a call. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

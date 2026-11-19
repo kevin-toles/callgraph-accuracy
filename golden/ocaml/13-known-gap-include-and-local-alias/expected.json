@@ -1,0 +1,59 @@
+{
+  "rule": "Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown. **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "KNOWN_GAP: include chains and local module aliases are not followed",
+  "edges": [
+    {
+      "caller": "base.greet",
+      "callee": "Stdlib.print_endline",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "base.ml",
+      "line": 1
+    },
+    {
+      "caller": "mid.wave",
+      "callee": "base.greet",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "mid.ml",
+      "line": 3
+    },
+    {
+      "caller": "top.a",
+      "callee": "base.greet",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "top.ml",
+      "line": 3
+    },
+    {
+      "caller": "top.b",
+      "callee": "base.greet",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "top.ml",
+      "line": 5
+    },
+    {
+      "caller": "top.c",
+      "callee": "base.greet",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "top.ml",
+      "line": 7
+    },
+    {
+      "caller": "top.d",
+      "callee": "mid.wave",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "top.ml",
+      "line": 11
+    }
+  ],
+  "nodes_include": [
+    "base.greet",
+    "mid.wave"
+  ],
+  "notes": "`greet` is defined once, in base.ml: ID `base.greet` (C1). `include Base` makes it a member of Mid's structure, so bare `greet` in mid.ml and `Mid.greet` resolve to `base.greet` (OCaml note: enclosing structures and their opens/includes). `Low` includes `Mid`, so `Low.greet` follows the two-step include chain to `base.greet`. `module B = Base` is a module alias; `let module G = Low in` is a local module alias, and `G.wave` follows it through Low's include of Mid to `mid.wave`. All high. `include` itself is not a call."
+}

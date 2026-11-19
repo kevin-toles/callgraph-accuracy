@@ -1,0 +1,107 @@
+{
+  "rule": "Typed call results (SPEC 2026-11-10, golden corpus), let-bound call results and optional chaining (SPEC Decisions 2026-11-12): a receiver that is a call of a scanned function or method with a declared return type names that type (make().run(), svc.with(1).run()); a local bound to such a call takes the same type, also after it is assigned again, since its static type is fixed at its declaration; ?. types through as . does. A generic return (any<T>(): T, called with a type argument) leaves the call a low guess.",
+  "source": "SPEC Decisions 2026-11-12 (user rulings: let-bound call results, optional chaining)",
+  "edges": [
+    {
+      "caller": "P.Svc#Make",
+      "callee": "P.Svc#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 4
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#Make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 10
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#Run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 11
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#Make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 12
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#Run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 12
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#With",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 12
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#Make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 13
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#Run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 13
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#Any",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 14
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "g.Run",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Svc.cs",
+      "line": 15
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#Make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 16
+    },
+    {
+      "caller": "P.Use#M",
+      "callee": "P.Svc#Run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Svc.cs",
+      "line": 18
+    }
+  ],
+  "nodes_include": [
+    "P.Svc#Run",
+    "P.Svc#With"
+  ],
+  "notes": "Rulings of 2026-11-12."
+}

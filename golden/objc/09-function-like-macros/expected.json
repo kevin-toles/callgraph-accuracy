@@ -1,0 +1,42 @@
+{
+  "rule": "function-like macros \u2192 call_type macro (high if `#define`d in the scan). | Calls written inside macro arguments are separate ordinary edges.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Calc#value",
+      "callee": "SQUARE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "Calc.m",
+      "line": 16
+    },
+    {
+      "caller": "Calc#value",
+      "callee": "compute",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Calc.m",
+      "line": 16
+    },
+    {
+      "caller": "Calc#value",
+      "callee": "CLAMP",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "Calc.m",
+      "line": 17
+    },
+    {
+      "caller": "Calc#value",
+      "callee": "SQUARE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "Calc.m",
+      "line": 18
+    }
+  ],
+  "nodes_include": [
+    "compute"
+  ],
+  "notes": "SQUARE is #defined in the file and CLAMP in a scanned header \u2192 macro, high. `compute(2)` written inside the macro argument is a separate ordinary edge (one edge: it is written once even though the expansion duplicates it). `LIMIT` is an object-like macro, not a function-like macro invocation \u2192 no edge. #import/#define lines are not calls."
+}

@@ -1,0 +1,124 @@
+{
+  "rule": "A table without a static identity gives no name: a parameter, a reassigned local, a local bound to a call result or other expression, a computed index. A function stored into it, in either form, folds into the enclosing function, and calls on it stay `T.f`, low.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "plugin#install",
+      "callee": "_G#tostring",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "plugin.lua",
+      "line": 9
+    },
+    {
+      "caller": "plugin#install",
+      "callee": "plugin#helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "plugin.lua",
+      "line": 12
+    },
+    {
+      "caller": "plugin#install",
+      "callee": "obj.hook",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "plugin.lua",
+      "line": 14
+    },
+    {
+      "caller": "plugin#install",
+      "callee": "obj.unhook",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "plugin.lua",
+      "line": 14
+    },
+    {
+      "caller": "plugin#reassigned",
+      "callee": "plugin.make",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "plugin.lua",
+      "line": 19
+    },
+    {
+      "caller": "plugin#reassigned",
+      "callee": "plugin#helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "plugin.lua",
+      "line": 21
+    },
+    {
+      "caller": "plugin#reassigned",
+      "callee": "T.go",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "plugin.lua",
+      "line": 23
+    },
+    {
+      "caller": "plugin#from_call",
+      "callee": "_G#setmetatable",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "plugin.lua",
+      "line": 27
+    },
+    {
+      "caller": "plugin#from_call",
+      "callee": "plugin#helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "plugin.lua",
+      "line": 29
+    },
+    {
+      "caller": "plugin#from_call",
+      "callee": "R.run",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "plugin.lua",
+      "line": 31
+    },
+    {
+      "caller": "plugin#indexed",
+      "callee": "plugin#helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "plugin.lua",
+      "line": 37
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "plugin#install",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "plugin#reassigned",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 3
+    }
+  ],
+  "nodes_include": [
+    "plugin#install",
+    "plugin#helper",
+    "plugin.make"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. Four tables without static identity: parameter `obj` (`function obj.hook` and `obj.unhook = function`, both forms), local `T` reassigned on line 19, local `R` bound to a call result (setmetatable), and the computed index `handlers[name]`. Each stored function is not a node; the calls in its body (tostring, P.helper) fold into the enclosing named function. Calls on those tables stay `obj.hook`, `obj.unhook`, `T.go`, `R.run`, low. `local function make` is `plugin.make`."
+}

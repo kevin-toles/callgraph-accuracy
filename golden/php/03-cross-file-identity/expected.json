@@ -1,0 +1,68 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Lib.slug",
+      "callee": "App.Lib.Util#trim",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Lib/Util.php",
+      "line": 6
+    },
+    {
+      "caller": "App.Lib.Util#fmt",
+      "callee": "App.Lib.slug",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "App/Lib/Util.php",
+      "line": 18
+    },
+    {
+      "caller": "App.Lib.Util#fmt",
+      "callee": "App.Lib.Util#trim",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Lib/Util.php",
+      "line": 18
+    },
+    {
+      "caller": "App.Web.Page#render",
+      "callee": "App.Lib.Util#fmt",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Web/Page.php",
+      "line": 12
+    },
+    {
+      "caller": "App.Web.Page#render",
+      "callee": "App.Lib.Util#trim",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Web/Page.php",
+      "line": 13
+    },
+    {
+      "caller": "App.Web.Page#render",
+      "callee": "App.Lib.slug",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "App/Web/Page.php",
+      "line": 14
+    },
+    {
+      "caller": "App.Web.Page#render",
+      "callee": "App.Lib.slug",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "App/Web/Page.php",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "App.Lib.slug",
+    "App.Lib.Util#trim",
+    "App.Lib.Util#fmt"
+  ],
+  "notes": "Free function: its name with the module qualifier \u2192 App.Lib.slug (PHP namespace qualifier with dots). The bare slug() inside namespace App\\Lib resolves to the scanned App\\Lib\\slug. From Page.php the same definitions are reached through `use`, an alias (`as U`), `use function` and a fully qualified name; all four use the defining file's IDs (C1). call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

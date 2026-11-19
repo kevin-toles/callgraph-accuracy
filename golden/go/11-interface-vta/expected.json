@@ -1,0 +1,84 @@
+{
+  "rule": "An interface call emits the call as written, `Interface#Method` (high/medium), plus one low edge per concrete implementation that type-flow analysis (VTA) shows can reach it; out-of-scan implementations only with include_external. | Body-less member declarations of scanned types are defined in the scan (high): a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (...) is high when that declaring type is in the scan, exactly as Go interface calls are. | C1 ... A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods)",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.describe",
+      "callee": "example.com/m.Animal#Speak",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 22
+    },
+    {
+      "caller": "example.com/m.describe",
+      "callee": "example.com/m.Dog#Speak",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "main.go",
+      "line": 22
+    },
+    {
+      "caller": "example.com/m.describe",
+      "callee": "example.com/m.Cat#Speak",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "main.go",
+      "line": 22
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 26
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.describe",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 26
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 27
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.describe",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 27
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 29
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Fish#Speak",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 29
+    }
+  ],
+  "nodes_include": [
+    "example.com/m.Animal#Speak",
+    "example.com/m.Dog#Speak",
+    "example.com/m.Cat#Speak"
+  ],
+  "notes": "a.Speak() is an interface call: the edge as written is Animal#Speak, high because Animal is declared in the scan (Decisions 2026-11-09 body-less members), and Animal#Speak must be in nodes (C1). Type flow shows *Dog and Cat values reach parameter a (both passed to describe), so one low edge each to Dog#Speak and Cat#Speak, on the same line. Fish implements Animal but no Fish value is ever converted to Animal, so VTA shows no flow and there is no Fish#Speak low edge from describe; main's f.Speak() is a static call on `var f Fish`: Fish#Speak high. &Dog{} and Cat{} are data construction."
+}

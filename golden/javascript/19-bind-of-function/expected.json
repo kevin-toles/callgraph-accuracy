@@ -1,0 +1,91 @@
+{
+  "rule": "JS/TS .bind of a function (SPEC Decisions 2026-11-10, amendment) and .call/.apply/.bind (SPEC Decisions 2026-11-12). X.bind(...) is evidence when X is a function; the invocation is Function#bind, method, medium; a call through the bound binding runs X, so it resolves to X at its tier. .bind on a value with no evidence is a receiver guess.",
+  "source": "SPEC Decisions (2026-11-10, amendment): pdf.js isValidExplicitDest; SPEC Decisions (2026-11-12): .call/.apply/.bind",
+  "edges": [
+    {
+      "caller": "display/api_utils",
+      "callee": "Function#bind",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "display/api_utils.js",
+      "line": 4
+    },
+    {
+      "caller": "display/api_utils",
+      "callee": "Function#bind",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "display/api_utils.js",
+      "line": 8
+    },
+    {
+      "caller": "display/api_utils",
+      "callee": "makeConfig",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "display/api_utils.js",
+      "line": 9
+    },
+    {
+      "caller": "display/api_utils",
+      "callee": "cfg.bind",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "display/api_utils.js",
+      "line": 10
+    },
+    {
+      "caller": "display/api_utils.use",
+      "callee": "shared/util._isValidExplicitDest",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "display/api_utils.js",
+      "line": 13
+    },
+    {
+      "caller": "display/api_utils.use",
+      "callee": "display/api_utils.add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "display/api_utils.js",
+      "line": 14
+    },
+    {
+      "caller": "display/api_utils.use",
+      "callee": "display/api_utils.opaque",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "display/api_utils.js",
+      "line": 15
+    },
+    {
+      "caller": "shared/util._isValidExplicitDest",
+      "callee": "validRef",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "shared/util.js",
+      "line": 2
+    },
+    {
+      "caller": "shared/util._isValidExplicitDest",
+      "callee": "validName",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "shared/util.js",
+      "line": 2
+    },
+    {
+      "caller": "web/link.setHash",
+      "callee": "shared/util._isValidExplicitDest",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "web/link.js",
+      "line": 3
+    }
+  ],
+  "nodes_include": [
+    "display/api_utils.isValidExplicitDest",
+    "shared/util._isValidExplicitDest"
+  ],
+  "notes": "isValidExplicitDest = _isValidExplicitDest.bind(...): calls through it, in its own file and from an importer, run _isValidExplicitDest (ECMA-262 15.3.4.5.1), high. add1 = add.bind(...): calls run add, high. opaque: cfg is a call result of an unscanned function, no evidence, so callback/unknown, and cfg.bind stays a receiver guess. Both .bind invocations on function receivers are Function#bind (question 80, decided 2026-11-12)."
+}

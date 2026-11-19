@@ -1,0 +1,83 @@
+{
+  "rule": "a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | locals, parameters, fields, and file-scope globals/statics (C, C++, ObjC, Zig, Rust `static`). | A type alias (`using X = T;`, `typedef T X;`, Zig `const X = a.b.T`) is expanded to its target | Generic/template type arguments are dropped from every ID (`HashSet#<init>`). | Dot-syntax property access is not a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Car#drive:list:",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 25
+    },
+    {
+      "caller": "Car#drive:list:",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 26
+    },
+    {
+      "caller": "Car#drive:list:",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 27
+    },
+    {
+      "caller": "Car#drive:list:",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 28
+    },
+    {
+      "caller": "Car#drive:list:",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 30
+    },
+    {
+      "caller": "Car#drive:list:",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 32
+    },
+    {
+      "caller": "Car#drive:list:",
+      "callee": "NSArray#count",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Car.m",
+      "line": 34
+    },
+    {
+      "caller": "Car#drive:list:",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 36
+    },
+    {
+      "caller": "Car#drive:list:",
+      "callee": "NSException#reason",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Car.m",
+      "line": 38
+    }
+  ],
+  "nodes_include": [
+    "Engine#start",
+    "Car#drive:list:"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. Receivers typed by declarations: parameter `param`, ivar `_spare` (field), property `self.engine` (`obj.field` chain whose property has a declared type; the dot access itself is not a call), file-scope static `gEngine` (Decision 2026-10-29), typedef alias `MotorAlias` expanded to `Engine`, for-in loop variable `each`, catch parameter `e` (NSException, external \u2192 medium). `NSArray<Engine *>`: lightweight-generic arguments dropped \u2192 `NSArray#count`, medium (external type). Message syntax `[e reason]` is a call even though `reason` is a property; only dot syntax is exempt."
+}

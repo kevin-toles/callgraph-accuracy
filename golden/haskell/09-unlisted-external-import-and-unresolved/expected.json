@@ -1,0 +1,63 @@
+{
+  "rule": "Bare names resolve through local bindings, the module, import lists (with `T (..)` fields and hiding), unqualified imports of scanned modules (following `module M` re-exports and export lists), the Prelude (`Prelude.show`, medium) and the one unlisted external import; qualified imports `Map.size` medium. **C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. Silence in the graph means no call, or a `coverage` note.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "One.loud",
+      "callee": "Prelude.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "One.hs",
+      "line": 6
+    },
+    {
+      "caller": "One.initial",
+      "callee": "Data.Char.toUpper",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "One.hs",
+      "line": 9
+    },
+    {
+      "caller": "One.initial",
+      "callee": "Prelude.head",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "One.hs",
+      "line": 9
+    },
+    {
+      "caller": "Two.firstDigit",
+      "callee": "Data.Char.isDigit",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Two.hs",
+      "line": 7
+    },
+    {
+      "caller": "Two.firstDigit",
+      "callee": "Prelude.head",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Two.hs",
+      "line": 7
+    },
+    {
+      "caller": "Two.orZero",
+      "callee": "Data.Maybe.fromMaybe",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Two.hs",
+      "line": 10
+    },
+    {
+      "caller": "Two.mystery",
+      "callee": "frobnicate",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "Two.hs",
+      "line": 13
+    }
+  ],
+  "notes": "One.hs has exactly one unlisted external import (`Data.Char`), so a bare name not found locally, in the module or the Prelude resolves to it: `Data.Char.toUpper`, medium. In `loud`, `toUpper` is only passed to `map`: no edge. Two.hs has two unlisted external imports, so neither is \"the one unlisted external import\" and `isDigit` / `fromMaybe` stay unresolved bare names, low (C4: never dropped, never promoted; confidence low: a bare name not found in the scan). `frobnicate` is defined nowhere: low bare name (C4). The fixture does not need to compile."
+}

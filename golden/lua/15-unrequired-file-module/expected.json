@@ -1,0 +1,7 @@
+{
+  "rule": "Lua: module = the name the scan's `require` strings give the file (`core.common` for data/core/common.lua; ambiguous matches go to the require root that explains the most requires ...). ... local functions `mod.f` / `outer.f`; module-level code's caller is the module.",
+  "source": "SPEC",
+  "spec_gap": "What is the Lua module ID of a file that no require string in the scan names (an entry script, or a scan with no requires at all)? The path below the scan root with dots (`tools.build`), the basename, or something else?",
+  "edges": [],
+  "notes": "tools/build.lua is the only file and contains no `require`; no require string names it and no require root exists. Expected edges would be `<mod>` -> `_G#print` (medium, line 5) and `<mod>` -> `<mod>.step` (high, line 5) with `<mod>` undecided (`tools.build` from the path, `build`, or something else). Other cases in this corpus avoid the question by placing the unrequired entry file `main.lua` at the require root."
+}

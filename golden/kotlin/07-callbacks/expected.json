@@ -1,0 +1,47 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.cb.Button#click",
+      "callee": "onClick",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "com/acme/cb/Button.kt",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.cb.Button#repeat",
+      "callee": "action",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "com/acme/cb/Button.kt",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.cb.Button#repeat",
+      "callee": "local",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "com/acme/cb/Button.kt",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.cb.runTwice",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "com/acme/cb/Button.kt",
+      "line": 16
+    },
+    {
+      "caller": "com.acme.cb.runTwice",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "com/acme/cb/Button.kt",
+      "line": 17
+    }
+  ],
+  "notes": "`onClick` is a stored property of function type (constructor `private val`), `action` and `f` are function-typed parameters, and `local` is a local variable holding a function value. It is not bound to a function literal, so it is not a named nested function. Each call is callee = the variable's name, callback, unknown. `val local: () -> Unit = onClick` reads the property without calling it: no edge on line 10."
+}

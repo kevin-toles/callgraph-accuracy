@@ -1,0 +1,76 @@
+{
+  "rule": "Generic/template type arguments are dropped from every ID (`HashSet#<init>`). | high: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition).",
+  "source": "KNOWN_GAP: methods of some generic types get no edges, and calls into scanned generics are medium",
+  "edges": [
+    {
+      "caller": "example.com/m.Stack#Push",
+      "callee": "example.com/m.Stack#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 11
+    },
+    {
+      "caller": "example.com/m.Stack#log",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 15
+    },
+    {
+      "caller": "example.com/m.Map",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "main.go",
+      "line": 21
+    },
+    {
+      "caller": "example.com/m.itoa",
+      "callee": "fmt.Sprint",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 26
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Stack#Push",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 30
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Map",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 31
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 32
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Map",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 32
+    }
+  ],
+  "nodes_include": [
+    "example.com/m.Stack#Push",
+    "example.com/m.Stack#log",
+    "example.com/m.Map"
+  ],
+  "notes": "Methods of the generic type Stack[T] are Stack#Push / Stack#log (type arguments dropped) and their bodies' calls are graphed like any method. s.log inside Push has receiver s of declared type *Stack[T]: Stack#log, high. Calls into the scanned generics (s.Push on `var s Stack[int]`, Map with explicit and inferred type arguments) are high: the callee is defined in the scan (tier rule), not medium. f(x) calls a parameter holding a function: callback, unknown. The function literal passed to Map (main$1) calls only the builtin len: no edge; append/make/len are builtins."
+}

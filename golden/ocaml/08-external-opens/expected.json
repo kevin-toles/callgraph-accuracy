@@ -1,0 +1,39 @@
+{
+  "rule": "Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "paths.show_dir",
+      "callee": "Printf.printf",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "paths.ml",
+      "line": 3
+    },
+    {
+      "caller": "paths.join",
+      "callee": "Filename.concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "paths.ml",
+      "line": 7
+    },
+    {
+      "caller": "paths.join",
+      "callee": "Filename.basename",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "paths.ml",
+      "line": 7
+    },
+    {
+      "caller": "paths.quoted",
+      "callee": "Filename.quote",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "paths.ml",
+      "line": 9
+    }
+  ],
+  "notes": "`printf` is not a Stdlib top-level value; the file has one external open (`open Printf`), so it resolves to `Printf.printf`, medium. Inside `join`, `concat` and `basename` are not Stdlib top-level values and resolve to the innermost external local open `Filename`: `Filename.concat`, `Filename.basename`, medium. The `open` declarations are module dependencies, not calls."
+}

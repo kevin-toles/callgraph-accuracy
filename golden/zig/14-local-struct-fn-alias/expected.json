@@ -1,0 +1,7 @@
+{
+  "rule": "A local bound directly to a function literal | Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). | **Lua / Zig**: a local or const alias of a function (`local insert = table.insert`, `const assert = std.debug.assert`) resolves to its target. | Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "KNOWN_GAP: struct { fn g }.g local function aliases are reported as callbacks",
+  "spec_gap": "Zig has no function literals; the idiom `const g = struct { fn g(..) .. {..} }.g;` binds a local to a function declared in an anonymous struct. Is `g` (a) a named nested function `app.outer.g` (callee of `g(v)`, direct, high; caller of `helper(x)`), (b) a const alias of a function that resolves to its target, and if so what is the target's ID given that anonymous-struct members fold into the enclosing function, or (c) a call through a local holding a function (`g`, callback, unknown)? SPEC's named-nested list does not name Zig, and its alias and anonymous-member rules give conflicting answers.",
+  "edges": [],
+  "notes": "The gap says the tool reports `g` as a callback. Under reading (a) the edges would be app.outer \u2192 app.outer.g (direct, high, line 7), app.outer.g \u2192 app.helper (direct, high, line 4), app.run \u2192 app.outer (direct, high, line 15)."
+}

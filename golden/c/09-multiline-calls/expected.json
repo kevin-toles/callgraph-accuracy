@@ -1,0 +1,52 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. **C7 Complete edges.** Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "pipeline",
+      "callee": "combine",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "pipeline.c",
+      "line": 14
+    },
+    {
+      "caller": "pipeline",
+      "callee": "first",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "pipeline.c",
+      "line": 15
+    },
+    {
+      "caller": "pipeline",
+      "callee": "second",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "pipeline.c",
+      "line": 16
+    },
+    {
+      "caller": "pipeline",
+      "callee": "first",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "pipeline.c",
+      "line": 17
+    },
+    {
+      "caller": "pipeline",
+      "callee": "second",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "pipeline.c",
+      "line": 18
+    }
+  ],
+  "nodes_include": [
+    "combine",
+    "first",
+    "second"
+  ],
+  "notes": "C has no method chains, but C7 fixes every edge's line as the line of the callee's name. A call whose arguments span lines 14-17 is reported per callee name; 'second' on line 18 with its argument list '(r)' on line 19 is reported on line 18, where the name is."
+}

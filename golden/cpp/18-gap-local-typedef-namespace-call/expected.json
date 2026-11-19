@@ -1,0 +1,62 @@
+{
+  "rule": "A type alias (`using X = T;`, `typedef T X;`, Zig `const X = a.b.T`) is expanded to its target, so the ID names the real type (`std.map#begin`, not `SafeStringMap#begin`); a declared type resolves through the file's using-directives and using-declarations, including those of headers it includes. **C++**: namespace-qualified with dots: `ns.Class#method`, `ns.func`; `Class::static()` → `Class#static`; template arguments dropped. Free function: its name (with the language's module qualifier where it has one).",
+  "source": "KNOWN_GAP: cpp: function-local typedefs and namespace-member calls (DirectX::XM…) are under-resolved",
+  "edges": [
+    {
+      "caller": "DirectX.XMVectorScale",
+      "callee": "DirectX.XMVectorAdd",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "dxmath.h",
+      "line": 17
+    },
+    {
+      "caller": "scene.step",
+      "callee": "scene.make_counter",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "scene.cpp",
+      "line": 18
+    },
+    {
+      "caller": "scene.step",
+      "callee": "scene.Counter#inc",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "scene.cpp",
+      "line": 19
+    },
+    {
+      "caller": "scene.step",
+      "callee": "DirectX.XMVectorAdd",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "scene.cpp",
+      "line": 20
+    },
+    {
+      "caller": "scene.step",
+      "callee": "DirectX.XMVectorScale",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "scene.cpp",
+      "line": 21
+    },
+    {
+      "caller": "scene.step",
+      "callee": "scene.Counter#get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "scene.cpp",
+      "line": 22
+    }
+  ],
+  "nodes_include": [
+    "DirectX.XMVectorAdd",
+    "DirectX.XMVectorScale",
+    "scene.Counter#inc",
+    "scene.Counter#get",
+    "scene.make_counter"
+  ],
+  "notes": "'typedef Counter C;' is a function-local alias; SPEC expands every type alias to its target, so c (declared C*) names scene.Counter → scene.Counter#inc / #get, high (pointer reaches the pointee). DirectX::XMVectorAdd / XMVectorScale are namespace-member free functions with inline bodies in the scanned header dxmath.h → ns.func form 'DirectX.XMVectorAdd', direct, high, from scene.cpp and from inside the header (C1: one ID). The local 'using Vec = DirectX::XMVECTOR' and the copy-initialisation of r from a call result are not calls; static_cast is a cast."
+}

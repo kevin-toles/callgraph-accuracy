@@ -1,0 +1,7 @@
+{
+  "rule": "Generic/template type arguments are dropped from every ID (`HashSet#<init>`). | Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). | **Zig**: file-qualified: `file.Struct#fn`, `file.fn`; `@import` bindings make `std.x.y` medium.",
+  "source": "SPEC",
+  "spec_gap": "What is the ID of a method of the anonymous struct returned by an in-scan generic type function (`fn Stack(comptime T: type) type { return struct { pub fn push \u2026 } }`): `app.Stack#push` (type arguments dropped, the function standing for the generic type), or does the anonymous struct's member fold into `app.Stack` like an anonymous-class member? Relatedly, is `Stack(u8)` in a type position, and `@This()`, an edge?",
+  "edges": [],
+  "notes": "Decides `s.push(1)` (declared `s: Stack(u8)`): `app.Stack#push` high under the first reading."
+}

@@ -1,0 +1,103 @@
+{
+  "rule": "A top-level binding has one ID, `mod.name`, from its own file and from every importer, per C1. That covers `const`/`let`/`var`/`export const`, a function declaration and a class. A call through it uses that ID everywhere, never the bare name in its own file. | **Function factory.** The initializer is a call of a scanned function that returns a function literal: its arrow body is one, a top-level `return` returns one, or its declared return type is a function type. Examples: `cacheStringFunction(fn)`, `createHook(\u2026)`, an IIFE `(() => (x) => \u2026)()`. Callee `mod.name`, direct, medium. | **No evidence**, as in plain JS `x = f()` with `f` not scanned: callee `mod.name`, callback, unknown. This is a call through a value, under the binding's canonical ID. | Medium, not high: the tool matched a binding, not a function body. | Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "hooks.twice",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "hooks.js",
+      "line": 8
+    },
+    {
+      "caller": "hooks.twice",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "hooks.js",
+      "line": 8
+    },
+    {
+      "caller": "hooks",
+      "callee": "hooks.makeAdder",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "hooks.js",
+      "line": 10
+    },
+    {
+      "caller": "hooks",
+      "callee": "hooks.twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "hooks.js",
+      "line": 11
+    },
+    {
+      "caller": "hooks",
+      "callee": "idgen.makeId",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "hooks.js",
+      "line": 12
+    },
+    {
+      "caller": "hooks.demo",
+      "callee": "hooks.add5",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "hooks.js",
+      "line": 15
+    },
+    {
+      "caller": "hooks.demo",
+      "callee": "hooks.quad",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "hooks.js",
+      "line": 15
+    },
+    {
+      "caller": "hooks.demo",
+      "callee": "hooks.nextId",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "hooks.js",
+      "line": 15
+    },
+    {
+      "caller": "app",
+      "callee": "hooks.add5",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.js",
+      "line": 3
+    },
+    {
+      "caller": "app",
+      "callee": "hooks.quad",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.js",
+      "line": 4
+    },
+    {
+      "caller": "app",
+      "callee": "hooks.nextId",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "app.js",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "hooks.add5",
+    "hooks.quad",
+    "hooks.nextId",
+    "hooks.makeAdder",
+    "hooks.twice",
+    "hooks.demo"
+  ],
+  "notes": "Factory evidence: `add5 = makeAdder(5)` where scanned `makeAdder` has a top-level `return function ...`; `quad = twice(add5)` where scanned `twice`'s arrow body is an arrow. Calls through them: `mod.name`, direct, medium, in the defining file and the importer. No evidence: `nextId = makeId()` with `makeId` from the unscanned package `idgen` -> `hooks.nextId`, callback, unknown, under the canonical ID in both files. `twice` itself is a function-literal binding; its inner arrow is anonymous and folds into `hooks.twice`, so `f(f(x))` is two callback edges on `f` (parameter). `makeId` resolves through the ESM import to `idgen.makeId`, medium. nodes_include lists the bindings the edges reach (C1: module-level bindings that hold a function; `nextId` is a top-level binding with ID `hooks.nextId` reached by edges)."
+}

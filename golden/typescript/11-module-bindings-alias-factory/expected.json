@@ -1,0 +1,152 @@
+{
+  "rule": "A top-level binding has one ID, `mod.name`, from its own file and from every importer, per C1. That covers `const`/`let`/`var`/`export const`, a function declaration and a class. A call through it uses that ID everywhere, never the bare name in its own file. | **Function literal.** The initializer is a function literal: a named function (existing rule). | **Alias.** The initializer, after removing parentheses, `as`, `satisfies` and `!`, is an identifier or member path that names a function (`isArray = Array.isArray`, `render = baseRender as RootRenderFunction`). The call resolves to that function's ID, as Lua/Zig aliases do. | **Function factory.** The initializer is a call of a scanned function that returns a function literal: its arrow body is one, a top-level `return` returns one, or its declared return type is a function type. Examples: `cacheStringFunction(fn)`, `createHook(\u2026)`, an IIFE `(() => (x) => \u2026)()`. Callee `mod.name`, direct, medium. | Medium, not high: the tool matched a binding, not a function body. | Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "fns.memo",
+      "callee": "fn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "fns.ts",
+      "line": 14
+    },
+    {
+      "caller": "fns",
+      "callee": "fns.makeLogger",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "fns.ts",
+      "line": 15
+    },
+    {
+      "caller": "fns",
+      "callee": "fns.memo",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "fns.ts",
+      "line": 16
+    },
+    {
+      "caller": "fns",
+      "callee": "fns.baseRender",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "fns.ts",
+      "line": 16
+    },
+    {
+      "caller": "fns",
+      "callee": "fns.double",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "fns.ts",
+      "line": 16
+    },
+    {
+      "caller": "fns",
+      "callee": "fns.log",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "fns.ts",
+      "line": 18
+    },
+    {
+      "caller": "fns",
+      "callee": "fns.baseRender",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "fns.ts",
+      "line": 18
+    },
+    {
+      "caller": "fns",
+      "callee": "fns.baseRender",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "fns.ts",
+      "line": 18
+    },
+    {
+      "caller": "fns",
+      "callee": "fns.baseRender",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "fns.ts",
+      "line": 18
+    },
+    {
+      "caller": "fns",
+      "callee": "fns.cached",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "fns.ts",
+      "line": 19
+    },
+    {
+      "caller": "use.go",
+      "callee": "fns.makeLogger",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "use.ts",
+      "line": 4
+    },
+    {
+      "caller": "use.go",
+      "callee": "fns.cached",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "use.ts",
+      "line": 5
+    },
+    {
+      "caller": "use.go",
+      "callee": "fns.log",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "use.ts",
+      "line": 6
+    },
+    {
+      "caller": "use.go",
+      "callee": "fns.baseRender",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "use.ts",
+      "line": 6
+    },
+    {
+      "caller": "use.go",
+      "callee": "fns.double",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "use.ts",
+      "line": 6
+    },
+    {
+      "caller": "use.go",
+      "callee": "fns.baseRender",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "use.ts",
+      "line": 6
+    },
+    {
+      "caller": "use.go",
+      "callee": "local",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "use.ts",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "fns.baseRender",
+    "fns.double",
+    "fns.memo",
+    "fns.makeLogger",
+    "fns.log",
+    "fns.cached",
+    "use.go"
+  ],
+  "notes": "Alias: `render = baseRender as RenderFn`, `strict = baseRender!`, `checked = (baseRender) satisfies RenderFn` all reduce to the identifier `baseRender` and resolve to `fns.baseRender` (high: the alias resolves to the scanned definition itself; see JS case 12 for the tier reading). Function literal: `double` (arrow) and `memo` (arrow) are named functions, high. Factory: `log = makeLogger(\"[x]\")` (declared return type is a function type) and `cached = memo(...)` (memo's arrow body is an arrow) -> `fns.log`/`fns.cached`, direct, medium, in both files. Inside memo the inner arrow folds into `fns.memo`, and `fn()` is a callback on the parameter. The top-level arrow `() => render(double(1))` folds into module `fns`. `local` in use.go is a function-scope local bound to a call result: the module-level factory rule covers top-level bindings only, so `local(...)` is the general callback rule (variable name, unknown). Nested `f` in makeLogger makes no calls; `return f` is a reference."
+}

@@ -1,0 +1,39 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Events#Fire",
+      "callee": "check",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Events.cs",
+      "line": 11
+    },
+    {
+      "caller": "App.Events#Fire",
+      "callee": "onDone",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Events.cs",
+      "line": 13
+    },
+    {
+      "caller": "App.Events#Wire",
+      "callee": "App.Events#Fire",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Events.cs",
+      "line": 20
+    },
+    {
+      "caller": "App.Events#Wire",
+      "callee": "handler",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Events.cs",
+      "line": 27
+    }
+  ],
+  "notes": "check and onDone are delegate parameters; handler is a local holding a method group (not a function literal, so not a named nested function): callback, unknown, callee = variable name. `= Handle` is a method reference without a call: no edge. `as`, the cast (long)n, typeof, nameof, sizeof and default(...) are casts / language constructs: no edge. The lambda `x => x > 0` folds into Wire and makes no call."
+}

@@ -1,0 +1,75 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) \u2192 `Parent#<init>`, constructor. Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". An ID is never invented: a medium or high callee that names a member of a scanned module or type (`mod.T#f`, `mod.f`) is defined there, or is inherited from a base outside the scan. **high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition). **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. **low**: a guess \u2014 receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan. **unknown**: a dynamic call (function value, callback, closure, function pointer).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Animal#speak",
+      "callee": "app.Animal#sound",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Animals.scala",
+      "line": 4
+    },
+    {
+      "caller": "app.Dog#<init>",
+      "callee": "app.Animal#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "app/Animals.scala",
+      "line": 9
+    },
+    {
+      "caller": "app.Dog#describe",
+      "callee": "app.Animal#describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Animals.scala",
+      "line": 11
+    },
+    {
+      "caller": "app.Dog#describe",
+      "callee": "app.Animal#speak",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Animals.scala",
+      "line": 12
+    },
+    {
+      "caller": "app.Keeper#visit",
+      "callee": "app.Animal#speak",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Animals.scala",
+      "line": 17
+    },
+    {
+      "caller": "app.Worker#<init>",
+      "callee": "java.lang.Thread#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "app/Animals.scala",
+      "line": 20
+    },
+    {
+      "caller": "app.Worker#go",
+      "callee": "app.Worker#start",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/Animals.scala",
+      "line": 21
+    },
+    {
+      "caller": "app.Worker#run",
+      "callee": ".run",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "app/Animals.scala",
+      "line": 22
+    }
+  ],
+  "nodes_include": [
+    "app.Animal#speak",
+    "app.Animal#<init>"
+  ],
+  "notes": "Scala's `extends Animal(n)` is the superclass constructor call (SPEC super(...) rule); caller is the subclass constructor app.Dog#<init>, line of `Animal`. `this.speak()` and `d.speak()`: speak is defined only on the scanned superclass Animal, so the callee is app.Animal#speak (self rule; for the typed receiver d, C2 forbids the invented ID app.Dog#speak). Worker's superclass Thread is outside the scan: the bare start() is inherited from an external base (medium tier: '`self.m()` inherited from a base outside the scan'), qualified java.lang.Thread as an implicitly imported java.lang name; `super.run()` with the superclass outside the scan is a computed receiver `.run`, low. `extends Thread()` is written with parentheses, so it is a superclass constructor call to java.lang.Thread#<init>, medium. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

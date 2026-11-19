@@ -1,0 +1,36 @@
+{
+  "rule": "**Java / Kotlin / C# / Groovy / Scala**: package/namespace-qualified: `com.x.C#m`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Main#main",
+      "callee": "Helper#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Main.java",
+      "line": 3
+    },
+    {
+      "caller": "Main#main",
+      "callee": "Helper#help",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Main.java",
+      "line": 4
+    },
+    {
+      "caller": "Main#main",
+      "callee": "Main#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Main.java",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "Helper#<init>",
+    "Helper#help",
+    "Main#run"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. Files with no package declaration are in the unnamed package, so there is no qualifier: `Main#main`, not `src.Main#main` or a path-derived prefix (the qualifier comes from the package declaration, not the directory)."
+}

@@ -1,0 +1,7 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) → `Parent#<init>`, constructor. Code outside a method body: the caller is its location. Field/val initializer → `Type#field`; C# property accessor → `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter → `Type#x=`; `static {}` block → `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not.",
+  "source": "SPEC",
+  "spec_gap": "Is OCaml `inherit counter` (line 9, inside `class loud = object ... end`) a superclass constructor call `objs.counter#<init>`, constructor, like `super(...)` / `: base(...)`? If it is, what is its caller: `objs.loud#<init>`, or `objs.loud`? And are `val` field initializers in an OCaml class body (`val mutable n = f ()`) callers `objs.counter#n`, with an `implicit` edge from `objs.counter#<init>`, as the code-outside-a-method rule gives for other languages?",
+  "edges": [],
+  "notes": "`self#incr` in `loud#shout` is defined only on the scanned superclass, so it would be `objs.counter#incr`, method, high (self rule), and `print_endline` is `Stdlib.print_endline`, medium, caller `objs.loud#shout`. The open question is `inherit counter` on line 9, which decides whether the case can list complete edges."
+}

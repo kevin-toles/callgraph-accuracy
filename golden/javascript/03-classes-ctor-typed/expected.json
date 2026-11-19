@@ -1,0 +1,86 @@
+{
+  "rule": "Method: `Type#member`. | Constructor / initializer call: `Type#<init>`. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | Receivers typed by a declaration or `= new Foo()` (decision A) give `Foo#m` (medium). | Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | **Typed receivers (decision A) cover every declaration of the receiver's type**: locals, parameters, fields, and file-scope globals/statics (C, C++, ObjC, Zig, Rust `static`). | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shapes.Rect#scaled",
+      "callee": "shapes.Rect#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shapes.js",
+      "line": 10
+    },
+    {
+      "caller": "shapes.Rect#doubleArea",
+      "callee": "shapes.Rect#scaled",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shapes.js",
+      "line": 13
+    },
+    {
+      "caller": "shapes.Rect#doubleArea",
+      "callee": ".area",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shapes.js",
+      "line": 13
+    },
+    {
+      "caller": "main.total",
+      "callee": "shapes.Rect#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 4
+    },
+    {
+      "caller": "main.total",
+      "callee": "shapes.Rect#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 5
+    },
+    {
+      "caller": "main.total",
+      "callee": "shapes.Rect#doubleArea",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 6
+    },
+    {
+      "caller": "main",
+      "callee": "shapes.Rect#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 9
+    },
+    {
+      "caller": "main",
+      "callee": "shapes.Rect#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 10
+    },
+    {
+      "caller": "main",
+      "callee": "main.total",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 11
+    }
+  ],
+  "nodes_include": [
+    "shapes.Rect#<init>",
+    "shapes.Rect#area",
+    "shapes.Rect#scaled",
+    "shapes.Rect#doubleArea",
+    "main.total"
+  ],
+  "notes": "Typed-receiver confidence: the JS/TS note says decision A gives `Foo#m` '(medium)', but decision A itself says 'high if defined in the scan, else medium' and the high tier is 'defined in the scanned source'; the class is defined in src/, so high. IDs carry the module qualifier (`mod.Foo#m`), per the module rule and C1. `r` and the file-scope `big` are both bound by `= new Rect(...)` (decision A; 2026-10-29 covers file-scope globals). `this.scaled(2).area()` (line 13): `.area` is on a call result, a computed receiver -> `.area`, low; JS has no declared return type to apply. Constructor is explicit so `Rect#<init>` is defined (high). `Rect` is referenced from its own file (line 10) and the importer (lines 4, 9) with one ID (C1)."
+}

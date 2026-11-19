@@ -1,0 +1,7 @@
+{
+  "rule": "a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | **Rust constructors type their binding**: `let x = T { .. }` and `let x = T::new(..)` / `T::default()` / `T::with_capacity(..)` give `x` type T",
+  "source": "SPEC",
+  "spec_gap": "Does a Zig local without a type annotation get its type from its initializer \u2014 `const a = Point.init(1)` (an in-scan fn whose declared return type is Point) or `const b = Point{ .x = 2 }` (a struct literal)? Decision A lists receivers typed 'by a declaration \u2026 or by `= new T(...)`', and only Rust has a ruling that constructors type their binding. If yes, `a.len()`/`b.len()` are `app.Point#len` high; if no, they are `a.len`/`b.len` low. This is the dominant Zig idiom (`var list = std.ArrayList(u8).init(a)`).",
+  "edges": [],
+  "notes": "The edges app.run \u2192 app.Point#init (method, high, line 14) are certain under either reading."
+}

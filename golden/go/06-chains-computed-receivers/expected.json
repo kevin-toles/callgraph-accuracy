@@ -1,0 +1,47 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. | Parameterless members are typed receivers (decision A): a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\".",
+  "source": "ADVERSARIAL: chain typing via parameterless methods vs a call result with arguments",
+  "edges": [
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Builder#Start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 23
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Builder#Next",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 24
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Builder#Done",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 25
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Builder#Add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 26
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Builder#Add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 26
+    }
+  ],
+  "notes": "Each chain call is on the line of its method name (Start, Next, Done on three lines). Next() and Done() have receivers that are calls of parameterless methods with declared return type *Builder (in the scan), so they name Builder (Decisions 2026-11-09 parameterless-member rule). In b.Add(1).Add(2) the second receiver is a call result of a method WITH a parameter; the parameterless-member rule does not cover it, so by the general ID rule it is a computed receiver: `.Add`, low (C5: not promoted)."
+}

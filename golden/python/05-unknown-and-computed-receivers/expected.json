@@ -1,0 +1,79 @@
+{
+  "rule": "Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` → `client.get`; `a.b.c()` → `b.c`). Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` — a leading dot means \"receiver unknown\". Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). An enum constant `E.C` has type `E`. A type alias (`using X = T;`, `typedef T X;`, Zig `const X = a.b.T`) is expanded to its target, so the ID names the real type (`std.map#begin`, not `SafeStringMap#begin`); a declared type resolves through the file's using-directives and using-declarations, including those of headers it includes. **low**: a guess — receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shop.client.Service#fetch",
+      "callee": "client.get",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/client.py",
+      "line": 14
+    },
+    {
+      "caller": "shop.client.Service#fetch",
+      "callee": "session.close",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/client.py",
+      "line": 15
+    },
+    {
+      "caller": "shop.client.Service#fetch",
+      "callee": ".split",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/client.py",
+      "line": 16
+    },
+    {
+      "caller": "shop.client.Service#fetch",
+      "callee": ".strip",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/client.py",
+      "line": 17
+    },
+    {
+      "caller": "shop.client.Service#fetch",
+      "callee": "shop.client.make_widget",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shop/client.py",
+      "line": 18
+    },
+    {
+      "caller": "shop.client.Service#fetch",
+      "callee": ".ping",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/client.py",
+      "line": 18
+    },
+    {
+      "caller": "shop.client.make_widget",
+      "callee": "shop.client.Widget#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shop/client.py",
+      "line": 22
+    },
+    {
+      "caller": "shop.client.local_typed",
+      "callee": "shop.client.Widget#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shop/client.py",
+      "line": 26
+    },
+    {
+      "caller": "shop.client.local_typed",
+      "callee": "w.ping",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/client.py",
+      "line": 27
+    }
+  ],
+  "notes": "`self.client.get()` -> `client.get` (last receiver segment, the SPEC example). `req.session.close()` -> `session.close`. A string literal receiver (16), an index receiver `parts[0]` (17) and a call-result receiver `make_widget()` (18) are computed -> `.split`, `.strip`, `.ping`, low. `w = Widget(); w.ping()` stays `w.ping`, low: decision A is scoped to \"all statically typed languages and typed PHP/Groovy declarations\" and the Python note grants no `= Widget()` typing (contrast the JS note, which grants it explicitly)."
+}

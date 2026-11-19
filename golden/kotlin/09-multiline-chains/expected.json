@@ -1,0 +1,63 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. ... **Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method ... with a declared type ... names that type ... Call on a computed receiver (call result, ...): `.member`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.chain.Pipeline#run",
+      "callee": "com.acme.chain.Pipeline#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/chain/Pipeline.kt",
+      "line": 14
+    },
+    {
+      "caller": "com.acme.chain.Pipeline#run",
+      "callee": "com.acme.chain.Pipeline#filter",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/chain/Pipeline.kt",
+      "line": 15
+    },
+    {
+      "caller": "com.acme.chain.Pipeline#run",
+      "callee": "com.acme.chain.Pipeline#filter",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/chain/Pipeline.kt",
+      "line": 16
+    },
+    {
+      "caller": "com.acme.chain.Pipeline#run",
+      "callee": "com.acme.chain.Pipeline#done",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/chain/Pipeline.kt",
+      "line": 17
+    },
+    {
+      "caller": "com.acme.chain.Pipeline#run",
+      "callee": "com.acme.chain.Pipeline#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/chain/Pipeline.kt",
+      "line": 18
+    },
+    {
+      "caller": "com.acme.chain.Pipeline#run",
+      "callee": "com.acme.chain.Pipeline#limit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/chain/Pipeline.kt",
+      "line": 19
+    },
+    {
+      "caller": "com.acme.chain.Pipeline#run",
+      "callee": "com.acme.chain.Pipeline#done",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/chain/Pipeline.kt",
+      "line": 20
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. start()/filter() are parameterless with declared return type Pipeline, so the next link is typed Pipeline. limit(n: Int) has a parameter, so `.done()` on its result is a computed receiver: `.done`, low (still emitted, C4). Each edge is on its own method-name line."
+}

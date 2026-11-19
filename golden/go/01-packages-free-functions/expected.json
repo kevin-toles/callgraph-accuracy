@@ -1,0 +1,75 @@
+{
+  "rule": "Go: package-path-qualified: `example.com/m/pkg.Type#Method`, `pkg.Func`; closures `pkg.F$1`. | Free function: its name (with the language's module qualifier where it has one). | high: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition). medium: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.greet",
+      "callee": "fmt.Sprintf",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 11
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.greet",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 15
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 16
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 17
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "path/filepath.Base",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 17
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 18
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m/util.Shout",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 18
+    },
+    {
+      "caller": "example.com/m/util.Shout",
+      "callee": "strings.ToUpper",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "util/util.go",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "example.com/m.greet",
+    "example.com/m/util.Shout"
+  ],
+  "notes": "The root package of module example.com/m has path example.com/m, so its functions are example.com/m.f (Go note: package-path-qualified). The aliased import u \"example.com/m/util\" resolves to the defining package (C1: every reference uses the definition's one ID). Standard-library packages are qualified by their import path (path/filepath.Base), medium because they are not defined in the scan. Package functions use call_type direct. The import declarations are not calls (C3: module dependency)."
+}

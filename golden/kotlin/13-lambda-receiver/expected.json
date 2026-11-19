@@ -1,0 +1,47 @@
+{
+  "rule": "Typed receivers (decision A ...): a receiver whose type is given by a declaration ... gives `T#m` ... `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. ... Call through a parameter ... holding a function ... \u2192 callee is the variable's name, `call_type` callback, confidence unknown. ... Decisions (2026-10-29): each picks what the code does at runtime",
+  "source": "KNOWN_GAP: bare calls on implicit lambda receivers (apply {}, buildMap {}) are attributed to the outer receiver",
+  "edges": [
+    {
+      "caller": "com.acme.dsl.Config#edit",
+      "callee": "block",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "com/acme/dsl/Dsl.kt",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.dsl.App#build",
+      "callee": "com.acme.dsl.Config#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/dsl/Dsl.kt",
+      "line": 18
+    },
+    {
+      "caller": "com.acme.dsl.App#build",
+      "callee": "com.acme.dsl.Config#edit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/dsl/Dsl.kt",
+      "line": 19
+    },
+    {
+      "caller": "com.acme.dsl.App#build",
+      "callee": "com.acme.dsl.Config#setName",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/dsl/Dsl.kt",
+      "line": 20
+    },
+    {
+      "caller": "com.acme.dsl.App#build",
+      "callee": "com.acme.dsl.App#setName",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/dsl/Dsl.kt",
+      "line": 22
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. The lambda passed to `cfg.edit { .. }` has declared receiver type `Config.() -> Unit`. Its innermost implicit receiver is a Config, so at runtime the bare `setName(\"svc\")` (line 20) runs Config#setName, not App#setName, though App also defines setName. That is the gap: the tool names the outer receiver. The lambda folds into App#build, so the caller is App#build. Line 22 is outside the lambda: App#setName. `block()` invokes a function-typed parameter: `block`, callback, unknown. A scanned higher-order member stands in for apply/buildMap here because SPEC does not decide IDs for Kotlin standard-library functions (see case 16)."
+}

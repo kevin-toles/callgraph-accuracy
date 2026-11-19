@@ -1,0 +1,39 @@
+{
+  "rule": "**high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition). **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. **low**: a guess — receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Sync#run",
+      "callee": "JSON#generate",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "lib/sync.rb",
+      "line": 6
+    },
+    {
+      "caller": "Sync#run",
+      "callee": "Logger#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "lib/sync.rb",
+      "line": 7
+    },
+    {
+      "caller": "Sync#run",
+      "callee": "remote.push",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/sync.rb",
+      "line": 8
+    },
+    {
+      "caller": "Sync#run",
+      "callee": "Sync#finish",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/sync.rb",
+      "line": 9
+    }
+  ],
+  "notes": "high: scanned `finish`. medium: statically named external types (`JSON.generate` -> `JSON#generate`, `Logger.new` -> `Logger#<init>` constructor); constants are type names in Ruby (`Outer.Inner#method`). low: parameter receiver `remote.push`. The unknown tier for Ruby is covered by case 13 (a proc called through a parameter)."
+}

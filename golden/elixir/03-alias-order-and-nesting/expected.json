@@ -1,0 +1,69 @@
+{
+  "rule": "Elixir: ... aliases (lexical, in source order; `require M, as: R`; a nested `defmodule` aliases itself in its parent) resolve to the full module; remote calls `Mod.fun` medium unless defined in the scan",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Store.early",
+      "callee": "Cache.get",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/store.ex",
+      "line": 2
+    },
+    {
+      "caller": "MyApp.Store.Cache.get",
+      "callee": "Map.get",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/store.ex",
+      "line": 5
+    },
+    {
+      "caller": "MyApp.Store.late",
+      "callee": "MyApp.Store.Cache.get",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/store.ex",
+      "line": 8
+    },
+    {
+      "caller": "MyApp.Store.before_alias",
+      "callee": "U.slug",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/store.ex",
+      "line": 10
+    },
+    {
+      "caller": "MyApp.Store.after_alias",
+      "callee": "MyApp.Util.slug",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/store.ex",
+      "line": 16
+    },
+    {
+      "caller": "MyApp.Store.after_alias",
+      "callee": "MyApp.Macros.key",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/store.ex",
+      "line": 16
+    },
+    {
+      "caller": "MyApp.Store.self_call",
+      "callee": "MyApp.Store.late",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/store.ex",
+      "line": 19
+    }
+  ],
+  "nodes_include": [
+    "MyApp.Store.Cache.get",
+    "MyApp.Util.slug",
+    "MyApp.Macros.key",
+    "MyApp.Store.late"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. Aliases apply in source order. Line 2 precedes the nested `defmodule Cache` (line 4), so `Cache` there is the top-level module `Cache`, not in the scan: `Cache.get`, medium. After line 4 the nested module aliases itself: line 8 is `MyApp.Store.Cache.get`, high. Line 10 precedes `alias MyApp.Util, as: U` (line 12): `U.slug`, medium (no module `U` is scanned). Line 16 uses both aliases, including `require MyApp.Macros, as: M` for the macro `key` (defined by defmacro in the scan: high). `__MODULE__.late` names the enclosing module. `%{}` is data construction."
+}

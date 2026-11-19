@@ -1,0 +1,7 @@
+{
+  "rule": "**Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` — left as a `metadata.insert` low guess it is wrong. Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "spec_gap": "Is the Groovy property read `conf.store`, which at runtime invokes the declared getter `Conf.getStore()`, a call edge (`core.Conf#getStore`, method, high, on the line of `store`) or field access without a call (no edge)? Decisions 2026-11-09 calls a getter receiver 'a call of … a property getter', while the Objective-C ruling says dot-syntax property access is not a call. The same question applies to properties declared without a modifier (`Store store`), whose generated getters also run on every `obj.store` read.",
+  "edges": [],
+  "notes": "The receiver typing is decided (`.save()` is core.Store#save, high, because the receiver is 'a property getter' with a declared type); only whether the property read itself is an edge is not."
+}

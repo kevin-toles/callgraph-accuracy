@@ -1,0 +1,44 @@
+{
+  "rule": "JS/TS function types through a type alias. Function-type evidence covers a type alias whose definition is a function type, generic or not. The alias can be declared in the file, or imported and re-exported.",
+  "source": "SPEC Decisions (2026-11-10, amendment): vue runtime-test render",
+  "edges": [
+    {
+      "caller": "runtime-test",
+      "callee": "runtime-core/renderer.createRenderer",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "runtime-test/index.ts",
+      "line": 4
+    },
+    {
+      "caller": "runtime-test.go",
+      "callee": "runtime-test.render",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "runtime-test/index.ts",
+      "line": 9
+    },
+    {
+      "caller": "runtime-test.go",
+      "callee": "runtime-test.half",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "runtime-test/index.ts",
+      "line": 10
+    },
+    {
+      "caller": "runtime-test.go",
+      "callee": "runtime-test.boxed",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "runtime-test/index.ts",
+      "line": 11
+    }
+  ],
+  "nodes_include": [
+    "runtime-core/renderer.createRenderer",
+    "runtime-test.render",
+    "runtime-test.half"
+  ],
+  "notes": "baseRender is destructured from a call, so the Alias rule does not resolve render; the cast's type decides. RootRenderFunction<string> is a generic alias of a function type, imported through the re-export in runtime-core/index.ts: function-type evidence, mod.render direct medium. Plain is a local alias of a function type (half). Box aliases an object type: no evidence, callback unknown. createRenderer resolves through the re-export to its scanned definition, high. Index files are named by their directory."
+}

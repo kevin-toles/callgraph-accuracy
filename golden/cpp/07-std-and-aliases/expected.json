@@ -1,0 +1,106 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type alias (`using X = T;`, `typedef T X;`, Zig `const X = a.b.T`) is expanded to its target, so the ID names the real type (`std.map#begin`, not `SafeStringMap#begin`); a declared type resolves through the file's using-directives and using-declarations, including those of headers it includes. A pointer, reference or smart pointer whose `->`/`.` reaches the pointee names the pointee: C++ `unique_ptr<T>`/`shared_ptr<T>`/`T*`, Rust `Box<T>`/`Rc<T>`/`Arc<T>`/`&T` → `T#m`, unless the wrapper itself defines `m` (`p.clone()` on an `Arc` is `Arc#clone`). A container is its own type: `Option<T>#unwrap`, `Vec#push`. **Typing reaches only declarations in the scan**: decision A and the parameterless-member rule use declared types written in the scanned source (including vendored code). A receiver whose type is only knowable from a library's signatures outside the scan (`project.tasks.named`, `entrySet().removeIf` on a JDK/Gradle type) stays a low guess, and that is correct. **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.tally",
+      "callee": "std.vector#push_back",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "store.cpp",
+      "line": 10
+    },
+    {
+      "caller": "app.tally",
+      "callee": "app.Item#value",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "store.cpp",
+      "line": 10
+    },
+    {
+      "caller": "app.tally",
+      "callee": "std.sort",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "store.cpp",
+      "line": 11
+    },
+    {
+      "caller": "app.tally",
+      "callee": "std.vector#begin",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "store.cpp",
+      "line": 11
+    },
+    {
+      "caller": "app.tally",
+      "callee": "std.vector#end",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "store.cpp",
+      "line": 11
+    },
+    {
+      "caller": "app.tally",
+      "callee": "std.vector#clear",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "store.cpp",
+      "line": 12
+    },
+    {
+      "caller": "app.tally",
+      "callee": "std.make_unique",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "store.cpp",
+      "line": 13
+    },
+    {
+      "caller": "app.tally",
+      "callee": "app.Item#value",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "store.cpp",
+      "line": 14
+    },
+    {
+      "caller": "app.tally",
+      "callee": "std.unique_ptr#get",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "store.cpp",
+      "line": 15
+    },
+    {
+      "caller": "app.tally",
+      "callee": ".value",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "store.cpp",
+      "line": 15
+    },
+    {
+      "caller": "app.tally",
+      "callee": "std.unique_ptr#reset",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "store.cpp",
+      "line": 16
+    },
+    {
+      "caller": "app.tally",
+      "callee": "std.vector#size",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "store.cpp",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "app.Item#value"
+  ],
+  "notes": "items is ItemList&, an alias (using, in the included header) for std::vector<Item>: expanded → std.vector#clear, not ItemList#clear. e is Entry*, a typedef of app::Item → app.Item#value, high. owned is declared std::unique_ptr<Item>: '->value()' reaches the pointee → app.Item#value; '.get()' / '.reset()' are the wrapper's own members → std.unique_ptr#get / #reset, medium. owned.get()->value(): the receiver's type is known only from the library signature of unique_ptr::get, outside the scan → stays a computed-receiver low guess '.value' (Decisions 2026-11-09, typing reaches only declarations in the scan). std::make_unique<Item>(3) is a call of the external template std.make_unique (template argument dropped); the Item constructor it runs is not written, so no Item#<init> edge. The copy-initialisation of owned from the make_unique result is not a call. static_cast is a cast."
+}

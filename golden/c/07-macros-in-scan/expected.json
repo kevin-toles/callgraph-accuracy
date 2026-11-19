@@ -1,0 +1,61 @@
+{
+  "rule": "`macro`: a macro invocation (C/C++/ObjC function-like macros, Rust `name!`). Calls written inside macro arguments are separate ordinary edges. **C / Objective-C**: function-like macros → call_type macro (high if `#define`d in the scan). C functions bare;",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "compute",
+      "callee": "SQUARE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "mathx.c",
+      "line": 10
+    },
+    {
+      "caller": "compute",
+      "callee": "base",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "mathx.c",
+      "line": 10
+    },
+    {
+      "caller": "compute",
+      "callee": "MAX",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "mathx.c",
+      "line": 11
+    },
+    {
+      "caller": "compute",
+      "callee": "TWICE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "mathx.c",
+      "line": 12
+    },
+    {
+      "caller": "compute",
+      "callee": "base",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "mathx.c",
+      "line": 12
+    },
+    {
+      "caller": "compute",
+      "callee": "SQUARE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "mathx.c",
+      "line": 13
+    }
+  ],
+  "nodes_include": [
+    "SQUARE",
+    "MAX",
+    "TWICE",
+    "base"
+  ],
+  "notes": "SQUARE and MAX are #defined in the scanned header, TWICE in mathx.c: macro, high. base(v) and base(s) are written inside macro arguments, so they are separate ordinary edges (one per written call, even though SQUARE's expansion evaluates its argument twice). MAX's second argument starts on line 12, so TWICE and the second base are on line 12 (C7: line of the callee's name). LIMIT is an object-like macro: not a call. C1: a high edge's callee is in nodes, so the macro definitions are listed."
+}

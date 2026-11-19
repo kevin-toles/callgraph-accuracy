@@ -1,0 +1,68 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) -> callee is the variable's name, `call_type` callback, confidence unknown. | Not calls: passing a method reference (`x::m`, `self.m` without call), ... field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "events#dispatch",
+      "callee": "h",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.lua",
+      "line": 9
+    },
+    {
+      "caller": "events#dispatch",
+      "callee": "handler",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.lua",
+      "line": 10
+    },
+    {
+      "caller": "events#make",
+      "callee": "events#factory",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "events.lua",
+      "line": 14
+    },
+    {
+      "caller": "events#make",
+      "callee": "fn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.lua",
+      "line": 15
+    },
+    {
+      "caller": "events#wire",
+      "callee": "table#sort",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "events.lua",
+      "line": 23
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "events#dispatch",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 2
+    }
+  ],
+  "nodes_include": [
+    "events#dispatch",
+    "events#factory",
+    "events#make"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. `handler` is a parameter; `h` is a local holding `handler or default_handler` (an expression, not an alias of one function, so the alias decision does not apply); `fn` is a local holding a call result. All three are calls through values: callee = variable name, callback, unknown. Passing `E.compare` to table.sort, reading it into `ref`, storing it in a table constructor, `#list`, `t.n`, and passing `print` as an argument are references/field access/operators, not calls. `E` is the returned table, so functions are `events#...`."
+}

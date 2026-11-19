@@ -1,0 +1,100 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type -> `Type#m`. | Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. | Call on a computed receiver (call result, ...): `.member`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "query#new",
+      "callee": "_G#setmetatable",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "query.lua",
+      "line": 4
+    },
+    {
+      "caller": "query#where",
+      "callee": "table#insert",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "query.lua",
+      "line": 8
+    },
+    {
+      "caller": "query#build",
+      "callee": "query#validate",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "query.lua",
+      "line": 13
+    },
+    {
+      "caller": "query#build",
+      "callee": "table#concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "query.lua",
+      "line": 14
+    },
+    {
+      "caller": "query#example",
+      "callee": "query#new",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "query.lua",
+      "line": 22
+    },
+    {
+      "caller": "query#example",
+      "callee": ".where",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "query.lua",
+      "line": 23
+    },
+    {
+      "caller": "query#example",
+      "callee": ".where",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "query.lua",
+      "line": 24
+    },
+    {
+      "caller": "query#example",
+      "callee": ".build",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "query.lua",
+      "line": 25
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "_G#print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "query#example",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 2
+    }
+  ],
+  "nodes_include": [
+    "query#validate",
+    "query#new",
+    "query#example"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. `self:validate()` in `function Q:build` names the enclosing table's member: `query#validate`, high. In the chain starting on line 22 each `:where`/`:build` is called on the previous call's result, a computed receiver, so `.where` / `.build`, low (Lua has no declared return types to type the result), each on its own line 23/24/25. `self.parts` and `#self.parts` are field access/operator."
+}

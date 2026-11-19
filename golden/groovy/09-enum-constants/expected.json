@@ -1,0 +1,43 @@
+{
+  "rule": "Java enum constants: each constant declaration is a call from `Enum#<clinit>` to `Enum#<init>`, constructor (high when the enum is in the scan), on the constant's line. Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). An enum constant `E.C` has type `E`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "core.Color#<clinit>",
+      "callee": "core.Color#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "core/Color.groovy",
+      "line": 4
+    },
+    {
+      "caller": "core.Color#<clinit>",
+      "callee": "core.Color#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "core/Color.groovy",
+      "line": 5
+    },
+    {
+      "caller": "core.Color#hex",
+      "callee": "java.lang.String#toLowerCase",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "core/Color.groovy",
+      "line": 14
+    },
+    {
+      "caller": "core.Painter#paint",
+      "callee": "core.Color#hex",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Color.groovy",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "core.Color#<init>",
+    "core.Color#hex"
+  ],
+  "notes": "A Groovy enum compiles to a Java enum (a java.lang.Enum subclass whose static initializer constructs each constant), so the 'Java enum constants' rule applies by runtime semantics: one core.Color#<clinit> → core.Color#<init> constructor edge per constant, on the constant's line, high. `Color.RED` has type Color, so .hex() is core.Color#hex. code is a field declared String: java.lang.String#toLowerCase, medium. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

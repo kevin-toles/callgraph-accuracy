@@ -1,0 +1,44 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) ... A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.util.title",
+      "callee": "com.acme.util.slug",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "com/acme/util/Text.kt",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.app.Main#go",
+      "callee": "com.acme.util.slug",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "com/acme/app/Main.kt",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.app.Main#go",
+      "callee": "com.acme.util.title",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "com/acme/app/Main.kt",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.app.Main#go",
+      "callee": "com.acme.util.Formatter#format",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/app/Main.kt",
+      "line": 11
+    }
+  ],
+  "nodes_include": [
+    "com.acme.util.slug",
+    "com.acme.util.title",
+    "com.acme.util.Formatter#format"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. `slug` is called from its own file and through `import com.acme.util.slug`: one ID. `heading(a)` calls `title` through the alias import `import com.acme.util.title as heading`: the callee is the definition's ID `com.acme.util.title`, never `heading` or `com.acme.app.heading` (C1: alias). Formatter is a plain (non-`fun`) interface with two members; `f.format(b)` is a typed call to a body-less member of a scanned type: high and in nodes."
+}

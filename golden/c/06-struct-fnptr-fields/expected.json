@@ -1,0 +1,39 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown. **unknown**: a dynamic call (function value, callback, closure, function pointer). Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "device_cycle",
+      "callee": "open",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "device.c",
+      "line": 25
+    },
+    {
+      "caller": "device_cycle",
+      "callee": "close",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "device.c",
+      "line": 26
+    },
+    {
+      "caller": "device_cycle",
+      "callee": "close",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "device.c",
+      "line": 27
+    },
+    {
+      "caller": "device_cycle",
+      "callee": "open",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "device.c",
+      "line": 28
+    }
+  ],
+  "notes": "open/close are struct members holding function pointers, i.e. 'stored property holding a function': callee is the member's name, callback, unknown — whether reached through a pointer chain (dev->ops->open), a by-value parameter (local.close) or a file-scope global (null_ops.open). The designated initializers '.open = null_open' only store function references: not calls. '(void)id' is a cast. The member declarations on lines 2-3 are declarations."
+}

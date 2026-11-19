@@ -1,0 +1,71 @@
+{
+  "rule": "Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | **low**: a guess \u2014 receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan. | **C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. | `this.x` assigned a value is a callback.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "svc.Service#fetch",
+      "callee": "client.get",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "svc.js",
+      "line": 7
+    },
+    {
+      "caller": "svc.Service#fetch",
+      "callee": "policy.apply",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "svc.js",
+      "line": 8
+    },
+    {
+      "caller": "svc.Service#fetch",
+      "callee": ".render",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "svc.js",
+      "line": 9
+    },
+    {
+      "caller": "svc.Service#later",
+      "callee": "makeThing",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "svc.js",
+      "line": 12
+    },
+    {
+      "caller": "svc.Service#later",
+      "callee": ".start",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "svc.js",
+      "line": 12
+    },
+    {
+      "caller": "svc.untyped",
+      "callee": "conn.open",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "svc.js",
+      "line": 17
+    },
+    {
+      "caller": "svc.untyped",
+      "callee": "notDefinedAnywhere",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "svc.js",
+      "line": 18
+    },
+    {
+      "caller": "svc.untyped",
+      "callee": ".toUpperCase",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "svc.js",
+      "line": 19
+    }
+  ],
+  "notes": "`this.client.get()` -> `client.get` (the SPEC's own example: last receiver segment); `this.opts.retry.policy.apply()` -> `policy.apply`. `res.data.items[0].render()`: the receiver ends in an index -> computed `.render`. `makeThing()` / `notDefinedAnywhere()` are bare names not found in the scan -> low guesses that must still be emitted (C4). `makeThing().start()` and `\"abc\".toUpperCase()` have call-result / literal receivers -> `.start`, `.toUpperCase`. The '`this.x` assigned a value is a callback' rule covers calling `this.client` itself, not calling a member of it; `this.client` holds an untyped parameter, so its type is unknown."
+}

@@ -1,0 +1,71 @@
+{
+  "rule": "Nested types are dotted: `Outer.Inner#m`. ... a bare call to a member of the enclosing type \u2192 `Type#m`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer.Inner#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.java",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer.Inner#walk",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.java",
+      "line": 6
+    },
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer.Leaf#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.java",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer.Leaf#mark",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.java",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer.Leaf#count",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.java",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.tree.Outer.Inner#walk",
+      "callee": "com.acme.tree.Outer#note",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.java",
+      "line": 17
+    },
+    {
+      "caller": "com.acme.tree.Outer.Inner#walk",
+      "callee": "com.acme.tree.Outer.Inner.Deep#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.java",
+      "line": 18
+    },
+    {
+      "caller": "com.acme.tree.Outer.Inner#walk",
+      "callee": "com.acme.tree.Outer.Inner.Deep#dive",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.java",
+      "line": 19
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. Inner, Leaf and Deep have no written constructor; the constructor calls are still high because the class is defined in the scan (SPEC: Java enum constants are high 'when the enum is in the scan' with no constructor written; the implicit default constructor is defined by the scanned class declaration). `note()` inside Inner is a bare call to a member of an enclosing type (Outer), so Outer#note. `Outer.Leaf` and `Leaf` name the same nested type."
+}

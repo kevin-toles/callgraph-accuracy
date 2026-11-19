@@ -1,0 +1,47 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Events#fire",
+      "callee": "cb",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "App/Events.php",
+      "line": 11
+    },
+    {
+      "caller": "App.Events#fire",
+      "callee": "handler",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "App/Events.php",
+      "line": 12
+    },
+    {
+      "caller": "App.Events#fire",
+      "callee": "onDone",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "App/Events.php",
+      "line": 13
+    },
+    {
+      "caller": "App.Events#fire",
+      "callee": "App.Events#factory",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Events.php",
+      "line": 14
+    },
+    {
+      "caller": "App.Events#fire",
+      "callee": "fn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "App/Events.php",
+      "line": 15
+    }
+  ],
+  "notes": "Parameter $cb, stored properties $handler/$onDone and the local $fn (bound to a call result, not a function literal, so not a named nested function) hold functions \u2192 callee is the variable's name without the `$` sigil (as in SPEC's `$f = function` \u2192 `outer.f`), callback, unknown. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

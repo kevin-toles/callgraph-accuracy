@@ -1,0 +1,123 @@
+{
+  "rule": "Typed call results (SPEC 2026-11-10, golden corpus), let-bound call results and optional chaining (SPEC Decisions 2026-11-12): a receiver that is a call of a scanned function or method with a declared return type names that type (make().run(), svc.with(1).run()); a local bound to such a call takes the same type, also after it is assigned again, since its static type is fixed at its declaration; ?. types through as . does. A generic return (any<T>(): T, called with a type argument) leaves the call a low guess.",
+  "source": "SPEC Decisions 2026-11-12 (user rulings: let-bound call results, optional chaining)",
+  "edges": [
+    {
+      "caller": "a.make",
+      "callee": "a.Svc#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 5
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.Svc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 9
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.make",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 9
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.make",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 10
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.Svc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 11
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.Svc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 12
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.maybe",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 12
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.Svc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 13
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.Svc#with",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 13
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.any",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 14
+    },
+    {
+      "caller": "a.use",
+      "callee": "g.run",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "a.ts",
+      "line": 15
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.make",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 16
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.Svc#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 17
+    },
+    {
+      "caller": "a.use",
+      "callee": "a.Svc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "a.ts",
+      "line": 18
+    }
+  ],
+  "nodes_include": [
+    "a.Svc#run",
+    "a.Svc#with"
+  ],
+  "notes": "Rulings of 2026-11-12."
+}

@@ -1,0 +1,52 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | **PHP**: namespace-qualified with dots: `App.Svc#run`; `$this->m()` \u2192 `App.Svc#m`; `Cls::m()` \u2192 resolved class `#m`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Animal#describe",
+      "callee": "App.Animal#name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Animal.php",
+      "line": 8
+    },
+    {
+      "caller": "App.Animal#describe",
+      "callee": "App.Animal#sound",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Animal.php",
+      "line": 8
+    },
+    {
+      "caller": "App.Dog#speak",
+      "callee": "App.Animal#describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Dog.php",
+      "line": 13
+    },
+    {
+      "caller": "App.Dog#speak",
+      "callee": "App.Dog#sound",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Dog.php",
+      "line": 14
+    },
+    {
+      "caller": "App.Dog#speak",
+      "callee": "App.Animal#name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Dog.php",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "App.Animal#sound",
+    "App.Animal#describe",
+    "App.Animal#name"
+  ],
+  "notes": "describe is defined only on the scanned superclass \u2192 App.Animal#describe. Dog overrides sound \u2192 App.Dog#sound. Inside Animal, $this->sound() names the abstract (body-less) App.Animal#sound, high (Decision 2026-11-09). parent::name() with the parent in the scan resolves to App.Animal#name. String concatenation `.` is not a call. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

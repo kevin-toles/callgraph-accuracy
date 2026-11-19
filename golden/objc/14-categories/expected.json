@@ -1,0 +1,52 @@
+{
+  "rule": "C functions bare; ObjC methods `Class#selector` with keyword colons (`doX:withY:`); `[obj m]` \u2192 `obj.m`. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Widget#draw",
+      "callee": "Widget#highlight",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Widget.m",
+      "line": 13
+    },
+    {
+      "caller": "Widget#highlight",
+      "callee": "Widget#draw",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Widget.m",
+      "line": 19
+    },
+    {
+      "caller": "NSString#shout",
+      "callee": "NSString#uppercaseString",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Widget.m",
+      "line": 29
+    },
+    {
+      "caller": "paint",
+      "callee": "Widget#highlight",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Widget.m",
+      "line": 34
+    },
+    {
+      "caller": "paint",
+      "callee": "NSString#shout",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Widget.m",
+      "line": 35
+    }
+  ],
+  "nodes_include": [
+    "Widget#highlight",
+    "Widget#draw",
+    "NSString#shout"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. A category adds methods to the class it names; the ID form is `Class#selector`, and the category name (Extras, Shout) is not a class, so category methods are `Widget#highlight` and `NSString#shout` (the definition is scanned \u2192 high when called on a receiver typed NSString). Inside the NSString category, `[self uppercaseString]` is defined on NSString outside the scan \u2192 `NSString#uppercaseString` medium."
+}

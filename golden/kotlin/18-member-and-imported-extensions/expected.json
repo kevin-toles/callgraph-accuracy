@@ -1,0 +1,68 @@
+{
+  "rule": "A member extension (fun Modifier.weight declared in RowScope) called on its receiver type inside a lambda whose receiver is the declaring scope, or in a class that declares or inherits it, is that scope's member extension, innermost first, never an invented Receiver#ext (C2); with the receiver's type undetermined, the enclosing class's member extension of that name applies when no scanned type declares a member of that name. An explicitly imported external extension (import ...psiUtil.leaves) called on a receiver is the imported function.",
+  "source": "h-mosaic v15 and s-ktlint v11 re-reviews (2026-11-12): mosaic RowColumnTest/BoxTest Modifier.weight/align, ktlint GitHookCliktCommand toUniqueId, rules' leaves/applyIf",
+  "edges": [
+    {
+      "caller": "com.acme.ui.screen",
+      "callee": "com.acme.ui.Row",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "ui/Layout.kt",
+      "line": 25
+    },
+    {
+      "caller": "com.acme.ui.screen",
+      "callee": "com.acme.ui.RowScope#weight",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "ui/Layout.kt",
+      "line": 26
+    },
+    {
+      "caller": "com.acme.ui.screen",
+      "callee": "com.acme.ui.Column",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "ui/Layout.kt",
+      "line": 27
+    },
+    {
+      "caller": "com.acme.ui.screen",
+      "callee": "com.acme.ui.ColumnScope#weight",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "ui/Layout.kt",
+      "line": 28
+    },
+    {
+      "caller": "com.acme.ui.Rule#visit",
+      "callee": "org.jetbrains.kotlin.psi.psiUtil.leaves",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "ui/Layout.kt",
+      "line": 35
+    },
+    {
+      "caller": "com.acme.ui.Rule#visit",
+      "callee": "java.io.File#readText",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "ui/Layout.kt",
+      "line": 36
+    },
+    {
+      "caller": "com.acme.ui.Rule#visit",
+      "callee": "com.acme.ui.Rule#toUniqueId",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "ui/Layout.kt",
+      "line": 37
+    }
+  ],
+  "nodes_include": [
+    "com.acme.ui.RowScope#weight",
+    "com.acme.ui.ColumnScope#weight",
+    "com.acme.ui.Rule#toUniqueId"
+  ],
+  "notes": "Fixed defects of the 2026-11-12 cycle."
+}

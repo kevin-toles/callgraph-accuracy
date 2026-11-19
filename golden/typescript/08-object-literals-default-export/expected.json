@@ -1,0 +1,86 @@
+{
+  "rule": "TS namespaces and named object literals (bound at the top level or exported) nest with dots (`mod.ns.f`, `mod.obj.f`); the object `module.exports`/`export default` is, is the module (`mod.f`); `module.exports = fn` is `mod.default`. | Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty. | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "api.handlers.ping",
+      "callee": "api.util",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "api.ts",
+      "line": 7
+    },
+    {
+      "caller": "api.handlers.echo",
+      "callee": "api.handlers.ping",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "api.ts",
+      "line": 10
+    },
+    {
+      "caller": "api.handlers.echo",
+      "callee": "api.util",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "api.ts",
+      "line": 10
+    },
+    {
+      "caller": "api.make",
+      "callee": "api.util",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "api.ts",
+      "line": 17
+    },
+    {
+      "caller": "api.start",
+      "callee": "api.handlers.echo",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "api.ts",
+      "line": 24
+    },
+    {
+      "caller": "main",
+      "callee": "api.start",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ts",
+      "line": 3
+    },
+    {
+      "caller": "main",
+      "callee": "api.handlers.ping",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ts",
+      "line": 4
+    },
+    {
+      "caller": "main",
+      "callee": "api.make",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ts",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": ".run",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "main.ts",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "api.handlers.ping",
+    "api.handlers.echo",
+    "api.start",
+    "api.make",
+    "api.util"
+  ],
+  "notes": "`handlers` is a named object literal bound at the top level: its methods are `api.handlers.ping`/`api.handlers.echo`, and `handlers.ping()` resolves to that ID in its own file and in main.ts (C1). The `export default` object is the module, so `start` is `api.start`, and the default import `api.start()` resolves to it. The object literal returned inside `make` is anonymous: its method `run` folds into `api.make`, so `make().run()` is `.run` on a call result, low. call_type direct for object-literal members: their IDs are dotted like namespace functions, not `Type#m`; SPEC does not state call_type for them (see report)."
+}

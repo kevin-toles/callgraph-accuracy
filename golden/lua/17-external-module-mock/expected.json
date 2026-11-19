@@ -1,0 +1,59 @@
+{
+  "rule": "Lua tables of external modules. A local bound to `require` of a module the scan does not define, or to a member of one, gives no name to a function stored on it. It folds into the enclosing function. Calls of the library stay the library's ID at medium, including the mock's call of the saved original.",
+  "source": "SPEC Decisions (2026-11-10, amendment): kong spec mocks of resty.dns.resolver and pl.utils",
+  "edges": [
+    {
+      "caller": "spec.dns_spec",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "spec/dns_spec.lua",
+      "line": 1
+    },
+    {
+      "caller": "spec.dns_spec",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "spec/dns_spec.lua",
+      "line": 2
+    },
+    {
+      "caller": "spec.dns_spec.setup",
+      "callee": "resty.dns.resolver#new",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "spec/dns_spec.lua",
+      "line": 6
+    },
+    {
+      "caller": "spec.dns_spec",
+      "callee": "spec.dns_spec.setup",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "spec/dns_spec.lua",
+      "line": 12
+    },
+    {
+      "caller": "kong.dns.client",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "kong/dns/client.lua",
+      "line": 1
+    },
+    {
+      "caller": "kong.dns.client#hosts",
+      "callee": "pl.utils#readlines",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "kong/dns/client.lua",
+      "line": 4
+    }
+  ],
+  "nodes_include": [
+    "spec.dns_spec.setup",
+    "kong.dns.client#hosts"
+  ],
+  "notes": "Neither file is required, so each module is named by its path. The mocks resolver.new = function and utils.readlines = function fold into setup. old_new is a local alias of resolver.new and resolves to its target, medium (the library is not scanned). The production call utils.readlines stays the library's, medium, not the mock's."
+}

@@ -1,0 +1,35 @@
+{
+  "rule": "Top-level / file-level code (outside any function or type): the caller is the file's module ID. | Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). | An empty caller or `<global>` is a wrong caller.",
+  "source": "KNOWN_GAP: calls in file-level const initializers and some decl-literal forms (return .init(), .field = .x()) are not emitted",
+  "edges": [
+    {
+      "caller": "app",
+      "callee": "app.computeSize",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 13
+    },
+    {
+      "caller": "app",
+      "callee": "app.Point#origin",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 14
+    },
+    {
+      "caller": "app.size",
+      "callee": "app.computeSize",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "app.computeSize",
+    "app.Point#origin"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). The initializers of the file-scope consts `table_size` and `default_point` are file-level code (outside any function or type); SPEC names Zig file scope among the languages whose top-level caller is the file path below the scan root without extension \u2192 caller `app`. No implicit edge: Zig has no <clinit>/<init>. This case covers the first half of the gap; 11-decl-literal-calls covers the second."
+}

@@ -1,0 +1,53 @@
+{
+  "rule": "module = the file's path below the scan root without extension and trailing `/index` (`src/chat` for src/chat/index.ts; basenames collide across directories): `src/app.f`, `src/app.C#m`, `#<init>`/`#<clinit>`/`#field` as in Java. | Imports, `require`, re-exports (`export *`, `export * as`) and workspace packages (package.json `exports`) resolve to the defining module; packages outside the scan are named as written (`node:http.createServer`, `zod.z.object`, medium). | Import statements are not calls. | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "a/util.fmt",
+      "callee": "a/util.wrap",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "a/util.js",
+      "line": 2
+    },
+    {
+      "caller": "a.hello",
+      "callee": "a/util.fmt",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "a/index.js",
+      "line": 4
+    },
+    {
+      "caller": "main",
+      "callee": "a.hello",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": "b/util.fmt",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 6
+    },
+    {
+      "caller": "main",
+      "callee": "a/util.fmt",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "a/util.fmt",
+    "a/util.wrap",
+    "b/util.fmt",
+    "a.hello"
+  ],
+  "notes": "a/index.js drops the trailing `/index`: module `a`, so `hello` is `a.hello`. a/util.js and b/util.js share a basename but are distinct modules `a/util` and `b/util` ('basenames collide across directories'). The aliased import `fmt as fmtB` resolves to `b/util.fmt`; the namespace import `autil.fmt(...)` resolves to `a/util.fmt` (imports resolve to the defining module), direct because the callee is a module function, not a method. `a/util.fmt` is reached from a/index.js and main.js with one ID (C1)."
+}

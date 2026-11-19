@@ -1,0 +1,75 @@
+{
+  "rule": "`macro`: a macro invocation (C/C++/ObjC function-like macros, Rust `name!`). Calls written inside macro arguments are separate ordinary edges. | Macro invocations \u2192 call_type macro; calls inside macro arguments are ordinary edges.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "compute",
+      "callee": "square!",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 8
+    },
+    {
+      "caller": "main",
+      "callee": "println!",
+      "call_type": "macro",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 12
+    },
+    {
+      "caller": "main",
+      "callee": "compute",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 12
+    },
+    {
+      "caller": "main",
+      "callee": "vec!",
+      "call_type": "macro",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 13
+    },
+    {
+      "caller": "main",
+      "callee": "compute",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 13
+    },
+    {
+      "caller": "main",
+      "callee": "assert_eq!",
+      "call_type": "macro",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 14
+    },
+    {
+      "caller": "main",
+      "callee": "square!",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 14
+    },
+    {
+      "caller": "main",
+      "callee": "compute",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 14
+    }
+  ],
+  "nodes_include": [
+    "square!",
+    "compute"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Macro ID = the macro's name without `!` (the `!` is invocation syntax; macro_rules! defines `square`). square is defined in the scan \u2192 high (cf. C: high if #defined in the scan); std macros are named statically but not defined in the scan \u2192 medium (cf. gtest macros: macro, medium). Calls written inside macro arguments, including a macro inside a macro, are separate edges on their own lines. The macro_rules! definition is a declaration."
+}

@@ -1,0 +1,71 @@
+{
+  "rule": "**Zig**: file-qualified: `file.Struct#fn`, `file.fn`; `@import` bindings make `std.x.y` medium. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. | Free function: its name (with the language's module qualifier where it has one).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Point#scaled",
+      "callee": "app.Point#scale",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 14
+    },
+    {
+      "caller": "app.Point#scaled",
+      "callee": "app.Point#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 14
+    },
+    {
+      "caller": "app.main",
+      "callee": "app.Point#origin",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 27
+    },
+    {
+      "caller": "app.main",
+      "callee": "app.Point#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 28
+    },
+    {
+      "caller": "app.main",
+      "callee": "app.Point#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 29
+    },
+    {
+      "caller": "app.main",
+      "callee": "app.helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 30
+    },
+    {
+      "caller": "app.main",
+      "callee": "app.Point#scaled",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 30
+    }
+  ],
+  "nodes_include": [
+    "app.Point#origin",
+    "app.Point#len",
+    "app.Point#scaled",
+    "app.Point#scale",
+    "app.helper",
+    "app.main"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). Every fn declared in a struct is `app.Point#fn` whether or not it takes self. `scale(...)` inside Point is a bare call to a member of the enclosing type \u2192 `app.Point#scale`; `self.len()` \u2192 `app.Point#len`. `Point.len(p)` (Type.m) and `p.len()` with `p: Point` declared both give `app.Point#len`. The struct literal `Point{ .x = 0, .y = 0 }` is data construction, `_ =` is a discard, `self.x` is field access: no edges."
+}

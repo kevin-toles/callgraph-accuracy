@@ -1,0 +1,52 @@
+{
+  "rule": "Method: `Type#member`. Nested types are dotted: `Outer.Inner#m`. | **Zig**: file-qualified: `file.Struct#fn`, `file.fn`; `@import` bindings make `std.x.y` medium.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Outer#build",
+      "callee": "app.Outer.Inner#make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 15
+    },
+    {
+      "caller": "app.Outer#build",
+      "callee": "app.Outer.Inner#get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 16
+    },
+    {
+      "caller": "app.run",
+      "callee": "app.Outer.Inner#make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 21
+    },
+    {
+      "caller": "app.run",
+      "callee": "app.Outer.Inner#get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 22
+    },
+    {
+      "caller": "app.run",
+      "callee": "app.Outer#build",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 22
+    }
+  ],
+  "nodes_include": [
+    "app.Outer.Inner#make",
+    "app.Outer.Inner#get",
+    "app.Outer#build"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). Inner is declared inside Outer \u2192 `app.Outer.Inner#m`. Inside Outer, the bare type name `Inner` resolves lexically to Outer.Inner; the locals `i` are typed by their declarations (decision A)."
+}

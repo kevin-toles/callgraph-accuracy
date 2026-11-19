@@ -1,0 +1,246 @@
+{
+ "cpp/01-namespaces-free-functions": {
+  "disposition": "open defect",
+  "note": "some namespace-qualified free-function calls are missed (calls into a nested namespace, ::global calls, an overload calling another)"
+ },
+ "cpp/03-constructors": {
+  "disposition": "open defect",
+  "note": "delegating constructor calls (: Circle(…)) get no edge"
+ },
+ "cpp/06-callbacks": {
+  "disposition": "open defect",
+  "note": "calls through a function-pointer parameter written (*op)() get no edge"
+ },
+ "cpp/10-code-outside-functions": {
+  "disposition": "open defect",
+  "note": "calls in instance field initializers have the file as caller instead of Type#field, and the implicit <init> edge is missing"
+ },
+ "cpp/11-c1-cross-file-identity": {
+  "disposition": "open defect",
+  "note": "a call through a reference parameter to a method declared in a header is missed"
+ },
+ "cpp/13-not-calls": {
+  "disposition": "open defect",
+  "note": "calls through a pointer-to-member ((w.*method)()) get no edge"
+ },
+ "cpp/16-gap-operator-call": {
+  "disposition": "open defect",
+  "note": "operator() on typed objects is not T#operator()"
+ },
+ "cpp/18-gap-local-typedef-namespace-call": {
+  "disposition": "open defect",
+  "note": "function-local typedefs are not expanded (C#inc instead of scene.Counter#inc)"
+ },
+ "csharp/07-typed-receivers": {
+  "disposition": "open defect",
+  "note": "receivers bound by is-patterns (x is Item matched) stay low"
+ },
+ "csharp/08-interface-abstract-bounds": {
+  "disposition": "open defect",
+  "note": "type parameters with a where-bound are named T#m, not the bound"
+ },
+ "csharp/09-local-functions-lambdas": {
+  "disposition": "open defect",
+  "note": "a lambda bound to a local is not a named nested function"
+ },
+ "csharp/11-multiline-chain": {
+  "disposition": "open defect",
+  "note": "calls on a call result whose declared return type is in the scan stay .m low"
+ },
+ "csharp/15-gap-null-conditional-target-new": {
+  "disposition": "open defect",
+  "note": "target-typed new() gets no constructor edge"
+ },
+ "csharp/16-gap-delegate-fields-arrow-getters": {
+  "disposition": "open defect",
+  "note": "calls through delegate fields are methods (T#f) instead of callbacks"
+ },
+ "elixir/03-alias-order-and-nesting": {
+  "disposition": "open defect",
+  "note": "a nested defmodule alias applies before its defmodule line (aliases are lexical, in source order)"
+ },
+ "go/07-builtins-casts-not-calls": {
+  "disposition": "open defect",
+  "note": "a call through a method value (bark := d.Bark; bark()) is named Dog#Bark medium instead of the callback rule"
+ },
+ "go/14-gap-generic-types": {
+  "disposition": "open defect",
+  "note": "calls into scanned generic types are medium, not high"
+ },
+ "go/15-gap-package-var-init": {
+  "disposition": "open defect",
+  "note": "calls in package-level var initializers get no edges (SPEC Decisions 2026-10-29 requires caller pkg.init)"
+ },
+ "go/16-gap-typecheck-failure": {
+  "disposition": "accepted limitation",
+  "note": "a Go package that fails to type-check is not graphed; the coverage note go_package_load_error says so"
+ },
+ "groovy/05-typed-receivers": {
+  "disposition": "open defect",
+  "note": "type parameters with a bound are named T#m, not the bound"
+ },
+ "groovy/06-dynamic-low-guesses": {
+  "disposition": "open defect",
+  "note": "a bare call not defined anywhere in the scan is Type#m medium instead of a low guess"
+ },
+ "groovy/09-enum-constants": {
+  "disposition": "open defect",
+  "note": "enum constant declarations get no Enum#<clinit> → Enum#<init> edge"
+ },
+ "groovy/14-gap-getter-and-typed-field-chain": {
+  "disposition": "open defect",
+  "note": "receivers typed by an explicit getter or a typed field chain stay low"
+ },
+ "javascript/14-workspace-vendor-reexport": {
+  "disposition": "accepted limitation",
+  "note": "vendor/ directories are skipped by design (coverage note \"skipped\"); a call into vendor/ code is therefore medium and vendor/ edges are absent"
+ },
+ "kotlin/01-classes-methods": {
+  "disposition": "open defect",
+  "note": "secondary-constructor delegation : this(…) gets no edge"
+ },
+ "kotlin/04-inheritance-super": {
+  "disposition": "open defect",
+  "note": "secondary-constructor : super(…) / : this(…) delegation gets no edge"
+ },
+ "kotlin/14-invoke-and-factory-functions": {
+  "disposition": "open defect",
+  "note": "companion operator invoke is reported as a constructor"
+ },
+ "objc/03-typed-receivers": {
+  "disposition": "open defect",
+  "note": "typedef aliases of class types are not expanded; @catch parameters are untyped"
+ },
+ "objc/05-parameterless-member-receiver": {
+  "disposition": "open defect",
+  "note": "receivers that are parameterless message results stay .m low"
+ },
+ "objc/07-protocol-typed-id": {
+  "disposition": "open defect",
+  "note": "receivers typed id<P> by a property or ivar stay low"
+ },
+ "objc/11-file-scope-code": {
+  "disposition": "open defect",
+  "note": "[[T alloc] init] in .mm class methods gives .init low; file-scope macro uses in .m get no edge"
+ },
+ "objc/13-cross-file-identity": {
+  "disposition": "open defect",
+  "note": "a C function call in another .m file is missed"
+ },
+ "ocaml/04-applying-parameters": {
+  "disposition": "open defect",
+  "note": "calls through a record field holding a function (t.on_event x) get no edge"
+ },
+ "ocaml/14-known-gap-class-methods": {
+  "disposition": "open defect",
+  "note": "OCaml classes/objects: methods have no caller IDs and no call edges"
+ },
+ "php/06-parameterless-return-type": {
+  "disposition": "open defect",
+  "note": "receivers that are parameterless method results with a declared return type stay .m low"
+ },
+ "php/11-top-level-code": {
+  "disposition": "open defect",
+  "note": "receivers typed by $x = new T at file top level stay low"
+ },
+ "php/12-not-calls": {
+  "disposition": "open defect",
+  "note": "PHP first-class callable syntax $this->m(...) is reported as a call"
+ },
+ "php/13-anonymous-class": {
+  "disposition": "open defect",
+  "note": "anonymous-class members are named as methods of the enclosing class instead of folding; no constructor edge for new class extends Base"
+ },
+ "php/14-enum-constant": {
+  "disposition": "open defect",
+  "note": "enum-case receivers (Suit::Hearts->color()) stay .m low"
+ },
+ "php/17-gap-trait-method": {
+  "disposition": "open defect",
+  "note": "methods from traits resolve to the using class at medium"
+ },
+ "php/18-gap-parent-outside-scan": {
+  "disposition": "open defect",
+  "note": "parent::m() with a parent outside the scan becomes parent.m"
+ },
+ "python/03-nested-functions-lambdas": {
+  "disposition": "open defect",
+  "note": "a lambda bound to a local is not a named nested function (callee is a callback, body folds)"
+ },
+ "python/13-gap-callable-attributes": {
+  "disposition": "open defect",
+  "note": "callable attributes set by a superclass or tuple assignment are methods, not callbacks"
+ },
+ "ruby/03-top-level-code": {
+  "disposition": "open defect",
+  "note": "a call of a top-level def is #name medium instead of the free function"
+ },
+ "ruby/06-external-ancestry": {
+  "disposition": "open defect",
+  "note": "code in a class body has the class as caller instead of the file"
+ },
+ "ruby/13-gap-proc-call": {
+  "disposition": "open defect",
+  "note": ".call on a Proc or lambda is a method call, not a callback; lambdas bound to locals are not named nested functions"
+ },
+ "ruby/14-gap-struct-new-block": {
+  "disposition": "open defect",
+  "note": "methods inside Const = Struct.new do … end blocks get broken IDs (#norm)"
+ },
+ "ruby/15-gap-bare-new-scoped-const": {
+  "disposition": "open defect",
+  "note": "bare new in class methods is a low guess, not Type#<init>"
+ },
+ "rust/05-callbacks": {
+  "disposition": "open defect",
+  "note": "calls through an fn-pointer field ((self.on_click)()) get no edge"
+ },
+ "rust/15-gap-pattern-bindings": {
+  "disposition": "open defect",
+  "note": "receivers bound by match/if-let patterns are untyped"
+ },
+ "scala/03-inheritance-super": {
+  "disposition": "open defect",
+  "note": "a bare call of a member inherited from an external base is a low bare name"
+ },
+ "scala/12-gap-calls-without-parentheses": {
+  "disposition": "open defect",
+  "note": "Scala calls written without parentheses are never emitted (recall)"
+ },
+ "scala/13-gap-operator-infix-calls": {
+  "disposition": "open defect",
+  "note": "Scala symbolic and infix operator calls are never emitted (recall)"
+ },
+ "typescript/03-known-gap-function-valued-props": {
+  "disposition": "open defect",
+  "note": "function-valued properties called as this.f() are reported as methods"
+ },
+ "typescript/05-parameterless-members": {
+  "disposition": "open defect",
+  "note": "getters and parameterless methods used as receivers stay low"
+ },
+ "zig/04-function-aliases": {
+  "disposition": "open defect",
+  "note": "function-local const aliases of functions are callbacks, not their target"
+ },
+ "zig/05-typed-receivers": {
+  "disposition": "open defect",
+  "note": "receivers typed by an optional capture or file-scope var stay low"
+ },
+ "zig/07-callbacks": {
+  "disposition": "open defect",
+  "note": "calls through function-pointer fields are methods (T#cb) instead of callbacks"
+ },
+ "zig/10-file-level-const-initializers": {
+  "disposition": "open defect",
+  "note": "calls in file-level const initializers get no edges"
+ },
+ "zig/11-decl-literal-calls": {
+  "disposition": "open defect",
+  "note": "decl-literal calls (return .init(), .field = .init()) get no edges"
+ },
+ "zig/12-generic-type-static-init": {
+  "disposition": "open defect",
+  "note": "static calls on instantiated generic types (std.AutoHashMap(K, V).init) are .m low"
+ }
+}

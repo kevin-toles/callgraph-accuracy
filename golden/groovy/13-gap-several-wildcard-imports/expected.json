@@ -1,0 +1,31 @@
+{
+  "rule": "**Implicitly imported names are qualified**: Java/Scala/Groovy `java.lang.String`, Groovy's default imports (`java.util.List`, `groovy.lang.Closure`, …). With exactly one on-demand import (`import a.b.*`), a simple type name that is not in the file's package, not imported singly and not a java.lang type is `a.b.Name` (medium); with more than one such import it stays unqualified, low. Honest low (do not resolve by guessing): calls resolved only at runtime through a closure delegate (Groovy), query/DSL names read by a macro (Ecto `field`, `type`), and types reachable only through more than one wildcard import.",
+  "source": "KNOWN_GAP: types reachable only through several wildcard imports stay medium",
+  "edges": [
+    {
+      "caller": "core.Lookup#go",
+      "callee": "ConcurrentHashMap#<init>",
+      "call_type": "constructor",
+      "confidence": "low",
+      "file": "core/Lookup.groovy",
+      "line": 8
+    },
+    {
+      "caller": "core.Lookup#go",
+      "callee": "ConcurrentHashMap#clear",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "core/Lookup.groovy",
+      "line": 9
+    },
+    {
+      "caller": "core.Lookup#go",
+      "callee": "ConcurrentHashMap#size",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "core/Lookup.groovy",
+      "line": 10
+    }
+  ],
+  "notes": "ConcurrentHashMap is not in package core, not imported singly, not a java.lang type, not a Groovy default import, and not defined in the scan; it is reachable only through the two explicit on-demand imports java.util.concurrent.* and java.nio.file.*. Per Decisions 2026-10-29 it 'stays unqualified, low' (also SPEC's honest-low rule), so the type keeps its simple name: ConcurrentHashMap#<init> / ConcurrentHashMap#clear / ConcurrentHashMap#size, low — not the medium java.util.concurrent.ConcurrentHashMap the gap describes. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

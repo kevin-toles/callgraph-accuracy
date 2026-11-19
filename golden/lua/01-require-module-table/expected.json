@@ -1,0 +1,85 @@
+{
+  "rule": "Lua: module = the name the scan's `require` strings give the file (`core.common` for data/core/common.lua ...). Functions on the module's returned table are `mod#fn` ... `require` bindings resolve. | C1 Symbol identity. Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. | A `require(...)` call (JS) or `require \"m\"` (Lua) is an invocation of the loader: callee `require` (JS) or `_G#require` (Lua), medium, direct, on its line.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 2
+    },
+    {
+      "caller": "main.run",
+      "callee": "util#trim",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 5
+    },
+    {
+      "caller": "main.run",
+      "callee": "util#clean",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 6
+    },
+    {
+      "caller": "main.run",
+      "callee": "lib.strutil#upper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 7
+    },
+    {
+      "caller": "main",
+      "callee": "main.run",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 10
+    },
+    {
+      "caller": "util#trim",
+      "callee": "s.gsub",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "util.lua",
+      "line": 4
+    },
+    {
+      "caller": "util#clean",
+      "callee": "util#trim",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "util.lua",
+      "line": 8
+    },
+    {
+      "caller": "lib.strutil#upper",
+      "callee": "string#upper",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/strutil.lua",
+      "line": 4
+    }
+  ],
+  "nodes_include": [
+    "util#trim",
+    "util#clean",
+    "lib.strutil#upper",
+    "main.run"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. util#trim is reached from its own file (util.lua:8, `M.trim` on the returned table M) and through the require binding in main.lua:5; C1 requires the same ID. lib/strutil.lua is required as \"lib.strutil\", so its module is `lib.strutil`. `s:gsub` on parameter s is an unknown receiver: `s.gsub`, low (Lua note: 'Other `obj:f()` -> `obj.f`'). `local function run` at top level is `main.run` (Lua note: 'local functions `mod.f`'). `string.upper` is standard library `string#upper`, medium."
+}

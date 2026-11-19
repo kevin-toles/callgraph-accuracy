@@ -1,0 +1,6 @@
+{
+  "rule": "**Implicitly imported names are qualified**: Java/Scala/Groovy `java.lang.String`, Groovy's default imports (`java.util.List`, `groovy.lang.Closure`, \u2026). ... low: a guess \u2014 ... a bare name not found in the scan.",
+  "source": "SPEC",
+  "spec_gap": "Kotlin's default imports (kotlin.*, kotlin.collections.*, kotlin.io.*, kotlin.text.*, ...) are not covered by the 'Implicitly imported names are qualified' decision, which lists only Java/Scala/Groovy. (1) Is `println(x)` the qualified `kotlin.io.println`, direct, medium, or a bare name not found in the scan, `println`, low? Likewise `listOf(..)`. (2) What is the ID of a standard-library extension function called on a typed receiver, such as `names.forEach { }` (names: List<String>) or `\"x\".uppercase()`? Candidates: `kotlin.collections.forEach` (the extension's top-level ID), `kotlin.collections.List#forEach` (decision A on the receiver's type), or a low guess `names.forEach` / `.uppercase`. The same question decides the IDs of scope functions such as `apply {}`, `let {}`, `buildMap {}` and of `lazy {}` in `by lazy` delegates.",
+  "notes": "Greet.kt lines 4-7: listOf, println (x2, one inside a lambda that folds into greet), List.forEach (extension), String.uppercase (extension, literal receiver). `all.size` is a property read."
+}

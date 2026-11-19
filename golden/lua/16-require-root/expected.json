@@ -1,0 +1,52 @@
+{
+  "rule": "Lua: module = the name the scan's `require` strings give the file (`core.common` for data/core/common.lua; ambiguous matches go to the require root that explains the most requires; ...). Functions on the module's returned table are `mod#fn`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "core.common#clamp",
+      "callee": "math#max",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "data/core/common.lua",
+      "line": 4
+    },
+    {
+      "caller": "core.common#clamp",
+      "callee": "math#min",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "data/core/common.lua",
+      "line": 4
+    },
+    {
+      "caller": "core.common#doc",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "data/core/common.lua",
+      "line": 8
+    },
+    {
+      "caller": "core.doc",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "data/core/doc.lua",
+      "line": 1
+    },
+    {
+      "caller": "core.doc#line",
+      "callee": "core.common#clamp",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "data/core/doc.lua",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "core.common#clamp",
+    "core.common#doc",
+    "core.doc#line"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. The require strings `core.common` and `core.doc` are explained by the require root data/ (both files exist as data/core/common.lua and data/core/doc.lua); the scan root src/ explains none of them. So the modules are `core.common` and `core.doc`, not `data.core.common`/`data.core.doc` (the SPEC's own example). Each file is required by the other (common.lua lazily, inside a function), so neither name depends on an entry-file rule. doc.lua's module-level require has caller `core.doc`."
+}

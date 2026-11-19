@@ -1,0 +1,63 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown. **unknown**: a dynamic call (function value, callback, closure, function pointer). Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shop.events.apply",
+      "callee": "fn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "shop/events.py",
+      "line": 10
+    },
+    {
+      "caller": "shop.events.run",
+      "callee": "on_item",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "shop/events.py",
+      "line": 15
+    },
+    {
+      "caller": "shop.events.run",
+      "callee": "shop.events.pick_handler",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shop/events.py",
+      "line": 16
+    },
+    {
+      "caller": "shop.events.run",
+      "callee": "handler",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "shop/events.py",
+      "line": 17
+    },
+    {
+      "caller": "shop.events.run",
+      "callee": "builtins.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "shop/events.py",
+      "line": 18
+    },
+    {
+      "caller": "shop.events.Emitter#emit",
+      "callee": "_hook",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "shop/events.py",
+      "line": 26
+    },
+    {
+      "caller": "shop.events.Emitter#emit",
+      "callee": "shop.events.apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shop/events.py",
+      "line": 27
+    }
+  ],
+  "notes": "Calls through a parameter (`fn`, `on_item`), a local holding a function (`handler`, bound to a call result) and a stored property (`self._hook`, assigned from a parameter in __init__) are callbacks named by the variable/property name, unknown. `return transform` (6), `map(transform, ...)` (18) and `apply(self.emit, 1)` (27) pass function/method references without calling them: not calls."
+}

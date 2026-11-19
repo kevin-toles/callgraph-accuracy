@@ -1,0 +1,31 @@
+{
+  "rule": "Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) \u2192 `Parent#<init>`, constructor. | **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "KNOWN_GAP: parent::m() with a parent outside the scan becomes parent.m",
+  "edges": [
+    {
+      "caller": "App.Cmd#<init>",
+      "callee": "Symfony.Component.Console.Command.Command#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "App/Cmd.php",
+      "line": 10
+    },
+    {
+      "caller": "App.Cmd#configure",
+      "callee": ".configure",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "App/Cmd.php",
+      "line": 15
+    },
+    {
+      "caller": "App.Cmd#configure",
+      "callee": "App.Cmd#setName",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "App/Cmd.php",
+      "line": 16
+    }
+  ],
+  "notes": "parent:: is PHP's super; the superclass Symfony\\...\\Command is not in the scan, so parent::configure() is a computed receiver \u2192 .configure, low (not parent.configure: `parent` is a keyword, not a receiver name). parent::__construct is covered by the more specific superclass-constructor rule \u2192 Parent#<init> with Parent the imported class, medium (external). $this->setName() is not defined in Cmd and its base is outside the scan \u2192 App.Cmd#setName, medium (self.m() inherited from a base outside the scan; allowed by C2). call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

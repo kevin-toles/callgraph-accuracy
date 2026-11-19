@@ -1,0 +1,51 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`. **Body-less member declarations of scanned types are defined in the scan (high)**: a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "lib.Text#clean",
+      "callee": "java.lang.String#trim",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "lib/Text.groovy",
+      "line": 9
+    },
+    {
+      "caller": "lib.Text#twice",
+      "callee": "lib.Text#clean",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/Text.groovy",
+      "line": 13
+    },
+    {
+      "caller": "lib.Text#twice",
+      "callee": "lib.Text#clean",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/Text.groovy",
+      "line": 13
+    },
+    {
+      "caller": "app.Main#run",
+      "callee": "lib.Text#clean",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Main.groovy",
+      "line": 10
+    },
+    {
+      "caller": "app.Main#run",
+      "callee": "lib.Sink#emit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Main.groovy",
+      "line": 11
+    }
+  ],
+  "nodes_include": [
+    "lib.Text#clean",
+    "lib.Sink#emit"
+  ],
+  "notes": "lib.Text#clean is called from its own file (two calls on one line, two edges) and from app/Main.groovy through `import lib.Text`: one ID everywhere (C1). out is a field declared lib.Sink; emit is a body-less interface method of a scanned type: high, and listed in nodes. Import declarations are not calls. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

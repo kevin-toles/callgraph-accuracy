@@ -1,0 +1,912 @@
+[
+ {
+  "id": "rust-type-path-strip",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^(::)?[A-Za-z_]\\w*(::[A-Za-z_]\\w*)+#",
+   "new_callee": "^[A-Za-z_][\\w]*#"
+  },
+  "disposition": "implementation defect fixed (open defect rust/06)",
+  "note": "SPEC Rust note: a type ID carries no module prefix. std::collections::HashMap#new -> HashMap#new; a path stays only where the scan defines a same-named type (C1). Where the path-free ID is a scanned impl's (impl From<..> for HashMap), the edge is now high."
+ },
+ {
+  "id": "rust-type-path-strip-caller",
+  "kind": "caller",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_caller": "::"
+  },
+  "disposition": "implementation defect fixed (C1)",
+  "note": "A method defined in impl Trait for path::Type<..> has the same path-free ID as its callers (spv::Inst#try_from -> Inst#try_from)."
+ },
+ {
+  "id": "rust-type-path-strip-self-edge-removed",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_caller": "^[A-Za-z_]\\w*(::[A-Za-z_]\\w*)+#",
+   "old_callee": "::"
+  },
+  "disposition": "implementation defect fixed (C1)",
+  "note": "The removed half of a caller+callee path strip (serde_json::Value#from -> serde_json::Value#from becomes Value#from -> Value#from); its added half is rust-type-path-strip-self-edge-added."
+ },
+ {
+  "id": "rust-type-path-strip-self-edge-added",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "new_caller": "^[A-Z]\\w*#",
+   "new_callee": "^[A-Z]\\w*#"
+  },
+  "disposition": "implementation defect fixed (C1)",
+  "note": "The added half of a caller+callee path strip, at the same file:line as the removed path-qualified edge."
+ },
+ {
+  "id": "typed-call-results-and-receivers",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(rs|kt|kts|scala|java|cs|ts|tsx|mts|cts|js|mjs|cc|cpp|cxx|h|hpp|mm|swift)$",
+   "old": "low/method",
+   "new_callee": "#"
+  },
+  "disposition": "ruling SPEC Decisions 2026-11-10 typed call results; 2026-11-12 let-bound call results and ?.; decision A typed receivers",
+  "note": "x.m(), f().m() and let s = f(); s.m() on a receiver whose declared or declared-return type is known now name Type#m: high when the type is scanned, medium when it is not (Command::new(..).arg -> Command#arg, Promise#then, std.string#find)."
+ },
+ {
+  "id": "typed-results-c2-demotion",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(rs|kt|kts|scala|java|cs|ts|tsx|cc|cpp|cxx|h|hpp|mm)$",
+   "new": "low/method",
+   "old_callee": "#"
+  },
+  "disposition": "implementation defect fixed (C2 an ID is never invented); SPEC Decisions 2026-11-12 overload-ambiguous / generic returns",
+  "note": "A medium/high T#m whose T is a type parameter (T#toString), a scanned type that does not declare m (Kotlin/Scala C2 pass: Animatable#also), an overload-ambiguous or generic return (C++ GetName/Pop, Kotlin same-named overloads), or a fallible external constructor (ruling 2026-11-12: NonZeroU64::new(..).unwrap) is now the receiver guess."
+ },
+ {
+  "id": "kotlin-extensions#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (Kotlin member and imported extensions, golden kotlin/18)",
+  "note": "Calls of member extensions in receiver scope, imported extensions (kotlin.io.path.outputStream, kotlinx.coroutines.launch) and top-level extension functions now name the extension function; typed receivers name Type#m."
+ },
+ {
+  "id": "kotlin-extensions#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (Kotlin member and imported extensions, golden kotlin/18)",
+  "note": "Calls of member extensions in receiver scope, imported extensions (kotlin.io.path.outputStream, kotlinx.coroutines.launch) and top-level extension functions now name the extension function; typed receivers name Type#m."
+ },
+ {
+  "id": "kotlin-extensions#3",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (Kotlin member and imported extensions, golden kotlin/18)",
+  "note": "Calls of member extensions in receiver scope, imported extensions (kotlin.io.path.outputStream, kotlinx.coroutines.launch) and top-level extension functions now name the extension function; typed receivers name Type#m."
+ },
+ {
+  "id": "kotlin-extensions#4",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (Kotlin member and imported extensions, golden kotlin/18)",
+  "note": "Calls of member extensions in receiver scope, imported extensions (kotlin.io.path.outputStream, kotlinx.coroutines.launch) and top-level extension functions now name the extension function; typed receivers name Type#m."
+ },
+ {
+  "id": "python-third-party-capitalized-direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.py$",
+   "old": "medium/constructor",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (Python external callee identity)",
+  "note": "A capitalized third-party callee (pandas.DataFrame, tempfile.NamedTemporaryFile, click.Choice) is not known to be a class: it is the direct call of the name, not T#<init>."
+ },
+ {
+  "id": "ocaml-stdlib-is-scanned",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.mli?$",
+   "old_callee": "^Stdlib\\.",
+   "new_callee": "^stdlib\\.",
+   "new": "high/direct"
+  },
+  "disposition": "ruling 1b (a scanned stdlib is the scan's own code)",
+  "note": "s-ocaml scans the OCaml stdlib itself: Stdlib.ref is the scanned stdlib.ref, high."
+ },
+ {
+  "id": "js-call-apply-bind",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|mts|cts|jsx)$",
+   "new_callee": "^Function#(call|apply|bind)$"
+  },
+  "disposition": "ruling Q80 revised D (.call/.apply/.bind)",
+  "note": "f.call(..)/f.apply(..)/f.bind(..) is Function#call/apply/bind plus an edge to f where f is known."
+ },
+ {
+  "id": "js-call-apply-bind-target#1",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|mts|cts|jsx)$",
+   "new": "medium/method",
+   "new_callee": "^(Object#|Array#|String#|Math\\.|Function#)"
+  },
+  "disposition": "ruling Q80 revised D (.call/.apply/.bind)",
+  "note": "The edge to the called-through function (Object.prototype.hasOwnProperty.call -> Object#hasOwnProperty, Math.max.apply -> Math.max)."
+ },
+ {
+  "id": "js-call-apply-bind-target#2",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|mts|cts|jsx)$",
+   "new": "medium/direct",
+   "new_callee": "^(Object#|Array#|String#|Math\\.|Function#)"
+  },
+  "disposition": "ruling Q80 revised D (.call/.apply/.bind)",
+  "note": "The edge to the called-through function (Object.prototype.hasOwnProperty.call -> Object#hasOwnProperty, Math.max.apply -> Math.max)."
+ },
+ {
+  "id": "js-call-apply-bind-target#3",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|mts|cts|jsx)$",
+   "new": "high/method",
+   "new_callee": "^(Object#|Array#|String#|Math\\.|Function#)"
+  },
+  "disposition": "ruling Q80 revised D (.call/.apply/.bind)",
+  "note": "The edge to the called-through function (Object.prototype.hasOwnProperty.call -> Object#hasOwnProperty, Math.max.apply -> Math.max)."
+ },
+ {
+  "id": "js-call-apply-bind-target#4",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|mts|cts|jsx)$",
+   "new": "high/direct",
+   "new_callee": "^(Object#|Array#|String#|Math\\.|Function#)"
+  },
+  "disposition": "ruling Q80 revised D (.call/.apply/.bind)",
+  "note": "The edge to the called-through function (Object.prototype.hasOwnProperty.call -> Object#hasOwnProperty, Math.max.apply -> Math.max)."
+ },
+ {
+  "id": "js-bound-alias-target#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|jsx)$",
+   "old": "medium/direct",
+   "new": "high/direct"
+  },
+  "disposition": "ruling Q80 revised D; ruling 1a",
+  "note": "const g = f.bind(..); g() is a call of the scanned f (isValidExplicitDest = _isValidExplicitDest.bind(..)), and e.bind(this) on a scanned e names e."
+ },
+ {
+  "id": "js-bound-alias-target#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|jsx)$",
+   "old": "medium/method",
+   "new": "high/direct"
+  },
+  "disposition": "ruling Q80 revised D; ruling 1a",
+  "note": "const g = f.bind(..); g() is a call of the scanned f (isValidExplicitDest = _isValidExplicitDest.bind(..)), and e.bind(this) on a scanned e names e."
+ },
+ {
+  "id": "js-ts-new-module-extensions",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(mjs|cjs|mts|cts)$"
+  },
+  "disposition": "implementation defect fixed (language router: .mjs/.cjs JavaScript, .mts/.cts TypeScript)",
+  "note": "Files with these module extensions were not scanned; every edge in them is new."
+ },
+ {
+  "id": "js-object-literal-fold-caller",
+  "kind": "caller",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|jsx)$"
+  },
+  "disposition": "ruling 1a (local object literals fold)",
+  "note": "A function in a local object literal is not its own node: its calls are its enclosing function's or module's (cordova.cordova.callbackSuccess -> the cordova module)."
+ },
+ {
+  "id": "js-object-literal-fold-change#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|jsx)$",
+   "old": "high/method",
+   "new": "low/method",
+   "new_callee": "^\\."
+  },
+  "disposition": "ruling 1a (local object literals fold)",
+  "note": "At a folded site the caller is the enclosing function, and a this.m() or literal.m() that named a folded literal member is now the receiver guess (.decodePush), Math.abs a direct call."
+ },
+ {
+  "id": "js-object-literal-fold-change#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|jsx)$",
+   "old": "medium/method",
+   "new": "low/method",
+   "new_callee": "^\\."
+  },
+  "disposition": "ruling 1a (local object literals fold)",
+  "note": "At a folded site the caller is the enclosing function, and a this.m() or literal.m() that named a folded literal member is now the receiver guess (.decodePush), Math.abs a direct call."
+ },
+ {
+  "id": "js-object-literal-fold-removed",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|jsx)$"
+  },
+  "disposition": "ruling 1a (local object literals fold)",
+  "note": "Edges into or from folded literal members (cordova.channel.createSticky) that no longer exist as nodes."
+ },
+ {
+  "id": "js-object-literal-fold-added",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|jsx|ts|tsx)$"
+  },
+  "disposition": "ruling 1a (local object literals fold); Q80 revised D",
+  "note": "The folded counterparts at the enclosing caller (cordova -> cordova/channel.create, .createSticky) and bound-function targets (third_party.bundle.ix.qe -> ix.ye)."
+ },
+ {
+  "id": "lua-c2-undefined-member#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "old": "medium/direct",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (C2 an ID is never invented)",
+  "note": "A member no scanned table in the receiver's hierarchy defines, assigns or declares in a constructor (core.log.error generated through __index; pandoc's test script named pandoc) is the receiver guess."
+ },
+ {
+  "id": "lua-c2-undefined-member#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "old": "medium/direct",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed (C2 an ID is never invented)",
+  "note": "A member no scanned table in the receiver's hierarchy defines, assigns or declares in a constructor (core.log.error generated through __index; pandoc's test script named pandoc) is the receiver guess."
+ },
+ {
+  "id": "lua-c2-undefined-member#3",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "old": "medium/method",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (C2 an ID is never invented)",
+  "note": "A member no scanned table in the receiver's hierarchy defines, assigns or declares in a constructor (core.log.error generated through __index; pandoc's test script named pandoc) is the receiver guess."
+ },
+ {
+  "id": "lua-c2-undefined-member#4",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "old": "medium/method",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed (C2 an ID is never invented)",
+  "note": "A member no scanned table in the receiver's hierarchy defines, assigns or declares in a constructor (core.log.error generated through __index; pandoc's test script named pandoc) is the receiver guess."
+ },
+ {
+  "id": "lua-c2-stored-property",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "new": "unknown/callback"
+  },
+  "disposition": "implementation defect fixed (C2); SPEC callbacks",
+  "note": "self.encode = encode \u2026 self.encode(x), opts.on_accept(): a call through a stored property is a callback of that value."
+ },
+ {
+  "id": "lua-resolved#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (Lua require chains, ffi.C, value locals)",
+  "note": "bundle.readfile with local bundle = require('luvi').bundle is luvi.bundle#readfile; C.atoll is ffi.C#atoll; URL.format with local URL = url is url.format; a local bound to a scanned function names it."
+ },
+ {
+  "id": "lua-resolved#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (Lua require chains, ffi.C, value locals)",
+  "note": "bundle.readfile with local bundle = require('luvi').bundle is luvi.bundle#readfile; C.atoll is ffi.C#atoll; URL.format with local URL = url is url.format; a local bound to a scanned function names it."
+ },
+ {
+  "id": "lua-c2-removed-added#1",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (C2)",
+  "note": "The callee text changes with the demotion (spec.helpers#validate_plugin_config_schema -> v, ts.writecb -> cb), so the gate sees an added guess beside the removed ID."
+ },
+ {
+  "id": "lua-c2-removed-added#2",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed (C2)",
+  "note": "The callee text changes with the demotion (spec.helpers#validate_plugin_config_schema -> v, ts.writecb -> cb), so the gate sees an added guess beside the removed ID."
+ },
+ {
+  "id": "lua-c2-removed-added#3",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "new": "low/callback"
+  },
+  "disposition": "implementation defect fixed (C2)",
+  "note": "The callee text changes with the demotion (spec.helpers#validate_plugin_config_schema -> v, ts.writecb -> cb), so the gate sees an added guess beside the removed ID."
+ },
+ {
+  "id": "lua-c2-removed-added#4",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "new": "unknown/direct"
+  },
+  "disposition": "implementation defect fixed (C2)",
+  "note": "The callee text changes with the demotion (spec.helpers#validate_plugin_config_schema -> v, ts.writecb -> cb), so the gate sees an added guess beside the removed ID."
+ },
+ {
+  "id": "lua-c2-removed-added#5",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "new": "unknown/method"
+  },
+  "disposition": "implementation defect fixed (C2)",
+  "note": "The callee text changes with the demotion (spec.helpers#validate_plugin_config_schema -> v, ts.writecb -> cb), so the gate sees an added guess beside the removed ID."
+ },
+ {
+  "id": "lua-c2-removed-added#6",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$",
+   "new": "unknown/callback"
+  },
+  "disposition": "implementation defect fixed (C2)",
+  "note": "The callee text changes with the demotion (spec.helpers#validate_plugin_config_schema -> v, ts.writecb -> cb), so the gate sees an added guess beside the removed ID."
+ },
+ {
+  "id": "lua-c2-removed",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.lua$"
+  },
+  "disposition": "implementation defect fixed (C2)",
+  "note": "The removed half of a demotion whose callee text changed (see lua-c2-removed-added)."
+ },
+ {
+  "id": "cpp-macro-generated-functions",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(c|cc|cpp|cxx|h|hpp)$",
+   "old": "low/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "ruling 1c, widened to nested expansions (approved 2026-11-12)",
+  "note": "A function a scanned macro defines (WASM_DECLARE_OWN(memory) -> release_memory) is defined in the scan."
+ },
+ {
+  "id": "typed-receiver-removed-guess",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.(cc|cpp|hpp|h)$",
+   "old": "low/method"
+  },
+  "disposition": "ruling SPEC Decisions 2026-11-10 typed call results",
+  "note": "A receiver guess at a site where the same call is now typed under another caller pairing (rule_set.size)."
+ },
+ {
+  "id": "rust-smart-pointer-alias-deref#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^(Arc|Box|Rc|Ref|RefMut|MutexGuard|RwLockReadGuard|RwLockWriteGuard)#",
+   "old": "medium/method",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (SPEC smart pointers name the pointee; readings 2026-11-12)",
+  "note": "type ObjectStoreRef = Arc<DynObjectStore> is expanded before the deref: Arc#put_opts -> DynObjectStore#put_opts; LogStoreRef = Arc<dyn LogStore> names LogStore#object_store as the spelled-out type does. Guards (RefMut<'_, Builder>) deref to the pointee."
+ },
+ {
+  "id": "rust-smart-pointer-alias-deref#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^(Arc|Box|Rc|Ref|RefMut|MutexGuard|RwLockReadGuard|RwLockWriteGuard)#",
+   "old": "high/method",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (SPEC smart pointers name the pointee; readings 2026-11-12)",
+  "note": "type ObjectStoreRef = Arc<DynObjectStore> is expanded before the deref: Arc#put_opts -> DynObjectStore#put_opts; LogStoreRef = Arc<dyn LogStore> names LogStore#object_store as the spelled-out type does. Guards (RefMut<'_, Builder>) deref to the pointee."
+ },
+ {
+  "id": "rust-smart-pointer-alias-deref#3",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^(Arc|Box|Rc|Ref|RefMut|MutexGuard|RwLockReadGuard|RwLockWriteGuard)#",
+   "old": "high/method",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (SPEC smart pointers name the pointee; readings 2026-11-12)",
+  "note": "type ObjectStoreRef = Arc<DynObjectStore> is expanded before the deref: Arc#put_opts -> DynObjectStore#put_opts; LogStoreRef = Arc<dyn LogStore> names LogStore#object_store as the spelled-out type does. Guards (RefMut<'_, Builder>) deref to the pointee."
+ },
+ {
+  "id": "rust-guard-deref-pairing#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "spirv_asm\\.rs$",
+   "old_callee": "FxHashMap#entry$",
+   "new_callee": "^rspirv::dr::Builder#",
+   "old": "medium/method",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (SPEC smart pointers name the pointee)",
+  "note": "Two calls on one line: self.emit().id() is now rspirv::dr::Builder#id (RefMut deref) and the FxHashMap#entry beside it is path-stripped; the gate pairs them across."
+ },
+ {
+  "id": "js-prototype-call-apply-target#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|mts|cts|jsx)$",
+   "old_callee": "\\.prototype\\.\\w+\\.(call|apply)$",
+   "new_callee": "^(Array|Object|String|Function|Number|Date|RegExp|Error)#",
+   "old": "medium/method",
+   "new": "medium/method"
+  },
+  "disposition": "ruling Q80 revised D (.call/.apply/.bind)",
+  "note": "Array.prototype.push.apply(a, b) names Array#push (and Function#apply)."
+ },
+ {
+  "id": "js-call-apply-pairing#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|mts|cts|jsx)$",
+   "old": "unknown/callback",
+   "new": "medium/method"
+  },
+  "disposition": "ruling Q80 revised D; gate pairing",
+  "note": "Several calls on one minified or helper line (tsc's __createBinding, swagger-ui's .call(...).toISOString()); the gate pairs the new Function#call/target edges across them."
+ },
+ {
+  "id": "js-call-apply-pairing#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(js|mjs|cjs|ts|tsx|mts|cts|jsx)$",
+   "old": "low/method",
+   "new": "low/method"
+  },
+  "disposition": "ruling Q80 revised D; gate pairing",
+  "note": "Several calls on one minified or helper line (tsc's __createBinding, swagger-ui's .call(...).toISOString()); the gate pairs the new Function#call/target edges across them."
+ },
+ {
+  "id": "ts-fold-added#1",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(ts|tsx)$",
+   "new": "medium/direct"
+  },
+  "disposition": "ruling 1a (local object literals fold)",
+  "note": "The added half at the enclosing caller of a folded object-literal method (setup() { Object.keys(..) } -> the spec module)."
+ },
+ {
+  "id": "ts-fold-added#2",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(ts|tsx)$",
+   "new": "high/method"
+  },
+  "disposition": "ruling 1a (local object literals fold)",
+  "note": "The added half at the enclosing caller of a folded object-literal method (setup() { Object.keys(..) } -> the spec module)."
+ },
+ {
+  "id": "ts-fold-added#3",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(ts|tsx)$",
+   "new": "medium/method"
+  },
+  "disposition": "ruling 1a (local object literals fold)",
+  "note": "The added half at the enclosing caller of a folded object-literal method (setup() { Object.keys(..) } -> the spec module)."
+ },
+ {
+  "id": "scala-function-alias-callback#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "old": "low/method",
+   "new": "unknown/callback"
+  },
+  "disposition": "implementation defect fixed (Scala function-type aliases, golden scala/19)",
+  "note": "Calling a value of a function-type alias (type Pipe[F, I, O] = Stream[F, I] => Stream[F, O]; Cont, Finalizer) is a callback of that value, not Alias#apply."
+ },
+ {
+  "id": "scala-function-alias-callback#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "old": "medium/method",
+   "new": "unknown/callback"
+  },
+  "disposition": "implementation defect fixed (Scala function-type aliases, golden scala/19)",
+  "note": "Calling a value of a function-type alias (type Pipe[F, I, O] = Stream[F, I] => Stream[F, O]; Cont, Finalizer) is a callback of that value, not Alias#apply."
+ },
+ {
+  "id": "scala-implicit-class-owner#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "new_callee": "#",
+   "old": "medium/method",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (Scala C2 with implicit classes)",
+  "note": "A member a scanned type lacks but one scanned implicit class defines is that class's (fs2.Stream.InvariantOps#repeatPull), the extension the compiler applies."
+ },
+ {
+  "id": "scala-c2#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "old": "medium/method",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (C2); Scala ambiguous wildcard imports",
+  "note": "An apply no scanned object declares (UnwrapImplicit(x)) is the bare guess; a base named through several wildcard imports (SemanticRule with import scalafix.v1._ beside others) has no known origin."
+ },
+ {
+  "id": "scala-c2#2",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "old": "medium/constructor",
+   "new": "low/constructor"
+  },
+  "disposition": "implementation defect fixed (C2); Scala ambiguous wildcard imports",
+  "note": "An apply no scanned object declares (UnwrapImplicit(x)) is the bare guess; a base named through several wildcard imports (SemanticRule with import scalafix.v1._ beside others) has no known origin."
+ },
+ {
+  "id": "scala-c7-global-caller-removed",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "old_caller": "^(<global>)?$"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "A top-level call's empty or <global> caller is now the file's module, and the call is typed in the same scan; the gate sees the old <global> edge removed."
+ },
+ {
+  "id": "scala-c7-global-caller-added#1",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "scala-c7-global-caller-added#2",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "scala-c7-global-caller-added#3",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "scala-c7-global-caller-added#4",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "swift-c7-global-caller-removed",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.swift$",
+   "old_caller": "^(<global>)?$"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "A top-level call's empty or <global> caller is now the file's module, and the call is typed in the same scan; the gate sees the old <global> edge removed."
+ },
+ {
+  "id": "swift-c7-global-caller-added#1",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.swift$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "swift-c7-global-caller-added#2",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.swift$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "swift-c7-global-caller-added#3",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.swift$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "swift-c7-global-caller-added#4",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.swift$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "kotlin-c7-global-caller-removed",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "old_caller": "^(<global>)?$"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "A top-level call's empty or <global> caller is now the file's module, and the call is typed in the same scan; the gate sees the old <global> edge removed."
+ },
+ {
+  "id": "kotlin-c7-global-caller-added#1",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "kotlin-c7-global-caller-added#2",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "kotlin-c7-global-caller-added#3",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "kotlin-c7-global-caller-added#4",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "new_callee": "(#|^\\.|\\.)",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (C7 file-module caller); typed receivers",
+  "note": "The added half: the module caller with the typed callee (zio.stream.ZStream#via, BasicPromise#fulfill, Foo.apply guess)."
+ },
+ {
+  "id": "kotlin-guess-text-pairing#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "old": "low/method",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed (Kotlin constants are not types)",
+  "note": "RESTRICTED_CIPHER_SUITES.toTypedArray() is a guess on a constant, not a type: the guess text changes, and the gate pairs guesses on one line across."
+ },
+ {
+  "id": "ocaml-opened-misc-stdlib#1",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.mli?$",
+   "old_callee": "^Stdlib\\.",
+   "new_callee": "^misc\\.Stdlib\\.",
+   "old": "medium/direct",
+   "new": "high/direct"
+  },
+  "disposition": "ruling 1b; OCaml open shadowing",
+  "note": "With open Misc, Stdlib.compare is Misc.Stdlib.compare (misc.ml defines module Stdlib), the scanned function."
+ },
+ {
+  "id": "cpp-fn-pointer-field-callback",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(cc|cpp|cxx|hpp|h)$",
+   "old": "low/method",
+   "new": "unknown/callback",
+   "new_callee": "^\\w+$"
+  },
+  "disposition": "SPEC line 18 (call through a stored property holding a function)",
+  "note": "ctx->isSupported(info) where isSupported is a function-pointer field of ctx's declared struct: the field's name, callback, unknown, instead of a receiver guess (s-nvidia-streamline sl.cpp:865)."
+ },
+ {
+  "id": "typed-call-results-added-cpp",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.(cc|cpp|cxx|hpp|h)$",
+   "new": "medium/method",
+   "new_callee": "^std\\.\\w+#"
+  },
+  "disposition": "ruling SPEC Decisions 2026-11-12 let-bound call results",
+  "note": "auto x = f() with f declared to return Plugin*: x->name.c_str() is std.string#c_str, a separate edge from the same-line plugin->name.c_str guess (s-nvidia-streamline pluginManager.cpp:1123)."
+ },
+ {
+  "id": "rust-bound-truncation",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^[^#]*<[^#]*#",
+   "new_callee": "^[A-Za-z_][\\w:]*#",
+   "old": "medium/method",
+   "new": "medium/method"
+  },
+  "disposition": "implementation defect fixed (2026-11-13: a trait object's + bound inside a generic argument truncated the type text)",
+  "note": "Option<Box<dyn Error + Send>> was cut at its +, giving the malformed callee Option<Box<dyn Error#as_deref; the type is now the whole Option (Option#as_deref), and a smart-pointer argument derefs as written (Box<dyn RecordBatchReader + Send> -> RecordBatchReader#schema)."
+ },
+ {
+  "id": "rust-typed-receiver-pairing",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "::ObjectStoreUrl#as_ref$",
+   "new_callee": "::ObjectStoreRegistry#get_store$",
+   "old": "medium/method",
+   "new": "medium/method"
+  },
+  "disposition": "ruling SPEC Decisions 2026-11-10 typed call results; rust-type-path-strip",
+  "note": "self.registry().get_store(url.as_ref()): the get_store guess is now typed through registry()'s declared Arc<dyn ObjectStoreRegistry> and url.as_ref() lost its module path; the gate pairs the two same-line edges across the change."
+ }
+]

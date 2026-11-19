@@ -1,0 +1,91 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | Generic/template type arguments are dropped from every ID (`HashSet#<init>`).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Worker#Run",
+      "callee": "App.Item#Process",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Worker.cs",
+      "line": 28
+    },
+    {
+      "caller": "App.Worker#Run",
+      "callee": "App.Item#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Worker.cs",
+      "line": 29
+    },
+    {
+      "caller": "App.Worker#Run",
+      "callee": "App.Item#Process",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Worker.cs",
+      "line": 30
+    },
+    {
+      "caller": "App.Worker#Run",
+      "callee": "App.Item#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Worker.cs",
+      "line": 31
+    },
+    {
+      "caller": "App.Worker#Run",
+      "callee": "App.Item#Process",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Worker.cs",
+      "line": 32
+    },
+    {
+      "caller": "App.Worker#Run",
+      "callee": "App.Item#Process",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Worker.cs",
+      "line": 35
+    },
+    {
+      "caller": "App.Worker#Run",
+      "callee": "App.Item#Process",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Worker.cs",
+      "line": 39
+    },
+    {
+      "caller": "App.Worker#Run",
+      "callee": "App.Item#Process",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Worker.cs",
+      "line": 41
+    },
+    {
+      "caller": "App.Worker#Run",
+      "callee": "System.Collections.Generic.List#Clear",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Worker.cs",
+      "line": 44
+    },
+    {
+      "caller": "App.Worker#Run",
+      "callee": "System.InvalidOperationException#GetBaseException",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Worker.cs",
+      "line": 48
+    }
+  ],
+  "nodes_include": [
+    "App.Item#Process",
+    "App.Item#<init>"
+  ],
+  "notes": "Receivers typed by: parameter (first), local declaration (local), `var = new T()` (made), foreach variable (it), pattern binding (matched), an obj.field chain whose field has a declared type (holder.Current, Current is a field of type Item), a parameter of an external generic type (items: List, type argument dropped, medium) and a catch parameter (ex: written fully qualified, medium). The Worker constructor only assigns a field; `o is Item matched` is a pattern, not a call."
+}

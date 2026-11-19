@@ -1,0 +1,595 @@
+{
+ "measured_on": "2026-11-17",
+ "method": "blind review of untouched repos (holdout + random sample): every in-scope edge judged by scripted census of wrong patterns, validated by hand; per-repo precision, the target met when the worst repo reaches it; pooled edge-weighted per language alongside",
+ "languages": {
+  "c": {
+   "census_precision": 0.9968,
+   "wrong_edges": 107,
+   "judged_edges": 33731,
+   "repo_precision": {
+    "h-aws-c-common": 0.992,
+    "s-crypto": 0.999,
+    "s-xv6-riscv": 0.9984,
+    "s-mesa-drm": 0.9984
+   },
+   "worst_repo": "h-aws-c-common",
+   "worst_repo_precision": 0.992,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-aws-c-common",
+    "s-crypto",
+    "s-xv6-riscv",
+    "s-mesa-drm"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "X-macros defined by the including file are not expanded (behaviour not yet decided in SPEC)"
+   ],
+   "note": ""
+  },
+  "cpp": {
+   "census_precision": 0.9877,
+   "wrong_edges": 811,
+   "judged_edges": 65923,
+   "repo_precision": {
+    "h-wabt": 0.987,
+    "s-falco": 0.9881,
+    "s-nvidia-streamline": 0.991,
+    "s-nvidia-flex": 0.9849
+   },
+   "worst_repo": "s-nvidia-flex",
+   "worst_repo_precision": 0.9849,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-wabt",
+    "s-falco",
+    "s-nvidia-streamline",
+    "s-nvidia-flex"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "operator() on typed objects is reported as a callback",
+    "function-local typedefs and namespace-member calls (DirectX::XM\u2026) are under-resolved",
+    "some namespace-qualified free-function calls are missed (calls into a nested namespace, ::global calls, an overload calling another)",
+    "delegating constructor calls (: Circle(\u2026)) get no edge",
+    "calls through a function-pointer parameter written (*op)() get no edge",
+    "calls in instance field initializers have the file as caller instead of Type#field, and the implicit <init> edge is missing",
+    "a call through a reference parameter to a method declared in a header is missed",
+    "calls through a pointer-to-member ((w.*method)()) get no edge"
+   ],
+   "note": ""
+  },
+  "csharp": {
+   "census_precision": 0.991,
+   "wrong_edges": 153,
+   "judged_edges": 17065,
+   "repo_precision": {
+    "h-framerecorder": 0.9881,
+    "s-particular-nservicebus.rabbitmq": 0.9875,
+    "s-xr-interaction-examples": 0.996,
+    "s-unity-cloud-reference-project": 0.9913
+   },
+   "worst_repo": "s-particular-nservicebus.rabbitmq",
+   "worst_repo_precision": 0.9875,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-framerecorder",
+    "s-particular-nservicebus.rabbitmq",
+    "s-xr-interaction-examples",
+    "s-unity-cloud-reference-project"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "?. calls and target-typed new() are missed",
+    "delegate fields and => getters are under-resolved",
+    "receivers bound by is-patterns (x is Item matched) stay low",
+    "type parameters with a where-bound are named T#m, not the bound",
+    "a lambda bound to a local is not a named nested function",
+    "calls on a call result whose declared return type is in the scan stay .m low"
+   ],
+   "note": ""
+  },
+  "elixir": {
+   "census_precision": 0.9999,
+   "wrong_edges": 4,
+   "judged_edges": 49759,
+   "repo_precision": {
+    "h-phoenix": 1.0,
+    "s-elixir": 1.0,
+    "s-realtime": 0.9996,
+    "s-rabbitmq": 1.0
+   },
+   "worst_repo": "s-realtime",
+   "worst_repo_precision": 0.9996,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-phoenix",
+    "s-elixir",
+    "s-realtime",
+    "s-rabbitmq"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "a nested defmodule alias applies before its defmodule line (aliases are lexical, in source order)"
+   ],
+   "note": ""
+  },
+  "go": {
+   "census_precision": 0.9899,
+   "wrong_edges": 129,
+   "judged_edges": 12823,
+   "repo_precision": {
+    "h-chi": 0.9989,
+    "s-chaosmonkey": 1.0,
+    "s-robpike-ivy": 0.989,
+    "s-gorm": 0.9872
+   },
+   "worst_repo": "s-gorm",
+   "worst_repo_precision": 0.9872,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-chi",
+    "s-chaosmonkey",
+    "s-robpike-ivy",
+    "s-gorm"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "packages that fail to type-check are not graphed (reported in coverage)",
+    "range-over-func loop bodies (for x := range seq) get no edges (behaviour not yet decided in SPEC)",
+    "methods of some generic types get no edges, and calls into scanned generics are medium",
+    "calls in package-level var initializers get no edges",
+    "a call through a method value (bark := d.Bark; bark()) is named Dog#Bark medium instead of the callback rule"
+   ],
+   "note": "precision is high; the gaps are missing edges, not wrong ones"
+  },
+  "groovy": {
+   "census_precision": 0.992,
+   "wrong_edges": 75,
+   "judged_edges": 9359,
+   "repo_precision": {
+    "h-dbb": 0.9919,
+    "s-grails-gradle": 0.9949,
+    "s-grails-profiles": 0.99,
+    "s-grails-data-mongodb": 0.9884
+   },
+   "worst_repo": "s-grails-data-mongodb",
+   "worst_repo_precision": 0.9884,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-dbb",
+    "s-grails-gradle",
+    "s-grails-profiles",
+    "s-grails-data-mongodb"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "properties declared by getters and typed field chains are left as low recv.m",
+    "type parameters with a bound are named T#m, not the bound",
+    "a bare call not defined anywhere in the scan is Type#m medium instead of a low guess",
+    "enum constant declarations get no Enum#<clinit> \u2192 Enum#<init> edge"
+   ],
+   "note": ""
+  },
+  "haskell": {
+   "census_precision": 0.9947,
+   "wrong_edges": 756,
+   "judged_edges": 141573,
+   "repo_precision": {
+    "h-pandoc": 0.9986,
+    "s-shellcheck": 0.9998,
+    "s-haskell": 1.0,
+    "s-agda": 0.9911
+   },
+   "worst_repo": "s-agda",
+   "worst_repo_precision": 0.9911,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-pandoc",
+    "s-shellcheck",
+    "s-haskell",
+    "s-agda"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "operator applications are not emitted (behaviour not yet decided in SPEC)"
+   ],
+   "note": ""
+  },
+  "java": {
+   "census_precision": 0.9947,
+   "wrong_edges": 186,
+   "judged_edges": 35314,
+   "repo_precision": {
+    "h-replicate": 0.9897,
+    "s-orc": 0.9956,
+    "s-commons-lang": 0.994,
+    "s-williamfiset-Algorithms": 0.9969
+   },
+   "worst_repo": "h-replicate",
+   "worst_repo_precision": 0.9897,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-replicate",
+    "s-orc",
+    "s-commons-lang",
+    "s-williamfiset-Algorithms"
+   ],
+   "adjudicated": {
+    "s-orc": {
+     "report": "s-orc_report.v10.md",
+     "raw_wrong": 156,
+     "wrong": 65,
+     "judged": 14925,
+     "ruling": "adjudications.md: Round 2026-11-17 s-orc v10: same P1 spec-gap ruling (156-91)"
+    }
+   },
+   "known_gaps": [],
+   "note": ""
+  },
+  "javascript": {
+   "census_precision": 0.9957,
+   "wrong_edges": 233,
+   "judged_edges": 54731,
+   "repo_precision": {
+    "h-uptime-kuma": 0.9974,
+    "s-newman": 0.9846,
+    "s-snarkjs": 0.9945,
+    "s-pdf-js": 0.9959
+   },
+   "worst_repo": "s-newman",
+   "worst_repo_precision": 0.9846,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-uptime-kuma",
+    "s-newman",
+    "s-snarkjs",
+    "s-pdf-js"
+   ],
+   "adjudicated": {
+    "s-newman": {
+     "report": "s-newman_report.v10.md",
+     "raw_wrong": 25,
+     "wrong": 18,
+     "judged": 1171,
+     "ruling": "adjudications.md: ## s-newman: 7 _.assign/_.assignIn member edges are a spec gap (25-7)"
+    }
+   },
+   "known_gaps": [],
+   "note": ""
+  },
+  "kotlin": {
+   "census_precision": 0.9958,
+   "wrong_edges": 381,
+   "judged_edges": 89786,
+   "repo_precision": {
+    "h-mosaic": 0.9957,
+    "s-okhttp": 0.9968,
+    "s-coil": 0.9959,
+    "s-ktlint": 0.9893
+   },
+   "worst_repo": "s-ktlint",
+   "worst_repo_precision": 0.9893,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-mosaic",
+    "s-okhttp",
+    "s-coil",
+    "s-ktlint"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "companion operator invoke and factory functions named like a type are reported as constructors",
+    "superclass constructor calls in class headers and infix calls are not emitted; constructor default values get an empty caller",
+    "secondary-constructor delegation : this(\u2026) gets no edge",
+    "secondary-constructor : super(\u2026) / : this(\u2026) delegation gets no edge",
+    "local fun is named Type#f, not Type#m.f; val f = { } is not a named nested function"
+   ],
+   "note": "files the grammar cannot parse are reported as partial coverage (syntax_error)"
+  },
+  "lua": {
+   "census_precision": 0.9936,
+   "wrong_edges": 324,
+   "judged_edges": 50711,
+   "repo_precision": {
+    "h-luvit": 1.0,
+    "s-apisix": 0.9865,
+    "s-lua": 0.9989,
+    "s-kong": 0.9947
+   },
+   "worst_repo": "s-apisix",
+   "worst_repo_precision": 0.9865,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-luvit",
+    "s-apisix",
+    "s-lua",
+    "s-kong"
+   ],
+   "adjudicated": {},
+   "known_gaps": [],
+   "note": ""
+  },
+  "objc": {
+   "census_precision": 0.9927,
+   "wrong_edges": 261,
+   "judged_edges": 35518,
+   "repo_precision": {
+    "h-oreilly-objc": 0.9966,
+    "s-jsonkit": 0.9979,
+    "s-reachability": 0.9873,
+    "s-moltenvk": 0.9841
+   },
+   "worst_repo": "s-moltenvk",
+   "worst_repo_precision": 0.9841,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-oreilly-objc",
+    "s-jsonkit",
+    "s-reachability",
+    "s-moltenvk"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "typedef aliases of class types are not expanded; @catch parameters are untyped",
+    "receivers that are parameterless message results stay .m low",
+    "receivers typed id<P> by a property or ivar stay low",
+    "[[T alloc] init] in .mm class methods gives .init low; file-scope macro uses in .m get no edge",
+    "a C function call in another .m file is missed"
+   ],
+   "note": ""
+  },
+  "ocaml": {
+   "census_precision": 0.9922,
+   "wrong_edges": 2905,
+   "judged_edges": 374268,
+   "repo_precision": {
+    "h-dune": 0.9868,
+    "s-semgrep": 0.992,
+    "s-spark2014": 0.9933,
+    "s-ocaml": 0.996
+   },
+   "worst_repo": "h-dune",
+   "worst_repo_precision": 0.9868,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-dune",
+    "s-semgrep",
+    "s-spark2014",
+    "s-ocaml"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "include chains and local module aliases are not followed",
+    "class methods (#m) have no caller IDs and no call edges",
+    "operators are not emitted (behaviour not yet decided in SPEC)",
+    "calls through a record field holding a function (t.on_event x) get no edge"
+   ],
+   "note": ""
+  },
+  "php": {
+   "census_precision": 0.9903,
+   "wrong_edges": 278,
+   "judged_edges": 28539,
+   "repo_precision": {
+    "h-pdepend": 0.9932,
+    "s-php-parser": 0.9929,
+    "s-composer": 0.9886,
+    "s-laminas": 0.9951
+   },
+   "worst_repo": "s-composer",
+   "worst_repo_precision": 0.9886,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-pdepend",
+    "s-php-parser",
+    "s-composer",
+    "s-laminas"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "methods from traits resolve to the using class at medium",
+    "parent::m() with a parent outside the scan becomes parent.m",
+    "receivers that are parameterless method results with a declared return type stay .m low",
+    "receivers typed by $x = new T at file top level stay low",
+    "PHP first-class callable syntax $this->m(...) is reported as a call",
+    "anonymous-class members are named as methods of the enclosing class instead of folding; no constructor edge for new class extends Base",
+    "enum-case receivers (Suit::Hearts->color()) stay .m low"
+   ],
+   "note": ""
+  },
+  "python": {
+   "census_precision": 0.9937,
+   "wrong_edges": 106,
+   "judged_edges": 16841,
+   "repo_precision": {
+    "h-distilabel": 0.9979,
+    "s-trlx": 0.9875,
+    "s-fastai": 0.9935,
+    "s-codet5": 0.9938
+   },
+   "worst_repo": "s-trlx",
+   "worst_repo_precision": 0.9875,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-distilabel",
+    "s-trlx",
+    "s-fastai",
+    "s-codet5"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "callable attributes set by a superclass or tuple assignment are under-resolved",
+    "a lambda bound to a local is not a named nested function (callee is a callback, body folds)"
+   ],
+   "note": ""
+  },
+  "ruby": {
+   "census_precision": 0.9906,
+   "wrong_edges": 477,
+   "judged_edges": 50986,
+   "repo_precision": {
+    "h-roda": 0.991,
+    "s-sidekiq": 0.9835,
+    "s-fluentd": 0.9819,
+    "s-rubygems": 0.9972
+   },
+   "worst_repo": "s-fluentd",
+   "worst_repo_precision": 0.9819,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-roda",
+    "s-sidekiq",
+    "s-fluentd",
+    "s-rubygems"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    ".call on a Proc or lambda is a method call, not a callback",
+    "methods inside Const = Struct.new do \u2026 end blocks get the enclosing class as caller",
+    "bare new in class methods is not Type#<init>; recv::Const receivers are glued into the type ID",
+    "a call of a top-level def is #name medium instead of the free function",
+    "code in a class body has the class as caller instead of the file"
+   ],
+   "note": ""
+  },
+  "rust": {
+   "census_precision": 0.9924,
+   "wrong_edges": 605,
+   "judged_edges": 79857,
+   "repo_precision": {
+    "h-rtic": 0.988,
+    "s-quinn": 0.9839,
+    "s-delta-rs": 0.9938,
+    "s-rust-gpu": 0.9946
+   },
+   "worst_repo": "s-quinn",
+   "worst_repo_precision": 0.9839,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-rtic",
+    "s-quinn",
+    "s-delta-rs",
+    "s-rust-gpu"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "receivers bound by match/if-let patterns, turbofish calls and user Deref impls are under-typed",
+    "calls through an fn-pointer field ((self.on_click)()) get no edge",
+    "enum-variant receivers (Dir::North.flip()) stay .m low"
+   ],
+   "note": ""
+  },
+  "scala": {
+   "census_precision": 0.9878,
+   "wrong_edges": 1026,
+   "judged_edges": 84329,
+   "repo_precision": {
+    "h-fs2": 0.9816,
+    "s-codepropertygraph": 0.9869,
+    "s-zio": 0.9892,
+    "s-doobie": 0.9905
+   },
+   "worst_repo": "h-fs2",
+   "worst_repo_precision": 0.9816,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-fs2",
+    "s-codepropertygraph",
+    "s-zio",
+    "s-doobie"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "calls written without parentheses are never emitted",
+    "symbolic and infix operator calls are never emitted",
+    "a bare call of a member inherited from an external base is a low bare name"
+   ],
+   "note": ""
+  },
+  "typescript": {
+   "census_precision": 0.9927,
+   "wrong_edges": 537,
+   "judged_edges": 73549,
+   "repo_precision": {
+    "h-mcp-servers": 0.9901,
+    "s-stripe-node": 0.9821,
+    "s-dafny-vscode": 0.9812,
+    "s-vue": 0.9939
+   },
+   "worst_repo": "s-dafny-vscode",
+   "worst_repo_precision": 0.9812,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-mcp-servers",
+    "s-stripe-node",
+    "s-dafny-vscode",
+    "s-vue"
+   ],
+   "adjudicated": {
+    "s-dafny-vscode": {
+     "report": "s-dafny-vscode_report.v11.md",
+     "raw_wrong": 31,
+     "wrong": 27,
+     "judged": 1434,
+     "ruling": "adjudications.md: ## s-dafny-vscode: 4 unannotated for-of loop-variable edges are a spec gap (31-4)"
+    }
+   },
+   "known_gaps": [
+    "function-valued properties called as this.f() are reported as methods",
+    "getters and parameterless methods used as receivers stay low"
+   ],
+   "note": ""
+  },
+  "zig": {
+   "census_precision": 0.9863,
+   "wrong_edges": 2570,
+   "judged_edges": 187918,
+   "repo_precision": {
+    "h-roc": 0.9863,
+    "s-input": 0.9836,
+    "s-renderer": 0.9907,
+    "s-config": 0.9887
+   },
+   "worst_repo": "s-input",
+   "worst_repo_precision": 0.9836,
+   "target_precision": 0.98,
+   "meets_target": true,
+   "repos": [
+    "h-roc",
+    "s-input",
+    "s-renderer",
+    "s-config"
+   ],
+   "adjudicated": {},
+   "known_gaps": [
+    "static calls on instantiated generic types (std.AutoHashMap(K, V).init) are .m low",
+    "calls in file-level const initializers and some decl-literal forms (return .init(), .field = .x()) are not emitted",
+    "struct { fn g }.g local function aliases are reported as callbacks (behaviour not yet decided in SPEC)",
+    "function-local const aliases of functions are callbacks, not their target",
+    "receivers typed by an optional capture or file-scope var stay low",
+    "calls through function-pointer fields are methods (T#cb) instead of callbacks"
+   ],
+   "note": ""
+  }
+ }
+}

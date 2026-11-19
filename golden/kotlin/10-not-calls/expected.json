@@ -1,0 +1,15 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (...), casts, language constructs (...), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.refs.Refs#run",
+      "callee": "com.acme.refs.Refs#print",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/refs/Refs.kt",
+      "line": 12
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. No edges for: `@Deprecated(\"old\")` (annotation, line 4); `::helper`, `this::print`, `Refs::noop` (callable references, 6-8); `o as String` (cast, 9); `this.x`, `p.y` (property reads, 10-11); the declarations. `print(s)` inside Refs resolves to the member Refs#print, not the default-imported kotlin.io.print: a bare call to a member of the enclosing type wins over a top-level/default-import function."
+}

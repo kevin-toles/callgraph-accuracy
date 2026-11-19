@@ -1,0 +1,60 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | Superclass constructor calls (`super(...)`, `: base(...)`, ...) \u2192 `Parent#<init>`, constructor.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Circle#<init>",
+      "callee": "App.Shape#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Shapes.cs",
+      "line": 14
+    },
+    {
+      "caller": "App.Circle#Describe",
+      "callee": "App.Shape#Log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Shapes.cs",
+      "line": 18
+    },
+    {
+      "caller": "App.Circle#Describe",
+      "callee": "App.Shape#Log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Shapes.cs",
+      "line": 19
+    },
+    {
+      "caller": "App.Circle#Describe",
+      "callee": "App.Shape#Describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Shapes.cs",
+      "line": 20
+    },
+    {
+      "caller": "App.AppError#<init>",
+      "callee": "Exception#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "Shapes.cs",
+      "line": 26
+    },
+    {
+      "caller": "App.AppError#ToString",
+      "callee": ".ToString",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Shapes.cs",
+      "line": 28
+    }
+  ],
+  "nodes_include": [
+    "App.Shape#Log",
+    "App.Shape#Describe",
+    "App.Shape#<init>"
+  ],
+  "notes": "Log is defined only on Shape (in the scan): bare and this. calls from Circle \u2192 App.Shape#Log. base.Describe() with the superclass in the scan names Shape's definition (the computed-receiver form applies only when the superclass is not in the scan). AppError's superclass System.Exception is outside the scan: base.ToString() \u2192 `.ToString`, low; : base(msg) \u2192 System.Exception#<init>, constructor, medium (named statically, not defined in the scan). Circle's base constructor call is written explicitly (: base()) because implicit chaining is not a written call."
+}

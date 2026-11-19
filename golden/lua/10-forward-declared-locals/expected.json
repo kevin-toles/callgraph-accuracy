@@ -1,0 +1,69 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => ...`, `local function f`, ...) is a named nested function: ID `outer.f` (Python form), and calls to it are high. | Lua: ... local functions `mod.f` / `outer.f`",
+  "source": "KNOWN_GAP: forward-declared locals and function-local tables are under-resolved",
+  "edges": [
+    {
+      "caller": "walker.walk",
+      "callee": "walker.visit",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walker.lua",
+      "line": 6
+    },
+    {
+      "caller": "walker.visit",
+      "callee": "walker.walk",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walker.lua",
+      "line": 11
+    },
+    {
+      "caller": "walker#run.inner",
+      "callee": "walker.is_leaf",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walker.lua",
+      "line": 23
+    },
+    {
+      "caller": "walker#run",
+      "callee": "walker.visit",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walker.lua",
+      "line": 25
+    },
+    {
+      "caller": "walker#run",
+      "callee": "walker#run.inner",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walker.lua",
+      "line": 25
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "walker#run",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 2
+    }
+  ],
+  "nodes_include": [
+    "walker.visit",
+    "walker.walk",
+    "walker.is_leaf",
+    "walker#run.inner"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. Correctness evidence (Change control (d), Lua 5.4 reference manual 3.4.11): `local function f () body end` translates to `local f; f = function () body end`, and `function f () body end` translates to `f = function () body end`, assigning the visible local. So `local visit` + `function visit(node)` (lines 3/9) and `local is_leaf` + `is_leaf = function` (lines 16/17) are exactly the expansion of `local function`: each local is bound once, to a function literal, giving the named functions `walker.visit` and `walker.is_leaf`. `walk` calls `visit` before its body is written (line 6), which the forward declaration makes legal; it still resolves to `walker.visit`, high. `node.child == nil` is field access and an operator."
+}

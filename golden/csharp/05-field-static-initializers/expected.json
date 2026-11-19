@@ -1,0 +1,67 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer \u2192 `Type#field`; C# property accessor \u2192 `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter \u2192 `Type#x=`; `static {}` block \u2192 `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. | `implicit`: an execution edge the language runs without a written call \u2014 `Type#<clinit>` \u2192 `Type#field` (static initializer), `Type#<init>` \u2192 `Type#field` (instance field initializer). Line = the field's line.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Registry#counter",
+      "callee": "App.Registry#Seed",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Registry.cs",
+      "line": 5
+    },
+    {
+      "caller": "App.Registry#<clinit>",
+      "callee": "App.Registry#counter",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "Registry.cs",
+      "line": 5
+    },
+    {
+      "caller": "App.Registry#names",
+      "callee": "System.Collections.Generic.List#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "Registry.cs",
+      "line": 7
+    },
+    {
+      "caller": "App.Registry#<init>",
+      "callee": "App.Registry#names",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "Registry.cs",
+      "line": 7
+    },
+    {
+      "caller": "App.Registry#<clinit>",
+      "callee": "App.Registry#Init",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Registry.cs",
+      "line": 11
+    },
+    {
+      "caller": "App.Registry#<init>",
+      "callee": "App.Registry#Register",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Registry.cs",
+      "line": 16
+    },
+    {
+      "caller": "App.Registry#Register",
+      "callee": "System.Collections.Generic.List#Add",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Registry.cs",
+      "line": 25
+    }
+  ],
+  "nodes_include": [
+    "App.Registry#Seed",
+    "App.Registry#Register"
+  ],
+  "notes": "Static field initializer: caller App.Registry#counter, plus implicit <clinit> \u2192 #counter on the field's line; instance field initializer: caller App.Registry#names, plus implicit <init> \u2192 #names. The implicit edges' callee is a definition in the scan, so they are high (tier rule: the tool matched a definition). The C# static constructor `static Registry() { }` is the type's static initializer, the C# form of Java's `static {}` block: caller App.Registry#<clinit>. The instance constructor body's caller is App.Registry#<init>. names.Add uses the field's declared type (decision A, medium)."
+}

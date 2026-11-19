@@ -1,0 +1,87 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer \u2192 `Type#field`; C# property accessor \u2192 `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter \u2192 `Type#x=`; `static {}` block \u2192 `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. | `implicit`: an execution edge the language runs without a written call \u2014 `Type#<clinit>` \u2192 `Type#field` (static initializer), `Type#<init>` \u2192 `Type#field` (instance field initializer). Line = the field's line. | module = the file's path below the scan root without extension and trailing `/index` (`src/chat` for src/chat/index.ts; basenames collide across directories): `src/app.f`, `src/app.C#m`, `#<init>`/`#<clinit>`/`#field` as in Java. | Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "registry.Registry#items",
+      "callee": "registry.build",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "registry.js",
+      "line": 10
+    },
+    {
+      "caller": "registry.Registry#<clinit>",
+      "callee": "registry.Registry#items",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "registry.js",
+      "line": 10
+    },
+    {
+      "caller": "registry.Registry#count",
+      "callee": "registry.start",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "registry.js",
+      "line": 11
+    },
+    {
+      "caller": "registry.Registry#<init>",
+      "callee": "registry.Registry#count",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "registry.js",
+      "line": 11
+    },
+    {
+      "caller": "registry.Registry#<clinit>",
+      "callee": "items.push",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "registry.js",
+      "line": 13
+    },
+    {
+      "caller": "registry.Registry#<clinit>",
+      "callee": "registry.start",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "registry.js",
+      "line": 13
+    },
+    {
+      "caller": "registry.Registry#<init>",
+      "callee": "registry.Registry#reset",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "registry.js",
+      "line": 16
+    },
+    {
+      "caller": "registry.Registry#reset",
+      "callee": "registry.build",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "registry.js",
+      "line": 19
+    },
+    {
+      "caller": "registry",
+      "callee": "registry.Registry#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "registry.js",
+      "line": 23
+    }
+  ],
+  "nodes_include": [
+    "registry.Registry#<init>",
+    "registry.Registry#reset",
+    "registry.Registry#items",
+    "registry.Registry#count",
+    "registry.build",
+    "registry.start"
+  ],
+  "notes": "Static field `items` and instance field `count` are field initializers: caller `Type#field`, plus an implicit edge from `<clinit>` (static) / `<init>` (instance) on the field's line. The JS note says `#<init>`/`#<clinit>`/`#field` work 'as in Java'. The implicit edges' confidence is high: SPEC gives no tier for implicit edges; both endpoints are defined in the scan, which is the high tier. The `static {}` block's code has caller `Registry#<clinit>`. `Registry.items` has no declared type -> `items.push` (last receiver segment), low. Every field initializer in this case contains a call, so the open question of literal-only initializers does not arise."
+}

@@ -1,0 +1,18 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium).",
+  "source": "KNOWN_GAP: typed properties declared on a superclass are not used",
+  "edges": [
+    {
+      "caller": "App.UserCtl#show",
+      "callee": "App.Logger#info",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/UserCtl.php",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "App.Logger#info"
+  ],
+  "notes": "$this->logger is the property declared `protected Logger $logger` on the scanned superclass App\\BaseCtl; the declaration gives its type, so the receiver is App.Logger \u2192 App.Logger#info, high. A `logger.info` low guess is wrong. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

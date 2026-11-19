@@ -1,0 +1,35 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "build",
+      "callee": "make_x",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shapes.c",
+      "line": 17
+    },
+    {
+      "caller": "build",
+      "callee": "make_y",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shapes.c",
+      "line": 17
+    },
+    {
+      "caller": "build",
+      "callee": "make_y",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shapes.c",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "make_x",
+    "make_y"
+  ],
+  "notes": "Not calls: sizeof(struct point) and sizeof(q) (language construct); the casts (int), (long), (void); the compound literal (struct point){...} and the brace initializer (data construction); 'return (seed);' (parenthesised expression); 'getter = make_x' (function reference); 'getter != 0' (comparison of a function pointer, no call); the prototype on line 6 and all function heads. The calls make_x() and make_y(seed) inside the brace initializer, and make_y(p.x) under the (void) cast, are real calls."
+}

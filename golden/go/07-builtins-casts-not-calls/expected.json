@@ -1,0 +1,39 @@
+{
+  "rule": "Go: calls in package-level `var` initializers have caller `pkg.init` (they run during package initialization). Builtins (`len`, `append`, `make`, `panic`, \u2026) are not calls: no edge. | Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. | Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.apply",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "main.go",
+      "line": 15
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 28
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 28
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "bark",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "main.go",
+      "line": 28
+    }
+  ],
+  "notes": "make, append, len, cap, delete, new and panic are builtins: no edge (Decisions 2026-10-29 Go). Celsius(3.5) and []byte(\"hi\") are conversions (casts): no edge. Point{...} is data construction: no edge. `bark := d.Bark` is a method value (method reference without a call): no edge to Dog#Bark; `double` passed to apply is likewise a reference. bark() calls through a local holding a function value (a method value, not a function literal), and f(v) through a parameter: callback, unknown, callee = the variable name (Go note: ONE edge). p.X is field access."
+}

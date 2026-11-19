@@ -1,0 +1,59 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func`, a Rust `fn` item inside a function body, a PHP `$f = function`/`fn`, a C++ `auto f = [..]`, a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Pipeline#run.double",
+      "callee": "App.Pipeline#scale",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Pipeline.php",
+      "line": 9
+    },
+    {
+      "caller": "App.Pipeline#run.inc",
+      "callee": "App.Pipeline#shift",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Pipeline.php",
+      "line": 11
+    },
+    {
+      "caller": "App.Pipeline#run",
+      "callee": "App.Pipeline#run.double",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "App/Pipeline.php",
+      "line": 12
+    },
+    {
+      "caller": "App.Pipeline#run",
+      "callee": "App.Pipeline#run.inc",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "App/Pipeline.php",
+      "line": 13
+    },
+    {
+      "caller": "App.Pipeline#run",
+      "callee": "App.Pipeline#each",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Pipeline.php",
+      "line": 14
+    },
+    {
+      "caller": "App.Pipeline#run",
+      "callee": "App.Pipeline#scale",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Pipeline.php",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "App.Pipeline#run.double",
+    "App.Pipeline#run.inc"
+  ],
+  "notes": "$double = function and $inc = fn are named nested functions: IDs App.Pipeline#run.double / #run.inc (Python form pkg.mod.C#m.inner); calls in their bodies have them as caller, and $double(1)/$inc(2) are high, direct (a named function, not a callback). The anonymous closure passed to each() folds into App.Pipeline#run. Passing it is not a call."
+}

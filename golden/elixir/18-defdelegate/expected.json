@@ -1,0 +1,7 @@
+{
+  "rule": "A record generates no runtime functions, unlike macros that do (`defdelegate`, `defexception`), whose generated functions are call targets.",
+  "source": "SPEC",
+  "spec_gap": "Does `defdelegate slug(s), to: MyApp.Util` emit an edge from the generated `MyApp.Facade.slug` to `MyApp.Util.slug` (call_type direct or implicit, high, on the defdelegate line), or is it a declaration with no edge, like def/defstruct?",
+  "edges": [],
+  "notes": "`title/1` calls `slug(s)`, which the SPEC makes a call target: `MyApp.Facade.slug`, high. But completeness of the case also needs the defdelegate line itself (facade.ex:2): the generated `MyApp.Facade.slug` runs `MyApp.Util.slug(s)`, which is not written as a call but is what the code does at runtime. SPEC does not say whether that is an edge (direct? implicit?), with what caller and line."
+}

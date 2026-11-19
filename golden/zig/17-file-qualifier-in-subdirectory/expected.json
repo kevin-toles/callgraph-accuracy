@@ -1,0 +1,7 @@
+{
+  "rule": "**Zig**: file-qualified: `file.Struct#fn`, `file.fn`; `@import` bindings make `std.x.y` medium. | Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`).",
+  "source": "SPEC",
+  "spec_gap": "For a Zig file below a subdirectory of the scan root (src/geo/shapes.zig), what is the 'file' qualifier: `shapes.area` (basename), `geo.shapes.area` (dotted path) or `geo/shapes.area` (path)? And is the caller of its file-level code (`table`'s initializer) `geo/shapes` (the top-level rule's 'file path below the scan root without extension', which lists Zig file scope) even if function IDs use a different form?",
+  "edges": [],
+  "notes": "The per-language note says `file.fn`; the top-level rule says Zig has no module qualifier and uses the file path. Both agree only for files directly under the scan root, which is why every other Zig case keeps its files there."
+}

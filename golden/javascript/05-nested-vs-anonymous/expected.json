@@ -1,0 +1,117 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func` | is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. | Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty. | Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | Top-level / file-level code (outside any function or type): the caller is the file's module ID.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "walk.outer.inner",
+      "callee": "walk.helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 6
+    },
+    {
+      "caller": "walk.outer.twice",
+      "callee": "walk.outer.inner",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 8
+    },
+    {
+      "caller": "walk.outer.twice",
+      "callee": "walk.outer.inner",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 8
+    },
+    {
+      "caller": "walk.outer",
+      "callee": "xs.forEach",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "walk.js",
+      "line": 10
+    },
+    {
+      "caller": "walk.outer",
+      "callee": "walk.helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 11
+    },
+    {
+      "caller": "walk.outer",
+      "callee": "walk.outer.twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 13
+    },
+    {
+      "caller": "walk.Tree#visit.step",
+      "callee": "walk.Tree#leaf",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 18
+    },
+    {
+      "caller": "walk.Tree#visit",
+      "callee": "nodes.map",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "walk.js",
+      "line": 19
+    },
+    {
+      "caller": "walk.Tree#visit",
+      "callee": "walk.Tree#visit.step",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 19
+    },
+    {
+      "caller": "walk.Tree#visit",
+      "callee": "walk.Tree#visit.step",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 20
+    },
+    {
+      "caller": "walk.Tree#leaf",
+      "callee": "walk.helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 23
+    },
+    {
+      "caller": "walk",
+      "callee": ".forEach",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "walk.js",
+      "line": 27
+    },
+    {
+      "caller": "walk",
+      "callee": "walk.outer",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "walk.js",
+      "line": 27
+    }
+  ],
+  "nodes_include": [
+    "walk.outer.inner",
+    "walk.outer.twice",
+    "walk.Tree#visit.step",
+    "walk.helper"
+  ],
+  "notes": "`const inner = (x) => ...` and the nested `function twice` (a local function declaration) are named nested functions `walk.outer.inner` / `walk.outer.twice`; `const step` inside a method is `walk.Tree#visit.step` (Python form `C#m.inner`). The anonymous `function (x) {...}` passed to forEach, the arrow passed to map, and the top-level arrow on line 27 fold into `walk.outer`, `walk.Tree#visit` and module `walk`. `inner(inner(x))` is two edges on line 8. `this` inside the arrow `step` is the lexical `this` of visit, so `this.leaf` -> `walk.Tree#leaf`. `xs`/`nodes` are untyped parameters -> `xs.forEach`/`nodes.map` low; `[1, 2].forEach` has a literal receiver -> `.forEach` low."
+}

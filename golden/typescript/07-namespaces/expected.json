@@ -1,0 +1,70 @@
+{
+  "rule": "TS namespaces and named object literals (bound at the top level or exported) nest with dots (`mod.ns.f`, `mod.obj.f`); the object `module.exports`/`export default` is, is the module (`mod.f`); `module.exports = fn` is `mod.default`. | Nested types are dotted: `Outer.Inner#m`. | Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "geo.Geo.area",
+      "callee": "geo.Geo.sq",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "geo.ts",
+      "line": 3
+    },
+    {
+      "caller": "geo.Geo.Pt#norm",
+      "callee": "geo.Geo.sq",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "geo.ts",
+      "line": 11
+    },
+    {
+      "caller": "geo.Outer.Inner.deep",
+      "callee": "geo.Geo.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "geo.ts",
+      "line": 18
+    },
+    {
+      "caller": "main",
+      "callee": "geo.Geo.Pt#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "main.ts",
+      "line": 3
+    },
+    {
+      "caller": "main",
+      "callee": "geo.Geo.Pt#norm",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.ts",
+      "line": 4
+    },
+    {
+      "caller": "main",
+      "callee": "geo.Outer.Inner.deep",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ts",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": "geo.Geo.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ts",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "geo.Geo.area",
+    "geo.Geo.sq",
+    "geo.Geo.Pt#<init>",
+    "geo.Geo.Pt#norm",
+    "geo.Outer.Inner.deep"
+  ],
+  "notes": "Namespace members nest with dots: `geo.Geo.area`, the non-exported `geo.Geo.sq`, the dotted namespace `Outer.Inner` -> `geo.Outer.Inner.deep`, and the class inside the namespace `geo.Geo.Pt#norm`. The bare `sq(...)` inside the namespace and inside Pt resolves lexically to `geo.Geo.sq`. `p` is bound by `= new Geo.Pt(2)` (decision A) -> `geo.Geo.Pt#norm`. `Geo.area` is referenced from its own file (line 18) and the importer (line 6) with one ID (C1)."
+}

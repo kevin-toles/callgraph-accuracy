@@ -1,0 +1,7 @@
+{
+  "rule": "module = the `module` header (else the file name); top-level functions, class methods and record fields `Module.f` **C3 Operation classification.** Each written construct is exactly one of:",
+  "source": "KNOWN_GAP: operator applications are not emitted",
+  "spec_gap": "Is a Haskell operator application (`sum xs + length ys`, a user-defined `a <+> b` defined in the scan, an operator section `(+ 1)`) an invocation edge? If it is: what is the callee ID (`Prelude.+` / `Ops.<+>`, with or without parentheses), what call_type and line, and is a section passed as an argument (`map (+ 1) xs`) a call or a reference? Also: do `$` and `&` emit an edge of their own besides the call of f? The Haskell note only says that `f $ x` and `x & f` call f.",
+  "edges": [],
+  "notes": "SPEC defines IDs for named functions but never says whether an operator application is an invocation edge or what its callee ID is. The only operator rule is that `f $ x` / `x & f` call f. Undecided here: `concat`, `sum`, `length` and `map` are ordinary Prelude calls, but the edges for `+`, the user-defined `<+>` and the section `(+ 1)` are not."
+}

@@ -1,0 +1,69 @@
+{
+  "rule": "Generic/template type arguments are dropped from every ID (`HashSet#<init>`). Overloads share one ID. | Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "box.Box#map",
+      "callee": "box.Box#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "box.ts",
+      "line": 4
+    },
+    {
+      "caller": "box.Box#map",
+      "callee": "fn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "box.ts",
+      "line": 4
+    },
+    {
+      "caller": "box.demo",
+      "callee": "box.Box#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "box.ts",
+      "line": 15
+    },
+    {
+      "caller": "box.demo",
+      "callee": "box.parse",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "box.ts",
+      "line": 16
+    },
+    {
+      "caller": "box.demo",
+      "callee": "box.parse",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "box.ts",
+      "line": 17
+    },
+    {
+      "caller": "box.demo",
+      "callee": "box.Box#map",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "box.ts",
+      "line": 18
+    },
+    {
+      "caller": "box.demo",
+      "callee": "box.parse",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "box.ts",
+      "line": 18
+    }
+  ],
+  "nodes_include": [
+    "box.Box#<init>",
+    "box.Box#map",
+    "box.parse",
+    "box.demo"
+  ],
+  "notes": "`new Box<U>(...)`, `new Box<string>(...)`, `b: Box<string>` and `b.map<number>(...)` drop their type arguments: `box.Box#<init>`, `box.Box#map`. The two overload signatures of `parse` (lines 8-9) are declarations (no edge) and share one ID with the implementation, `box.parse`. `fn(...)` calls a parameter -> callback. `typeof s` and `s.length` are not calls. The arrow passed to map folds into `box.demo`."
+}

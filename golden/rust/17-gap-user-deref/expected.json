@@ -1,0 +1,35 @@
+{
+  "rule": "A pointer, reference or smart pointer whose `->`/`.` reaches the pointee names the pointee: C++ `unique_ptr<T>`/`shared_ptr<T>`/`T*`, Rust `Box<T>`/`Rc<T>`/`Arc<T>`/`&T` \u2192 `T#m`, unless the wrapper itself defines `m` (`p.clone()` on an `Arc` is `Arc#clone`).",
+  "source": "KNOWN_GAP: receivers bound by match/if-let patterns, turbofish calls and user Deref impls are under-typed (user Deref part)",
+  "edges": [
+    {
+      "caller": "run",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 26
+    },
+    {
+      "caller": "run",
+      "callee": "Guard#release",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 27
+    },
+    {
+      "caller": "main",
+      "callee": "run",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 31
+    }
+  ],
+  "nodes_include": [
+    "Engine#start",
+    "Guard#release"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Guard implements Deref<Target = Engine>, so it is a smart pointer whose `.` reaches Engine: g.start() (start not defined on Guard) is Engine#start, high; g.release() is defined on the wrapper itself \u2192 Guard#release. A Guard#start or g.start guess is wrong. The auto-deref calls Guard#deref without a written call; SPEC defines `implicit` only for initializers, so no edge is expected for it. Guard { .. } is data construction."
+}

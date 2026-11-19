@@ -1,0 +1,15 @@
+{
+  "rule": "A use of a record macro declared in the file, or imported from a scanned module, emits no edge. Such a use builds, matches, updates or reads a tuple at compile time. That covers expression and pattern position alike: `listener(node: n)`, `handler(:id)`, `rec(r, field: v)`. This is data construction. Calls in the use's arguments are ordinary edges. A record generates no runtime functions, unlike macros that do (`defdelegate`, `defexception`), whose generated functions are call targets.",
+  "source": "KNOWN_GAP: Record.defrecordp accessors and calls inside quote blocks are not named as generated functions",
+  "edges": [
+    {
+      "caller": "MyApp.Acc.tally",
+      "callee": "Enum.count",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/acc.ex",
+      "line": 18
+    }
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. This case covers the defrecordp-accessor half of the gap (the quote-block half is 12-quote-blocks, a spec gap). Every accessor form of the private record `state` is a compile-time tuple operation, not a generated function, so none is an edge or a node: `state()` (new), `state(s, :count)` / `state(s, :items)` (read), `state(s, items: ..., count: ...)` (update, including the nested read in its argument), `state(s)` (to keyword list), `state(:items)` (field index). `Record.defrecordp` is a declaration. The only call is `Enum.count`, whose argument is a record read. `[item | items]` is list construction. Expected output is therefore no `MyApp.Acc.state` node and no edge to it."
+}

@@ -1,0 +1,77 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Button#press",
+      "callee": "on_click",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "src/main.rs",
+      "line": 7
+    },
+    {
+      "caller": "apply",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "src/main.rs",
+      "line": 16
+    },
+    {
+      "caller": "twice",
+      "callee": "g",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "src/main.rs",
+      "line": 24
+    },
+    {
+      "caller": "main",
+      "callee": "Button#press",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 29
+    },
+    {
+      "caller": "main",
+      "callee": "make_adder",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 30
+    },
+    {
+      "caller": "main",
+      "callee": "add",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "src/main.rs",
+      "line": 31
+    },
+    {
+      "caller": "main",
+      "callee": "apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 32
+    },
+    {
+      "caller": "main",
+      "callee": "twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 33
+    }
+  ],
+  "nodes_include": [
+    "Button#press",
+    "make_adder",
+    "apply",
+    "twice"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. A stored fn-pointer field (on_click), an `F: Fn` parameter, a `&dyn Fn` parameter and a local bound to a call result (add = make_adder(1), not a closure literal, so not a named nested function) are calls through values \u2192 callee = the variable/field name, callback, unknown. `on_click: double` passes a function without calling it (no edge); `Button { .. }` is data construction and types b. The closure returned by make_adder is anonymous and contains no calls. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

@@ -1,0 +1,55 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => …`, `local function f`, `let f x = …`, `where f = …`, local `fun`/`def`/`func`, a Rust `fn` item inside a function body, a PHP `$f = function`/`fn`, a C++ `auto f = [..]`, a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Batch#process",
+      "callee": "items.each",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/batch.rb",
+      "line": 3
+    },
+    {
+      "caller": "Batch#process",
+      "callee": "Batch#handle",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/batch.rb",
+      "line": 4
+    },
+    {
+      "caller": "Batch#process",
+      "callee": "items.map",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/batch.rb",
+      "line": 6
+    },
+    {
+      "caller": "Batch#process",
+      "callee": "Batch#handle",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/batch.rb",
+      "line": 6
+    },
+    {
+      "caller": "Batch#process",
+      "callee": "Batch#register",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/batch.rb",
+      "line": 7
+    },
+    {
+      "caller": "Batch#process",
+      "callee": "Batch#handle",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/batch.rb",
+      "line": 7
+    }
+  ],
+  "notes": "do/end blocks, brace blocks and an anonymous stabby lambda passed as an argument are anonymous functions: calls inside fold into the enclosing method `Batch#process`. The lambda is not bound to a local, so it is not a named nested function. `register(fn)` only returns its parameter (no call)."
+}

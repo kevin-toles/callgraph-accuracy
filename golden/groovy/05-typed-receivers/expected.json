@@ -1,0 +1,91 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). An enum constant `E.C` has type `E`. **Body-less member declarations of scanned types are defined in the scan (high)**: a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are. **Implicitly imported names are qualified**: Java/Scala/Groovy `java.lang.String`, Groovy's default imports (`java.util.List`, `groovy.lang.Closure`, …). With exactly one on-demand import (`import a.b.*`), a simple type name that is not in the file's package, not imported singly and not a java.lang type is `a.b.Name` (medium); with more than one such import it stays unqualified, low.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "core.Holder#viaField",
+      "callee": "core.Svc#work",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Typed.groovy",
+      "line": 17
+    },
+    {
+      "caller": "core.Holder#viaParam",
+      "callee": "core.FastSvc#work",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Typed.groovy",
+      "line": 21
+    },
+    {
+      "caller": "core.Holder#viaLocal",
+      "callee": "core.FastSvc#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "core/Typed.groovy",
+      "line": 25
+    },
+    {
+      "caller": "core.Holder#viaLocal",
+      "callee": "core.FastSvc#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "core/Typed.groovy",
+      "line": 26
+    },
+    {
+      "caller": "core.Holder#viaLocal",
+      "callee": "core.Svc#work",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Typed.groovy",
+      "line": 27
+    },
+    {
+      "caller": "core.Holder#viaLocal",
+      "callee": "core.FastSvc#work",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Typed.groovy",
+      "line": 28
+    },
+    {
+      "caller": "core.Holder#viaLoop",
+      "callee": "core.FastSvc#work",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Typed.groovy",
+      "line": 33
+    },
+    {
+      "caller": "core.Holder#viaCatch",
+      "callee": "java.lang.IllegalArgumentException#getMessage",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "core/Typed.groovy",
+      "line": 42
+    },
+    {
+      "caller": "core.Holder#viaBound",
+      "callee": "core.Svc#work",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Typed.groovy",
+      "line": 47
+    },
+    {
+      "caller": "core.Holder#viaString",
+      "callee": "java.lang.String#toUpperCase",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "core/Typed.groovy",
+      "line": 51
+    }
+  ],
+  "nodes_include": [
+    "core.Svc#work",
+    "core.FastSvc#work"
+  ],
+  "notes": "Typed Groovy declarations follow decision A: field, parameter, typed local (declared type Svc wins over the initializer), `def f = new FastSvc()`, for-loop variable, catch parameter. Svc#work is a body-less interface method of a scanned type: high (Decisions 2026-11-09) and in nodes (C1). T resolves to its bound Svc. IllegalArgumentException and String are java.lang names, medium. `return \"ok\"` and `return 0` are not calls. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

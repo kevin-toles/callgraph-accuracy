@@ -1,0 +1,92 @@
+{
+  "rule": "Method: `Type#member`. ... Constructor / initializer call: `Type#<init>`. ... `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. ... Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, ...) \u2192 `Parent#<init>`, constructor. ... Overloads share one ID. ... **Java / Kotlin / C# / Groovy / Scala**: package/namespace-qualified: `com.x.C#m`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.shop.Cart#<init>",
+      "callee": "com.acme.shop.Cart#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.kt",
+      "line": 4
+    },
+    {
+      "caller": "com.acme.shop.Cart#<init>",
+      "callee": "com.acme.shop.Cart#reset",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.kt",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.shop.Cart#add",
+      "callee": "com.acme.shop.Cart#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.kt",
+      "line": 14
+    },
+    {
+      "caller": "com.acme.shop.Cart#add",
+      "callee": "com.acme.shop.Cart#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.kt",
+      "line": 18
+    },
+    {
+      "caller": "com.acme.shop.Cart#add",
+      "callee": "com.acme.shop.Pricing#parse",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.kt",
+      "line": 18
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Cart#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.kt",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Cart#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.kt",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Cart#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.kt",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Pricing#parse",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.kt",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Pricing#parse",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.kt",
+      "line": 12
+    }
+  ],
+  "nodes_include": [
+    "com.acme.shop.Cart#<init>",
+    "com.acme.shop.Cart#add",
+    "com.acme.shop.Pricing#parse"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. The primary and secondary constructors are both `Cart#<init>`; the secondary's `: this(0)` delegation is a constructor edge from Cart#<init> to itself (Cart.kt:4, the line of `this`), and its body's `reset()` has caller Cart#<init>. Both add overloads share `Cart#add`. `object Pricing` is a type: its members are `Pricing#member`. `total = 0` / `total += amount` are property writes and Int arithmetic, not calls."
+}

@@ -1,0 +1,35 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | `this.x` assigned a value is a callback. | **unknown**: a dynamic call (function value, callback, closure, function pointer). | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`.",
+  "source": "KNOWN_GAP: function-valued properties called as this.f() are reported as methods",
+  "edges": [
+    {
+      "caller": "pipeline.Pipeline#run",
+      "callee": "pipeline.Pipeline#reset",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "pipeline.ts",
+      "line": 11
+    },
+    {
+      "caller": "pipeline.Pipeline#run",
+      "callee": "transform",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "pipeline.ts",
+      "line": 12
+    },
+    {
+      "caller": "pipeline.Pipeline#run",
+      "callee": "step",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "pipeline.ts",
+      "line": 12
+    }
+  ],
+  "nodes_include": [
+    "pipeline.Pipeline#reset",
+    "pipeline.Pipeline#run"
+  ],
+  "notes": "`step` and `transform` are properties declared with function types and assigned parameter values in the constructor; `this.step(n)` / `this.transform(...)` call through a stored property holding a function -> callee is the property's name, callback, unknown ('`this.x` assigned a value is a callback'). They are not methods: they are not `Type#m`. Contrast: `this.reset()` calls a real method, `pipeline.Pipeline#reset`, method, high. The `Handler` type alias is a declaration, not a call."
+}

@@ -1,0 +1,78 @@
+{
+  "rule": "top-level `file.fun` (file basename); nested modules/functors dotted (`file.Make.connect`); local function lets `outer.f`, local value lets fold into the enclosing binding; module-level code's caller is the module. Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "store.log",
+      "callee": "Stdlib.print_endline",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "store.ml",
+      "line": 1
+    },
+    {
+      "caller": "store.Cache.key",
+      "callee": "String.lowercase_ascii",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "store.ml",
+      "line": 4
+    },
+    {
+      "caller": "store.Cache.get",
+      "callee": "store.log",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "store.ml",
+      "line": 6
+    },
+    {
+      "caller": "store.Cache.get",
+      "callee": "store.Cache.key",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "store.ml",
+      "line": 6
+    },
+    {
+      "caller": "store.Cache.Stats.hit",
+      "callee": "store.Cache.get",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "store.ml",
+      "line": 9
+    },
+    {
+      "caller": "store.lookup",
+      "callee": "store.Cache.get",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "store.ml",
+      "line": 14
+    },
+    {
+      "caller": "store.lookup",
+      "callee": "store.Cache.Stats.hit",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "store.ml",
+      "line": 15
+    },
+    {
+      "caller": "store",
+      "callee": "store.lookup",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "store.ml",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "store.log",
+    "store.Cache.key",
+    "store.Cache.get",
+    "store.Cache.Stats.hit",
+    "store.lookup"
+  ],
+  "notes": "Nested modules are dotted under the file module: `store.Cache.get`, `store.Cache.Stats.hit`. Bare names inside a nested structure resolve through enclosing structures: `log` in Cache → `store.log`, `key` → `store.Cache.key`, `get` in Stats → `store.Cache.get`. Qualified `Cache.get` / `Cache.Stats.hit` from the file's top level resolve to the same IDs (C1)."
+}

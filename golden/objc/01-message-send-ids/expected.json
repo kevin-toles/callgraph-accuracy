@@ -1,0 +1,63 @@
+{
+  "rule": "C functions bare; ObjC methods `Class#selector` with keyword colons (`doX:withY:`); `[obj m]` \u2192 `obj.m`. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Shape#doX:withY:",
+      "callee": "twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Shape.m",
+      "line": 21
+    },
+    {
+      "caller": "Shape#run",
+      "callee": "Shape#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Shape.m",
+      "line": 24
+    },
+    {
+      "caller": "Shape#run",
+      "callee": "Shape#make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Shape.m",
+      "line": 25
+    },
+    {
+      "caller": "Shape#run",
+      "callee": "Shape#doX:withY:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Shape.m",
+      "line": 26
+    },
+    {
+      "caller": "Shape#run",
+      "callee": "Shape#doX:withY:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Shape.m",
+      "line": 27
+    },
+    {
+      "caller": "driveShape",
+      "callee": "Shape#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Shape.m",
+      "line": 32
+    }
+  ],
+  "nodes_include": [
+    "Shape#make",
+    "Shape#greet",
+    "Shape#doX:withY:",
+    "Shape#run",
+    "twice",
+    "driveShape"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. Class methods (+make) and instance methods share the `Class#selector` form. `other` is typed `Shape *` by its local declaration (decision A) so `[other doX:withY:]` is `Shape#doX:withY:` high. A C function is bare (`twice`, `driveShape`)."
+}

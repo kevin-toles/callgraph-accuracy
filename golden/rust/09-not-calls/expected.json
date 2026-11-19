@@ -1,0 +1,31 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Pt#convert",
+      "callee": "Vec#into_iter",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 24
+    },
+    {
+      "caller": "Pt#convert",
+      "callee": ".map",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 24
+    },
+    {
+      "caller": "Pt#convert",
+      "callee": ".collect",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 24
+    }
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Tuple-struct construction Meters(5), struct literal Pt { .. }, enum variants Shape::Circle(1.0)/Shape::Empty/Ok(())/Some(..), the cast `as u64`, field access self.x and the method reference Self::double passed to map are not calls. xs: Vec<i32> \u2192 Vec#into_iter medium; the following links are on call results typed only by std \u2192 .map, .collect low. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

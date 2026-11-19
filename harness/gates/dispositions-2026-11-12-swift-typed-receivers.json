@@ -1,0 +1,26 @@
+[
+ {
+  "id": "swift-typed-receiver-in-scan",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "\\.swift$", "old": "low/method", "new": "high/method", "new_callee": "#"},
+  "disposition": "ruling SPEC decision A (typed receivers)",
+  "note": "Swift r.m() on a receiver with a declared type in the scan (parameter, local, property, global, initializer-bound let/var, if/guard-let, closure parameter, type-variable bound, typealias) is now Owner#m at high, Owner the scanned type or ancestor declaring m (struct-analyzer d82a7cf..9e0236f)."
+ },
+ {
+  "id": "swift-typed-receiver-outside-scan",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "\\.swift$", "old": "low/method", "new": "medium/method", "new_callee": "#"},
+  "disposition": "ruling SPEC decision A (typed receivers); Decisions 2026-11-10 inherited member from an outside base",
+  "note": "Swift r.m() on a receiver whose declared type is outside the scan (or is scanned and may inherit m from a base or conformance outside the scan) is now Type#m at medium; a scanned type with no outside base that does not declare m stays a low guess (C2/C4, c6d55a2)."
+ },
+ {
+  "id": "swift-scanned-protocol-requirement-defined",
+  "kind": "change",
+  "language": "*",
+  "match": {"file": "\\.swift$", "old": "medium/method", "new": "high/method", "new_callee": "#"},
+  "disposition": "ruling SPEC Decisions 2026-11-09 (a scanned protocol requirement is defined); decision A",
+  "note": "Swift calls on a scanned protocol requirement are high (the requirement is defined in the scan); a static property read through its type (T.p.m()) names T#m instead of T.p#m."
+ }
+]

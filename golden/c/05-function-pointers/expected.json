@@ -1,0 +1,66 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown. **unknown**: a dynamic call (function value, callback, closure, function pointer). Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "apply",
+      "callee": "fn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "apply.c",
+      "line": 14
+    },
+    {
+      "caller": "apply",
+      "callee": "fn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "apply.c",
+      "line": 14
+    },
+    {
+      "caller": "run",
+      "callee": "notify",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "apply.c",
+      "line": 18
+    },
+    {
+      "caller": "compose",
+      "callee": "op",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "apply.c",
+      "line": 25
+    },
+    {
+      "caller": "compose",
+      "callee": "local",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "apply.c",
+      "line": 25
+    },
+    {
+      "caller": "compose",
+      "callee": "g_hook",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "apply.c",
+      "line": 25
+    },
+    {
+      "caller": "compose",
+      "callee": "apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "apply.c",
+      "line": 25
+    }
+  ],
+  "nodes_include": [
+    "apply"
+  ],
+  "notes": "fn(v) and (*fn)(v) are both calls through the parameter fn (two edges, callee 'fn'). In run, the parameter 'notify' shadows the global function notify, so notify(3) is a call through the parameter: callback/unknown, NOT 'notify' high. op (typedef'd fn-pointer local), local (fn-pointer local) and g_hook (file-scope fn-pointer variable) are variables holding functions: callback/unknown. 'unary_fn op = inc', '&notify', 'g_hook = inc' and passing 'inc' to apply take a function reference without calling it: not calls (SPEC 'Not calls: passing a method reference'). The typedef on line 1 is a declaration."
+}

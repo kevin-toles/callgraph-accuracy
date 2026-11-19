@@ -1,0 +1,67 @@
+{
+  "rule": "Constructor / initializer call: `Type#<init>`. | Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) \u2192 `Parent#<init>`, constructor. | Generic/template type arguments are dropped from every ID (`HashSet#<init>`).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Dog#<init>",
+      "callee": "App.Animal#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Dog.cs",
+      "line": 15
+    },
+    {
+      "caller": "App.Dog#<init>",
+      "callee": "App.Dog#Normalize",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Dog.cs",
+      "line": 15
+    },
+    {
+      "caller": "App.Dog#<init>",
+      "callee": "App.Dog#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Dog.cs",
+      "line": 19
+    },
+    {
+      "caller": "App.Dog#Create",
+      "callee": "System.Collections.Generic.List#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "Dog.cs",
+      "line": 27
+    },
+    {
+      "caller": "App.Dog#Create",
+      "callee": "System.Collections.Generic.List#Add",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Dog.cs",
+      "line": 28
+    },
+    {
+      "caller": "App.Dog#Create",
+      "callee": "App.Dog#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Dog.cs",
+      "line": 28
+    },
+    {
+      "caller": "App.Dog#Create",
+      "callee": "App.Dog#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Dog.cs",
+      "line": 29
+    }
+  ],
+  "nodes_include": [
+    "App.Animal#<init>",
+    "App.Dog#<init>"
+  ],
+  "notes": ": base(...) \u2192 Parent#<init> and : this(...) \u2192 own Type#<init>, both constructor, on the line of the base/this keyword; both Dog constructors share App.Dog#<init> (overloads). Normalize(name) is written in the constructor initializer, which is part of the constructor, so its caller is App.Dog#<init>. List<Dog> drops its type argument; the type is written fully qualified (medium). `var items = new ...List<Dog>()` types items (decision A), so items.Add is List#Add, medium. Animal's constructor body only assigns a field."
+}

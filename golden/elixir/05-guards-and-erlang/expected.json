@@ -1,0 +1,47 @@
+{
+  "rule": "Elixir: guards are calls of their function. `:erlang_mod.f` and an imported Erlang module are `erlang_mod.f`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Math.root",
+      "callee": "Kernel.is_number",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/math.ex",
+      "line": 4
+    },
+    {
+      "caller": "MyApp.Math.root",
+      "callee": "math.sqrt",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/math.ex",
+      "line": 5
+    },
+    {
+      "caller": "MyApp.Math.table",
+      "callee": "ets.new",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/math.ex",
+      "line": 9
+    },
+    {
+      "caller": "MyApp.Math.size",
+      "callee": "Kernel.is_tuple",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/math.ex",
+      "line": 12
+    },
+    {
+      "caller": "MyApp.Math.size",
+      "callee": "Kernel.tuple_size",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/math.ex",
+      "line": 12
+    }
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. Bare Kernel functions resolve to the auto-imported Kernel (Elixir decision: 'with one import known to export the name, that import is the target'): `Kernel.<name>`, medium. Guard calls (`is_number`, `is_tuple`) are calls with the guarded function as caller, on the guard's line. `sqrt(x)` resolves through `import :math, only: [sqrt: 1]` to `math.sqrt`; `:ets.new` is `ets.new`. The `import` line is a module dependency."
+}

@@ -1,0 +1,84 @@
+{
+  "rule": "A `require(...)` call (JS) or `require \"m\"` (Lua) is an invocation of the loader: callee `require` (JS) or `_G#require` (Lua), medium, direct, on its line. The edge is not the module dependency. | The binding carries the dependency: names bound from it resolve to the defining module, using its IDs when it is scanned and the specifier as written when it is not (`node:http.createServer`, medium). A `require` whose argument is not a literal leaves its bindings unresolved (low guesses), per C4. An ESM `import` declaration is not a call. | A top-level binding has one ID, `mod.name`, from its own file and from every importer, per C1. That covers `const`/`let`/`var`/`export const`, a function declaration and a class. A call through it uses that ID everywhere, never the bare name in its own file. | **No evidence**, as in plain JS `x = f()` with `f` not scanned: callee `mod.name`, callback, unknown. This is a call through a value, under the binding's canonical ID. | **C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "lib",
+      "callee": "idgen.makeId",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib.ts",
+      "line": 6
+    },
+    {
+      "caller": "lib",
+      "callee": "lib.nextId",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "lib.ts",
+      "line": 7
+    },
+    {
+      "caller": "main",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.ts",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.ts",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.ts",
+      "line": 3
+    },
+    {
+      "caller": "main.entry",
+      "callee": "lib.helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ts",
+      "line": 7
+    },
+    {
+      "caller": "main.entry",
+      "callee": "lib.nextId",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "main.ts",
+      "line": 8
+    },
+    {
+      "caller": "main.entry",
+      "callee": "dyn.start",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "main.ts",
+      "line": 9
+    },
+    {
+      "caller": "main.entry",
+      "callee": "lib.helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ts",
+      "line": 10
+    }
+  ],
+  "nodes_include": [
+    "lib.helper",
+    "lib.nextId",
+    "main.entry"
+  ],
+  "notes": "`nextId = makeId()` has no type annotation and `makeId` comes from the unscanned package `idgen`: no evidence -> `lib.nextId`, callback, unknown, called both in lib.ts (line 7, caller module `lib`) and in main.ts (ESM import). The three `require(...)` calls are loader invocations (`require`, medium, direct). `lib = require(\"./lib\")` and the destructured `{ helper }` resolve to `lib.helper`, high. `require(process.argv[2])` has a non-literal argument: `dyn.start()` stays `dyn.start`, low (C4). The ESM import on line 4 is not a call."
+}

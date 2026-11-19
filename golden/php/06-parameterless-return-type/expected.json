@@ -1,0 +1,59 @@
+{
+  "rule": "**Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` \u2014 left as a `metadata.insert` low guess it is wrong. | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Svc#store",
+      "callee": "App.Store#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 8
+    },
+    {
+      "caller": "App.Svc#storeFor",
+      "callee": "App.Store#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 13
+    },
+    {
+      "caller": "App.Svc#run",
+      "callee": "App.Svc#store",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 18
+    },
+    {
+      "caller": "App.Svc#run",
+      "callee": "App.Store#find",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 18
+    },
+    {
+      "caller": "App.Svc#run",
+      "callee": "App.Svc#storeFor",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 19
+    },
+    {
+      "caller": "App.Svc#run",
+      "callee": ".find",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "App/Svc.php",
+      "line": 19
+    }
+  ],
+  "nodes_include": [
+    "App.Store#find",
+    "App.Svc#store"
+  ],
+  "notes": "store() is a parameterless method with declared return type Store \u2192 its call names Store \u2192 App.Store#find high. storeFor(int $shard) takes a parameter, so the parameterless-member rule does not apply and its result is a computed receiver (call result) \u2192 .find low. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

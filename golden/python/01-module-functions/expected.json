@@ -1,0 +1,59 @@
+{
+  "rule": "**Python**: module-qualified IDs from the package structure (directories with `__init__.py`): `pkg.mod.f`, `pkg.mod.C#m`, `pkg.mod.C#<init>`, nested functions `pkg.mod.f.inner` / `pkg.mod.C#m.inner`; module-level code's caller is the module name, class-body code's caller is `pkg.mod.C`. Imports (relative, aliased, star, re-exported via `__init__.py`) resolve to the defining module. Builtins are `builtins.len` (medium). Free function: its name (with the language's module qualifier where it has one). Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). An empty caller or `<global>` is a wrong caller.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shop.pricing.base_price",
+      "callee": "builtins.len",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "shop/pricing.py",
+      "line": 5
+    },
+    {
+      "caller": "shop.pricing.total",
+      "callee": "shop.pricing.base_price",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shop/pricing.py",
+      "line": 9
+    },
+    {
+      "caller": "shop.pricing.total",
+      "callee": "math.ceil",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "shop/pricing.py",
+      "line": 10
+    },
+    {
+      "caller": "shop.pricing",
+      "callee": "shop.pricing.total",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shop/pricing.py",
+      "line": 13
+    },
+    {
+      "caller": "shop.pricing",
+      "callee": "builtins.print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "shop/pricing.py",
+      "line": 14
+    },
+    {
+      "caller": "shop.pricing",
+      "callee": "shop.pricing.total",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shop/pricing.py",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "shop.pricing.base_price",
+    "shop.pricing.total"
+  ],
+  "notes": "shop/ has __init__.py so pricing.py is module shop.pricing (Python note). Module-level code (lines 13, 14 and the __main__ guard at 17) has caller = the module name (Python note; Top-level rule). math.ceil: stdlib module function named statically, not in scan -> medium (tier: medium). len/print -> builtins.* medium (Python note). `import math` is not a call (C3). The `__name__ == \"__main__\"` comparison is not a call."
+}

@@ -1,0 +1,77 @@
+{
+  "rule": "Elixir: `defimpl P, for: T` members -> `P.T.fun` | `defimpl P, for: [A, B]` members are `P.A.f` and `P.B.f` (one edge per type). | Body-less member declarations of scanned types are defined in the scan (high): a call that resolves to a method declared without a body by a trait, interface, protocol ... is high when that declaring type is in the scan",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Shape.MyApp.Circle.area",
+      "callee": "MyApp.Shape.MyApp.Circle.square",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/impls.ex",
+      "line": 2
+    },
+    {
+      "caller": "MyApp.Shape.MyApp.Circle.square",
+      "callee": "math.pow",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/impls.ex",
+      "line": 3
+    },
+    {
+      "caller": "MyApp.Shape.MyApp.Square.area",
+      "callee": "MyApp.Shape.MyApp.Square.dims",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/impls.ex",
+      "line": 7
+    },
+    {
+      "caller": "MyApp.Shape.MyApp.Rect.area",
+      "callee": "MyApp.Shape.MyApp.Rect.dims",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/impls.ex",
+      "line": 7
+    },
+    {
+      "caller": "MyApp.Shape.MyApp.Square.dims",
+      "callee": "Tuple.to_list",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/impls.ex",
+      "line": 8
+    },
+    {
+      "caller": "MyApp.Shape.MyApp.Rect.dims",
+      "callee": "Tuple.to_list",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/impls.ex",
+      "line": 8
+    },
+    {
+      "caller": "MyApp.Calc.total",
+      "callee": "Enum.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/calc.ex",
+      "line": 2
+    },
+    {
+      "caller": "MyApp.Calc.one",
+      "callee": "MyApp.Shape.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/calc.ex",
+      "line": 3
+    }
+  ],
+  "nodes_include": [
+    "MyApp.Shape.area",
+    "MyApp.Shape.MyApp.Circle.square",
+    "MyApp.Shape.MyApp.Square.dims",
+    "MyApp.Shape.MyApp.Rect.dims"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. P = MyApp.Shape, T = MyApp.Circle gives `MyApp.Shape.MyApp.Circle.*` (Elixir's own impl module name). The list form gives one edge per type for each call in the shared body (lines 7, 8). `MyApp.Shape.area` is the body-less protocol declaration in shape.ex: in the scan, so high, and listed in nodes (C1). `c.r` / `s.dims` are field access. `&MyApp.Shape.area/1` is a capture, not a call. `def area(shape)` in defprotocol is a declaration."
+}

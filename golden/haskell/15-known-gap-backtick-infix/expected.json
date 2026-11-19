@@ -1,0 +1,59 @@
+{
+  "rule": "module = the `module` header (else the file name); top-level functions, class methods and record fields `Module.f` Bare names resolve through local bindings, the module, import lists (with `T (..)` fields and hiding), unqualified imports of scanned modules (following `module M` re-exports and export lists), the Prelude (`Prelude.show`, medium) and the one unlisted external import; qualified imports `Map.size` medium. **C7 Complete edges.** Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules.",
+  "source": "KNOWN_GAP: backtick-infix calls (x `f` y) are almost never emitted",
+  "edges": [
+    {
+      "caller": "Infix.combine",
+      "callee": "Prelude.max",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Infix.hs",
+      "line": 4
+    },
+    {
+      "caller": "Infix.halve",
+      "callee": "Prelude.div",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Infix.hs",
+      "line": 7
+    },
+    {
+      "caller": "Infix.merged",
+      "callee": "Infix.combine",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Infix.hs",
+      "line": 10
+    },
+    {
+      "caller": "Infix.nested",
+      "callee": "Infix.combine",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Infix.hs",
+      "line": 13
+    },
+    {
+      "caller": "Infix.nested",
+      "callee": "Infix.combine",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Infix.hs",
+      "line": 13
+    },
+    {
+      "caller": "Infix.nested",
+      "callee": "Infix.halve",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Infix.hs",
+      "line": 13
+    }
+  ],
+  "nodes_include": [
+    "Infix.combine",
+    "Infix.halve"
+  ],
+  "notes": "`x `f` y` is the application `f x y` of the named function f written infix; it calls f, which resolves like any bare name: `Infix.combine` (module, high), `Prelude.div` (Prelude, medium). `nested` applies `combine` twice (two edges on one line) and `halve` once. This is not an operator symbol application, so it does not depend on the operator spec_gap (case 16)."
+}

@@ -1,0 +1,67 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | Code outside a method body: the caller is its location. Field/val initializer \u2192 `Type#field`; C# property accessor \u2192 `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter \u2192 `Type#x=`; `static {}` block \u2192 `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not.",
+  "source": "KNOWN_GAP: delegate fields and => getters are under-resolved",
+  "edges": [
+    {
+      "caller": "App.Calc#Result",
+      "callee": "App.Calc#Clamp",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Calc.cs",
+      "line": 17
+    },
+    {
+      "caller": "App.Calc#Result",
+      "callee": "op",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Calc.cs",
+      "line": 17
+    },
+    {
+      "caller": "App.Calc#Scaled",
+      "callee": "transform",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Calc.cs",
+      "line": 19
+    },
+    {
+      "caller": "App.Calc#Scaled",
+      "callee": "App.Calc#Bump",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Calc.cs",
+      "line": 19
+    },
+    {
+      "caller": "App.Calc#Twice",
+      "callee": "App.Calc#Clamp",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Calc.cs",
+      "line": 21
+    },
+    {
+      "caller": "App.Calc#Apply",
+      "callee": "op",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Calc.cs",
+      "line": 27
+    },
+    {
+      "caller": "App.Calc#Apply",
+      "callee": "transform",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Calc.cs",
+      "line": 27
+    }
+  ],
+  "nodes_include": [
+    "App.Calc#Clamp",
+    "App.Calc#Bump"
+  ],
+  "notes": "Expression-bodied properties `public int Result => \u2026` are get accessors: caller App.Calc#Result / App.Calc#Scaled (SPEC: C# property accessor \u2192 Type#Prop). An expression-bodied method (`Twice(int v) => \u2026`) has the method as caller. op (a field of the scanned delegate type Op) and transform (a Func field) are stored properties holding a function: calling them, bare or through this., is callback, unknown, callee = the field name. The delegate type declaration and the constructor's assignments are not calls."
+}

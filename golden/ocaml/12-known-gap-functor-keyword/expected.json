@@ -1,0 +1,60 @@
+{
+  "rule": "top-level `file.fun` (file basename); nested modules/functors dotted (`file.Make.connect`); local function lets `outer.f`, local value lets fold into the enclosing binding; module-level code's caller is the module. Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown.",
+  "source": "KNOWN_GAP: modules written as = functor () -> struct drop their name from callers",
+  "edges": [
+    {
+      "caller": "counter.Make.first",
+      "callee": "Stdlib.succ",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "counter.ml",
+      "line": 2
+    },
+    {
+      "caller": "counter.Make.show",
+      "callee": "Stdlib.print_int",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "counter.ml",
+      "line": 4
+    },
+    {
+      "caller": "counter.Make.show",
+      "callee": "counter.Make.first",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "counter.ml",
+      "line": 4
+    },
+    {
+      "caller": "counter.Fresh.bump",
+      "callee": "Stdlib.incr",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "counter.ml",
+      "line": 8
+    },
+    {
+      "caller": "counter.run",
+      "callee": "counter.Make.show",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "counter.ml",
+      "line": 16
+    },
+    {
+      "caller": "counter.run",
+      "callee": "counter.Fresh.bump",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "counter.ml",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "counter.Make.first",
+    "counter.Make.show",
+    "counter.Fresh.bump"
+  ],
+  "notes": "`module Make = functor (X : ...) -> struct ... end` and the generative `module Fresh = functor () -> struct ... end` are functors exactly like `module Make (X : ...) = struct`: their members are dotted under the functor name (`counter.Make.show`, `counter.Fresh.bump`), and that name appears in the caller IDs of their bodies. `module M = Make (...)` / `module F = Fresh ()` are module aliases (OCaml note), so `M.show` and `F.bump` resolve to the functor members, high. Functor applications are module bindings, not calls. `X.start` is a value reference."
+}

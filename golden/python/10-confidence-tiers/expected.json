@@ -1,0 +1,59 @@
+{
+  "rule": "**high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition). **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. **low**: a guess — receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan. **unknown**: a dynamic call (function value, callback, closure, function pointer).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.encode",
+      "callee": "json.dumps",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.py",
+      "line": 5
+    },
+    {
+      "caller": "app.main",
+      "callee": "app.encode",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.py",
+      "line": 9
+    },
+    {
+      "caller": "app.main",
+      "callee": "conn.send",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "app.py",
+      "line": 10
+    },
+    {
+      "caller": "app.main",
+      "callee": "cb",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "app.py",
+      "line": 11
+    },
+    {
+      "caller": "app.main",
+      "callee": "builtins.len",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.py",
+      "line": 12
+    },
+    {
+      "caller": "app",
+      "callee": "app.main",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.py",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "app.encode",
+    "app.main"
+  ],
+  "notes": "One edge per tier: high (scanned `encode`, `main`), medium (stdlib `json.dumps`, builtin `len`), low (`conn.send`, parameter of unknown type), unknown (`cb(...)`, a parameter holding a function). app.py sits directly under the scan root, so its module is `app`; line 15 is module-level code with caller `app`. `print` is passed as a value at line 15, not called."
+}

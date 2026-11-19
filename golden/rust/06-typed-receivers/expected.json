@@ -1,0 +1,107 @@
+{
+  "rule": "**Typed receivers (decision A) cover every declaration of the receiver's type**: locals, parameters, fields, and file-scope globals/statics (C, C++, ObjC, Zig, Rust `static`). A pointer, reference or smart pointer whose `->`/`.` reaches the pointee names the pointee: C++ `unique_ptr<T>`/`shared_ptr<T>`/`T*`, Rust `Box<T>`/`Rc<T>`/`Arc<T>`/`&T` \u2192 `T#m`, unless the wrapper itself defines `m` (`p.clone()` on an `Arc` is `Arc#clone`). A container is its own type: `Option<T>#unwrap`, `Vec#push`. | Generic/template type arguments are dropped from every ID (`HashSet#<init>`).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Car#drive",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 25
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 26
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 27
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 28
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Arc#new",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 29
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Engine#new",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 29
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 30
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Arc#clone",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 31
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 33
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Option#unwrap",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 35
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Vec#new",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 36
+    },
+    {
+      "caller": "Car#drive",
+      "callee": "Vec#push",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 37
+    }
+  ],
+  "nodes_include": [
+    "Engine#start",
+    "Engine#new"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Field (engine: Engine), &Engine parameter, Box<Engine> parameter, file-scope `static SPARE: Engine`, an Arc<Engine> local and a `T { .. }` binding all name Engine \u2192 Engine#start high. Arc itself defines clone \u2192 Arc#clone, medium (std). Option<Engine> and Vec<u32> are containers \u2192 Option#unwrap, Vec#push, medium; generic arguments dropped (SPEC's `Option<T>#unwrap` example is read through the 'dropped from every ID' rule). Struct literals, `None` and `self.rpm` are not calls; the static's initializer `Engine { rpm: 1 }` contains no call. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

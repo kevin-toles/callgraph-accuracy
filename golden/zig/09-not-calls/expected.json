@@ -1,0 +1,18 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. | a module dependency (an import declaration; the binding carries it)",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.probe",
+      "callee": "app.consume",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 31
+    }
+  ],
+  "nodes_include": [
+    "app.consume"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). No edge for: `@import(\"std\")` (import declaration), struct literal `Point{\u2026}` and tagged-union literal `Shape{ .circle = 3 }` (data construction), `@sizeOf` (the sizeof language construct), `@intCast` and `@as` (casts), `&consume` (function reference without a call), `error.Bad` (error-value construction), field access `p.x`, the error-set and union declarations."
+}

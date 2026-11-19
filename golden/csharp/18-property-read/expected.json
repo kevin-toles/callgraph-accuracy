@@ -1,0 +1,6 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer \u2192 `Type#field`; C# property accessor \u2192 `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter \u2192 `Type#x=`; `static {}` block \u2192 `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. | C3 Operation classification. Each written construct is exactly one of: an invocation ...; one of these, which emit no edge: ... a reference without a call. | Not calls: ... field access without a call.",
+  "source": "SPEC",
+  "spec_gap": "Is reading a C# property whose getter is user code (`Balance` in Report, or `obj.Balance`) a call edge from App.Account#Report to the accessor App.Account#Balance (call_type method, high), or a field access without a call (no edge)? SPEC defines callers inside accessors (Type#Prop / Type#Prop=) but not whether a property read or assignment invokes them; for Objective-C it rules dot-syntax property access is not a call, for C# it is silent. An assignment `obj.Prop = v` raises the same question for Type#Prop=.",
+  "notes": "App.Account#Balance \u2192 App.Account#Round (method, high) is decidable; the property read is not."
+}

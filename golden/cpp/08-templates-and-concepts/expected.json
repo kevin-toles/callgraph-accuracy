@@ -1,0 +1,59 @@
+{
+  "rule": "A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` → `client.get`; `a.b.c()` → `b.c`). Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` — a leading dot means \"receiver unknown\". **low**: a guess — receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "bounded",
+      "callee": "Shape#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "generic.cpp",
+      "line": 10
+    },
+    {
+      "caller": "unbounded",
+      "callee": "t.area",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "generic.cpp",
+      "line": 15
+    },
+    {
+      "caller": "unbounded",
+      "callee": "child.area",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "generic.cpp",
+      "line": 16
+    },
+    {
+      "caller": "unbounded",
+      "callee": "t.make",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "generic.cpp",
+      "line": 17
+    },
+    {
+      "caller": "unbounded",
+      "callee": ".area",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "generic.cpp",
+      "line": 17
+    },
+    {
+      "caller": "use",
+      "callee": "bounded",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "generic.cpp",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "Shape#area",
+    "bounded"
+  ],
+  "notes": "In bounded, T is constrained by std::derived_from<Shape>, a concept that pins one type → t.area() names Shape#area, high. In unbounded, T is unconstrained, so t is a receiver of unknown type: t.area → 't.area'; t.child.area() uses the LAST receiver segment → 'child.area'; t.make().area(): t.make is 't.make' and .area is on a computed receiver (call result) → '.area'; all low. The concept in the template head is a declaration, not a call. Template IDs drop template parameters: 'bounded', 'unbounded'."
+}

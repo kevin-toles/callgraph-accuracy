@@ -1,0 +1,35 @@
+{
+  "rule": "Method: `Type#member`. Nested types are dotted: `Outer.Inner#m`. Some languages prefix a module/package qualifier with dots (see per-language notes). Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). An enum constant `E.C` has type `E`.",
+  "source": "KNOWN_GAP: symbolic and infix operator calls are never emitted",
+  "edges": [
+    {
+      "caller": "app.Physics#step",
+      "callee": "app.Vec#+",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Vec.scala",
+      "line": 10
+    },
+    {
+      "caller": "app.Physics#step",
+      "callee": "app.Vec#combine",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Vec.scala",
+      "line": 11
+    },
+    {
+      "caller": "app.Physics#step",
+      "callee": "app.Vec#+",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Vec.scala",
+      "line": 12
+    }
+  ],
+  "nodes_include": [
+    "app.Vec#+",
+    "app.Vec#combine"
+  ],
+  "notes": "In Scala `a + b` and `a combine b` are method calls on a (infix syntax for a.+(b) / a.combine(b)); a is a parameter typed Vec, which defines both, so Type#member with the member's source name, high. The fixture deliberately avoids arithmetic on primitive Int, whose operators SPEC does not classify. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

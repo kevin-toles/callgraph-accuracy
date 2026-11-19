@@ -1,0 +1,55 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. | Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Legacy#sync",
+      "callee": "client.send",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "legacy/Legacy.php",
+      "line": 9
+    },
+    {
+      "caller": "Legacy#sync",
+      "callee": "payload.validate",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "legacy/Legacy.php",
+      "line": 10
+    },
+    {
+      "caller": "Legacy#sync",
+      "callee": "Legacy#build",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "legacy/Legacy.php",
+      "line": 11
+    },
+    {
+      "caller": "Legacy#sync",
+      "callee": ".commit",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "legacy/Legacy.php",
+      "line": 11
+    },
+    {
+      "caller": "Legacy#sync",
+      "callee": ".flush",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "legacy/Legacy.php",
+      "line": 12
+    },
+    {
+      "caller": "Legacy#sync",
+      "callee": "undefined_helper",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "legacy/Legacy.php",
+      "line": 13
+    }
+  ],
+  "notes": "No namespace \u2192 class ID Legacy. $client and $payload have no declared type \u2192 recv.member with the last receiver segment; the `$` sigil is not part of the name (SPEC writes the PHP named nested function `$f = function` as `outer.f`). build() has no declared return type, so its result is a computed receiver \u2192 .commit; an index (`items[0]`) is a computed receiver \u2192 .flush. undefined_helper is a bare name not found in the scan (global namespace, so no fallback question) \u2192 low, direct. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

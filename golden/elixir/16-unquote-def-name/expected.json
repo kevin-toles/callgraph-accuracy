@@ -1,0 +1,26 @@
+{
+  "rule": "Elixir: ... `def unquote(:name)` with a literal name is `Mod.name`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Named.hello",
+      "callee": "String.capitalize",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/named.ex",
+      "line": 3
+    },
+    {
+      "caller": "MyApp.Named.greet",
+      "callee": "MyApp.Named.hello",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/named.ex",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "MyApp.Named.hello"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. `def unquote(:hello)(name)` defines `MyApp.Named.hello`; `unquote` in the function head is part of the declaration, not a call. Calls in its body have that caller; the local call `hello(n)` resolves to it, high."
+}

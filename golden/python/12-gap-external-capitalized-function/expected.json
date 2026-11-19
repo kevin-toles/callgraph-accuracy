@@ -1,0 +1,39 @@
+{
+  "rule": "**Python**: a call to an external capitalized function that is not known to be a class is a direct call to it (`mod.Name`), not `Name#<init>`.",
+  "source": "KNOWN_GAP: external capitalized functions are guessed to be constructors",
+  "edges": [
+    {
+      "caller": "shop.factory.wire",
+      "callee": "vendorlib.factory.MakeClient",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "shop/factory.py",
+      "line": 15
+    },
+    {
+      "caller": "shop.factory.wire",
+      "callee": "vendorlib.Connect",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "shop/factory.py",
+      "line": 16
+    },
+    {
+      "caller": "shop.factory.wire",
+      "callee": "shop.factory.BuildLocal",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shop/factory.py",
+      "line": 17
+    },
+    {
+      "caller": "shop.factory.wire",
+      "callee": "shop.factory.Local#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shop/factory.py",
+      "line": 18
+    }
+  ],
+  "notes": "Decisions 2026-10-29 (Python): `MakeClient` and `vendorlib.Connect` are external capitalized names not known to be classes -> direct calls `mod.Name`, medium; never `MakeClient#<init>` / `vendorlib.Connect#<init>`. Contrast: a scanned capitalized function `BuildLocal` is a direct high call to its definition, and the scanned class `Local` is a constructor."
+}

@@ -1,0 +1,44 @@
+{
+  "rule": "**Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\".",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Car#go",
+      "callee": "Car#engine",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 26
+    },
+    {
+      "caller": "Car#go",
+      "callee": "Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 26
+    },
+    {
+      "caller": "Car#go",
+      "callee": "Car#engineAt:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Car.m",
+      "line": 27
+    },
+    {
+      "caller": "Car#go",
+      "callee": ".start",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Car.m",
+      "line": 27
+    }
+  ],
+  "nodes_include": [
+    "Car#engine",
+    "Car#engineAt:",
+    "Engine#start"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. `[self engine]` is a call of a parameterless method with declared type `Engine *` \u2192 its result is a typed receiver: `Engine#start` high (Decision 2026-11-09). `engineAt:` takes a parameter, so the parameterless rule does not apply and its result is a computed receiver (call result) \u2192 `.start`, low."
+}

@@ -1,0 +1,26 @@
+{
+  "rule": "A free-function prototype whose definition is not in the scan (a C header declaring a library function) is still medium. **high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition). **C / Objective-C**: function-like macros → call_type macro (high if `#define`d in the scan). C functions bare;",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "roundtrip",
+      "callee": "codec_decode",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "codec.c",
+      "line": 8
+    },
+    {
+      "caller": "roundtrip",
+      "callee": "codec_encode",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "codec.c",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "codec_encode"
+  ],
+  "notes": "codec_decode is only prototyped in the scanned header codec.h, with no definition anywhere in src/: Decisions 2026-11-09 say such a prototype is still medium. codec_encode has a body in codec.c, so it is high. '#ifndef/#define CODEC_H' are object-like preprocessor directives, not macro invocations."
+}

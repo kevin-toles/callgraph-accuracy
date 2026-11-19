@@ -1,0 +1,52 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) ... A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.util.Strings#title",
+      "callee": "com.acme.util.Strings#slug",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/util/Strings.java",
+      "line": 12
+    },
+    {
+      "caller": "com.acme.app.Main#go",
+      "callee": "com.acme.util.Strings#slug",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/app/Main.java",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.app.Main#go",
+      "callee": "com.acme.util.Strings#title",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/app/Main.java",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.app.Main#go",
+      "callee": "com.acme.util.Formatter#format",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/app/Main.java",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.app.Tool#run",
+      "callee": "com.acme.util.Strings#slug",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/app/Tool.java",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "com.acme.util.Strings#slug",
+    "com.acme.util.Strings#title",
+    "com.acme.util.Formatter#format"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. Strings#slug is reached from its own file (bare call), through a single-type import (`Strings.slug`) and through a static import (`import static ...Strings.slug`, bare `slug(s)`): one ID in all three. Formatter has two abstract methods (not a functional interface), so `f.format(b)` is an ordinary typed-receiver call to a body-less declaration of a scanned type: high and listed in nodes."
+}

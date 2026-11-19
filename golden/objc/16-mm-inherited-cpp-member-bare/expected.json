@@ -1,0 +1,35 @@
+{
+  "rule": "**Objective-C++ (.mm)**: C++ constructs follow the C++ rules (`Cls::m` definitions, member calls, constructors); message sends follow the ObjC rules. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | **C++**: namespace-qualified with dots: `ns.Class#method`, `ns.func`; `Class::static()` \u2192 `Class#static`; template arguments dropped.",
+  "source": "KNOWN_GAP: inherited C++ members called bare (reportError) stay low",
+  "edges": [
+    {
+      "caller": "eng.Derived#run",
+      "callee": "eng.Base#reportError",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Engine.mm",
+      "line": 19
+    },
+    {
+      "caller": "eng.Derived#run",
+      "callee": "eng.Base#reportError",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Engine.mm",
+      "line": 20
+    },
+    {
+      "caller": "drive",
+      "callee": "eng.Derived#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Engine.mm",
+      "line": 26
+    }
+  ],
+  "nodes_include": [
+    "eng.Base#reportError",
+    "eng.Derived#run"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. A bare call (and `this->` call) to `reportError`, which is defined only on the scanned superclass `eng::Base` \u2192 `eng.Base#reportError`, high. Out-of-line definitions `Base::reportError` / `Derived::run` inside namespace eng give `eng.Base#reportError` / `eng.Derived#run`. `d` is declared `eng::Derived *` \u2192 pointer names the pointee (Decision 2026-10-29). A low `reportError` guess would be wrong."
+}

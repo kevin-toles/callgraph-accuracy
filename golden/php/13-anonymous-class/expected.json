@@ -1,0 +1,36 @@
+{
+  "rule": "Anonymous subclass instantiation (`new Iface() {\u2026}`, Scala `new Trait {\u2026}`): no constructor edge when the named type is an interface/trait (it has no constructor); when it is a class (including abstract), `Type#<init>`, constructor, as usual. Calls inside the body fold into the enclosing function as before.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Factory#make",
+      "callee": "App.BaseJob#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "App/Factory.php",
+      "line": 8
+    },
+    {
+      "caller": "App.Factory#make",
+      "callee": "App.BaseJob#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Factory.php",
+      "line": 11
+    },
+    {
+      "caller": "App.Factory#make",
+      "callee": "App.Factory#audit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Factory.php",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "App.BaseJob#<init>",
+    "App.BaseJob#log",
+    "App.Factory#audit"
+  ],
+  "notes": "`new class (5) extends BaseJob` instantiates an anonymous subclass of an (abstract) class \u2192 App.BaseJob#<init>, constructor, high (BaseJob defines __construct); line = the line naming BaseJob. `new class implements Handler` names only an interface \u2192 no constructor edge. Members of both anonymous classes fold into App.Factory#make. Inside the anonymous subclass, $this->log() is defined only on the scanned superclass \u2192 App.BaseJob#log. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

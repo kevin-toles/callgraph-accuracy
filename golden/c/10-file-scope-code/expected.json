@@ -1,0 +1,43 @@
+{
+  "rule": "Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). `macro`: a macro invocation (C/C++/ObjC function-like macros, Rust `name!`). Calls written inside macro arguments are separate ordinary edges. Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "lib/check",
+      "callee": "STATIC_CHECK",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "lib/check.c",
+      "line": 3
+    },
+    {
+      "caller": "lib/check",
+      "callee": "STATIC_CHECK",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "lib/check.c",
+      "line": 11
+    },
+    {
+      "caller": "fire",
+      "callee": "hook",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "lib/check.c",
+      "line": 14
+    },
+    {
+      "caller": "fire",
+      "callee": "handler",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/check.c",
+      "line": 14
+    }
+  ],
+  "nodes_include": [
+    "STATIC_CHECK",
+    "handler"
+  ],
+  "notes": "The two STATIC_CHECK invocations are file-level code outside any function: the caller is the file path below the scan root without extension, 'lib/check' (not empty, not <global>). sizeof(...) inside the arguments is a language construct, not a call. 'static int (*hook)(int) = handler;' stores a function reference: not a call. hook(x) is a call through a variable holding a function pointer: callback, unknown."
+}

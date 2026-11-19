@@ -1,0 +1,83 @@
+{
+  "rule": "module = the `module` header (else the file name); top-level functions, class methods and record fields `Module.f` Bare names resolve through local bindings, the module, import lists (with `T (..)` fields and hiding), unqualified imports of scanned modules (following `module M` re-exports and export lists), the Prelude (`Prelude.show`, medium) and the one unlisted external import; qualified imports `Map.size` medium. Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Rec.mk",
+      "callee": "Prelude.show",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Rec.hs",
+      "line": 6
+    },
+    {
+      "caller": "Rec.grow",
+      "callee": "Prelude.succ",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Rec.hs",
+      "line": 9
+    },
+    {
+      "caller": "Rec.grow",
+      "callee": "Rec.radius",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Rec.hs",
+      "line": 9
+    },
+    {
+      "caller": "Rec.describe",
+      "callee": "Prelude.unwords",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Rec.hs",
+      "line": 15
+    },
+    {
+      "caller": "Rec.describe",
+      "callee": "Rec.label",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Rec.hs",
+      "line": 15
+    },
+    {
+      "caller": "Rec.describe",
+      "callee": "Prelude.show",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Rec.hs",
+      "line": 15
+    },
+    {
+      "caller": "Rec.describe",
+      "callee": "Rec.radius",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Rec.hs",
+      "line": 15
+    },
+    {
+      "caller": "Use.size",
+      "callee": "Prelude.negate",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Use.hs",
+      "line": 6
+    },
+    {
+      "caller": "Use.size",
+      "callee": "Rec.radius",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Use.hs",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "Rec.radius",
+    "Rec.label"
+  ],
+  "notes": "Record fields have IDs `Module.f` (Haskell note); applying a field selector (`radius c`, `label c`) calls it, and the field is defined in the scan: high. Record construction `Circle { radius = r, ... }`, record update `c { radius = ... }` and positional `Circle 1 \"one\"` are data construction: no edge (Not calls: Haskell `Con {..}`). The field names inside construction/update syntax are not calls. `import Rec (Circle (..))` brings the fields into Use via the `T (..)` import list: `Rec.radius`, high."
+}

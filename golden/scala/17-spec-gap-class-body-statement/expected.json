@@ -1,0 +1,7 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer → `Type#field`; C# property accessor → `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter → `Type#x=`; `static {}` block → `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not.",
+  "source": "SPEC",
+  "spec_gap": "What is the caller of a statement written directly in a Scala class body (it runs as part of the primary constructor), e.g. `register()` here: `app.Server#<init>` (where it executes, by analogy with `static {}` → `Type#<clinit>`), or `app.Server` (Python's class-body form)? And does it get any implicit edge?",
+  "edges": [],
+  "notes": "Python's per-language note gives class-body code the caller `pkg.mod.C`; Java's instance-initializer and Scala's primary-constructor statements are not named."
+}

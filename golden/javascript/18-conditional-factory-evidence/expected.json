@@ -1,0 +1,69 @@
+{
+  "rule": "JS/TS conditional initializers and factory returns. A conditional `c ? a : b` is evidence when every branch is. A branch counts if it is a function literal, an alias of a function, a factory call, or such a conditional. A factory returns a function when a top-level `return` gives one of those, or a function declared in its body. A JSDoc `@type` comment is not evidence.",
+  "source": "SPEC Decisions (2026-11-10, amendment): pdf.js calcRound, BrotliDecode",
+  "edges": [
+    {
+      "caller": "ui_utils",
+      "callee": "ui_utils.makeRound",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "ui_utils.js",
+      "line": 5
+    },
+    {
+      "caller": "ui_utils",
+      "callee": "ui_utils.makeDecode",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "ui_utils.js",
+      "line": 14
+    },
+    {
+      "caller": "ui_utils",
+      "callee": "ui_utils.makeValue",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "ui_utils.js",
+      "line": 15
+    },
+    {
+      "caller": "ui_utils.use",
+      "callee": "ui_utils.calcRound",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "ui_utils.js",
+      "line": 18
+    },
+    {
+      "caller": "ui_utils.use",
+      "callee": "ui_utils.BrotliDecode",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "ui_utils.js",
+      "line": 19
+    },
+    {
+      "caller": "ui_utils.use",
+      "callee": "ui_utils.notFn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "ui_utils.js",
+      "line": 20
+    },
+    {
+      "caller": "ui_utils.use",
+      "callee": "ui_utils.mixed",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "ui_utils.js",
+      "line": 21
+    }
+  ],
+  "nodes_include": [
+    "ui_utils.calcRound",
+    "ui_utils.BrotliDecode",
+    "ui_utils.makeRound",
+    "ui_utils.makeDecode"
+  ],
+  "notes": "calcRound: both branches are evidence (alias Math.fround; a call of the scanned factory makeRound, whose return is a conditional of functions). BrotliDecode: makeDecode returns decode, a function declared in its body; the JSDoc comment plays no part. notFn: makeValue returns 1, no evidence. mixed: one branch is notFn, a value with no evidence, so the conditional is no evidence. Arrow bindings are named functions, called high."
+}

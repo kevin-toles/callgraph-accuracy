@@ -1,0 +1,55 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. | **C7 Complete edges.** Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "count_flags",
+      "callee": "std::env::args",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 2
+    },
+    {
+      "caller": "count_flags",
+      "callee": ".skip",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 3
+    },
+    {
+      "caller": "count_flags",
+      "callee": ".filter",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 4
+    },
+    {
+      "caller": "count_flags",
+      "callee": "a.starts_with",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 4
+    },
+    {
+      "caller": "count_flags",
+      "callee": ".count",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": "count_flags",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 9
+    }
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Each link sits on its own name's line. std::env::args is a std path \u2192 medium; later links are on call results typed only by std \u2192 .skip/.filter/.count low. The anonymous closure folds into count_flags; its parameter a has no declared type \u2192 a.starts_with low. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

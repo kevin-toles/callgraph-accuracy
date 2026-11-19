@@ -1,0 +1,111 @@
+[
+ {
+  "id": "groovy-inplace-new-ambiguous-wildcard-low",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$",
+   "old_callee": "^\\.",
+   "new_callee": "^[A-Z][A-Za-z0-9_]*#",
+   "old": "low/method",
+   "new": "low/method"
+  },
+  "disposition": "SPEC Decisions 2026-11-17 (in-place constructor results typed as the bound form) with Decision C: new T(...).m() where T is reachable only through two or more external wildcard imports names T#m at low, as def x = new T(); x.m() does",
+  "note": "h-dbb 14 edges: new XmlSlurper().parseText, new JobExec().text, new MVSExec().pgm, new DDStatement().name (spot-checked). Test: groovy InPlaceConstructorReceivers."
+ },
+ {
+  "id": "rust-reexported-external-type-keeps-path",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^[A-Z][A-Za-z0-9_]*#",
+   "new_callee": "^[a-z_][a-z0-9_]*::.*#"
+  },
+  "disposition": "implementation defect fixed: a type a scanned crate re-exports from an external crate (pub use delta_kernel::schema::{StructType, ...}) and that the file names through the scanned crate's path (use deltalake_core::kernel::StructType, use crate::kernel::StructType) keeps its external path where the scan defines a same-named type (SPEC Rust note; C1 through a re-export)",
+  "note": "s-delta-rs v16 P1. Test: rust DefinitionsInUnreachableCrates (corrected expectation)."
+ },
+ {
+  "id": "rust-self-inside-result-return",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "^Self#"
+  },
+  "disposition": "implementation defect fixed (C2, SPEC Rust constructors type their binding): Self inside a declared return type (Result<Self, E>, DeltaResult<Self>) is the impl's type, so T::new(..)?.m() is T#m, never the invented Self#m",
+  "note": "s-delta-rs v16 P5, quinn Recv tests. Test: rust SelfInsideResultReturnTypes."
+ },
+ {
+  "id": "rust-reexported-type-extension-trait-method",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "new_callee": "Ext#",
+   "old": "high/method",
+   "new": "high/method"
+  },
+  "disposition": "follows rust-reexported-external-type-keeps-path: once StructType/Protocol is the external re-exported type, a method only the scanned extension trait defines (StructTypeExt, ProtocolExt) resolves to the trait's ID by the extension-trait rule, not to the unreachable python crate's same-named type",
+  "note": "s-delta-rs 5 edges (actions.rs:445-446, protocol.rs:204-206)."
+ },
+ {
+  "id": "rust-try-through-result-alias",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old": "low/method"
+  },
+  "disposition": "implementation defect fixed (SPEC 2026-11-12 let-bound call results, ? applies as in place): x? on a scanned generic alias of Result whose first parameter is the Ok type (type DeltaResult<T> = Result<T, E>) is that argument",
+  "note": "Fallback for low\u2192typed changes in .rs not claimed by earlier typed-results entries. Test: rust SelfInsideResultReturnTypes (VecResult negative case)."
+ },
+ {
+  "id": "kotlin-infix-calls-emitted",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$"
+  },
+  "disposition": "implementation defect fixed (golden kotlin/15, open defect removed): an infix call a op b is emitted as the call a.op(b), resolved as that form is (typed receiver member T#op, scanned or imported extension, else a low guess on the line of op)",
+  "note": "Spot-checked: okhttp x shr 8 Long#shr, okhttp3.internal.and high, assertk isEqualTo imported, coil kotlin.experimental.and, literal 0 until n .until low, recv.to low. Tests: kotlin InfixCalls, golden kotlin/15."
+ },
+ {
+  "id": "kotlin-secondary-ctor-param-is-a-variable",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "old": "medium/direct",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed: a secondary constructor's parameter (task: Jar) is a variable, so task.archiveBaseName.zip() is a receiver call (low guess on an external property), not a package-qualified function",
+  "note": "okhttp BndBuildAction.kt:70,73. Test: kotlin NotNullLetBoundAndSecondaryCtorParams."
+ },
+ {
+  "id": "rust-reexport-pairing-artifact",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.rs$",
+   "old_callee": "(StructType|StructField|Arc)#",
+   "new_callee": "(StructType|StructField|Arc)#",
+   "old": "medium/method",
+   "new": "medium/method"
+  },
+  "disposition": "follows rust-reexported-external-type-keeps-path: on lines calling both StructType::try_new and StructField::nullable the gate pairs the two edges crosswise; the StructField edges are unchanged (533 bare before and after) and StructType#\u2026 gained its delta_kernel path; likewise with Arc::new on the same line (Arc#new / std::sync::Arc#new counts unchanged)",
+  "note": "s-delta-rs scan_row.rs and similar, 28 pairs; counts checked over the whole scan."
+ },
+ {
+  "id": "scala-inplace-case-class-pairing-artifact",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.scala$",
+   "old": "low/method",
+   "new": "low/direct"
+  },
+  "disposition": "follows SPEC Decisions 2026-11-17 (a scanned class's synthesized apply builds the class): on Macros.scala:163 SmartAssertionOps(...).is became SmartAssertionOps#is high, and the gate pairs the removed .is with the unchanged Unseal(...) edge on the same line",
+  "note": "s-zio, 1 pair. All 8 zio changes checked against source: ZSTM.Effect, Gen, LogLine.Fragment, Assertion, TestRunner, Person are scanned case classes without a companion apply."
+ }
+]

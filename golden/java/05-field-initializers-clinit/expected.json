@@ -1,0 +1,79 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer \u2192 `Type#field`; ... `static {}` block \u2192 `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. ... `implicit`: ... `Type#<clinit>` \u2192 `Type#field` (static initializer), `Type#<init>` \u2192 `Type#field` (instance field initializer). Line = the field's line.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.cfg.Settings#DEFAULT",
+      "callee": "com.acme.cfg.Settings#create",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/cfg/Settings.java",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.cfg.Settings#<clinit>",
+      "callee": "com.acme.cfg.Settings#DEFAULT",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "com/acme/cfg/Settings.java",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.cfg.Settings#keys",
+      "callee": "java.util.ArrayList#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "com/acme/cfg/Settings.java",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.cfg.Settings#<init>",
+      "callee": "com.acme.cfg.Settings#keys",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "com/acme/cfg/Settings.java",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.cfg.Settings#loader",
+      "callee": "com.acme.cfg.Loader#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/cfg/Settings.java",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.cfg.Settings#<init>",
+      "callee": "com.acme.cfg.Settings#loader",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "com/acme/cfg/Settings.java",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.cfg.Settings#<clinit>",
+      "callee": "com.acme.cfg.Loader#warm",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/cfg/Settings.java",
+      "line": 12
+    },
+    {
+      "caller": "com.acme.cfg.Settings#create",
+      "callee": "com.acme.cfg.Settings#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/cfg/Settings.java",
+      "line": 16
+    },
+    {
+      "caller": "com.acme.cfg.Settings#size",
+      "callee": "java.util.List#size",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "com/acme/cfg/Settings.java",
+      "line": 20
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. Static field DEFAULT gets the implicit edge from <clinit>; instance fields keys/loader from <init> (Settings has no written constructor; its implicit one runs the initializers). SPEC does not state a confidence for implicit edges; high is used because both ends are defined in the scanned source (Confidence tiers: high). `new Settings()` is high: the class is in the scan (see 02 notes). `keys` is declared `List<String>`, so List#size (declared type, not ArrayList), medium, qualified through `import java.util.List`."
+}

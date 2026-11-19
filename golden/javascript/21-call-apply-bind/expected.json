@@ -1,0 +1,124 @@
+{
+  "rule": "JS/TS .call/.apply/.bind (SPEC Decisions 2026-11-12, question 80): on a receiver with function evidence, .call/.apply emit Function#call/#apply and the target; .bind emits Function#bind, and a call through the bound binding runs the target; a literal receiver is an IIFE; X.prototype.m names the method; a receiver without evidence stays a guess; an imported function's own members have one ID.",
+  "source": "SPEC Decisions (2026-11-12): ECMA-262 15.3.4.3-15.3.4.5; CodeQL TReflectiveCallNode / PartialInvokeNode",
+  "edges": [
+    {
+      "caller": "app",
+      "callee": "Function#bind",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.js",
+      "line": 3
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "Function#call",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.js",
+      "line": 5
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "util.validateInput",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.js",
+      "line": 5
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "Function#apply",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.js",
+      "line": 6
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "app.local",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.js",
+      "line": 6
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "util.validateInput",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.js",
+      "line": 7
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "Function#bind",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.js",
+      "line": 8
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "app.local",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.js",
+      "line": 9
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "Function#call",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.js",
+      "line": 10
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "Object#hasOwnProperty",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.js",
+      "line": 10
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "Function#call",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.js",
+      "line": 11
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "helper",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "app.js",
+      "line": 11
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "client.call",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "app.js",
+      "line": 12
+    },
+    {
+      "caller": "app.dispatch",
+      "callee": "util.validateInput#extra",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.js",
+      "line": 13
+    }
+  ],
+  "nodes_include": [
+    "util.validateInput",
+    "util.validateInput#extra",
+    "app.local"
+  ],
+  "notes": "Line 5/6 have two edges each (the builtin and the target, both run). Line 7 and 9 call bound bindings: the targets. Line 10 names Object#hasOwnProperty through Object.prototype. Line 11 is an IIFE through .call: only Function#call, and helper() folds into dispatch. client.call has no function evidence: receiver guess. validateInput.extra from an importer is the definition's ID (C1)."
+}

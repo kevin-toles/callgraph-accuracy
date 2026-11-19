@@ -1,0 +1,63 @@
+{
+  "rule": "Go: package-path-qualified: `example.com/m/pkg.Type#Method`, `pkg.Func`; closures `pkg.F$1`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.SortByLen",
+      "callee": "sort.Slice",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 11
+    },
+    {
+      "caller": "example.com/m.SortByLen$1",
+      "callee": "example.com/m.key",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 12
+    },
+    {
+      "caller": "example.com/m.SortByLen$1",
+      "callee": "example.com/m.key",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 12
+    },
+    {
+      "caller": "example.com/m.SortByLen",
+      "callee": "sort.SliceStable",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 14
+    },
+    {
+      "caller": "example.com/m.SortByLen$2",
+      "callee": "fmt.Sprint",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 15
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.SortByLen",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 21
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 22
+    }
+  ],
+  "notes": "Anonymous function literals in Go get closure IDs `pkg.F$1`, `pkg.F$2` in source order within F (Go note), which takes precedence for Go over the general 'anonymous functions fold into the nearest enclosing named function' rule; calls inside them have the closure as caller. Passing a function literal as an argument is not a call of it: no SortByLen -> SortByLen$1 edge. len is a builtin: no edge."
+}

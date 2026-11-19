@@ -1,0 +1,83 @@
+{
+  "rule": "Nested types are dotted: `Outer.Inner#m`. ... Companion-object members flatten onto the class.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer.Nested#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.kt",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer.Nested#walk",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.kt",
+      "line": 6
+    },
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer#create",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.kt",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer#visit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.kt",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Outer#create",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.kt",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.tree.Outer#visit",
+      "callee": "com.acme.tree.Registry#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.kt",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.tree.Outer.Nested#walk",
+      "callee": "com.acme.tree.Outer.Nested.Deep#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.kt",
+      "line": 15
+    },
+    {
+      "caller": "com.acme.tree.Outer.Nested#walk",
+      "callee": "com.acme.tree.Outer.Nested.Deep#dive",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.kt",
+      "line": 16
+    },
+    {
+      "caller": "com.acme.tree.Outer#create",
+      "callee": "com.acme.tree.Outer#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/tree/Outer.kt",
+      "line": 27
+    }
+  ],
+  "nodes_include": [
+    "com.acme.tree.Outer#create",
+    "com.acme.tree.Registry#add"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. The companion's `create` is `Outer#create` (flattened; not `Outer.Companion#create`), both as a definition (caller of `Outer()` at line 27) and as a callee via `Outer.create()` and the bare `create()`. `o` is declared Outer, so `o.visit()` is Outer#visit. `object Registry` is a type: Registry#add."
+}

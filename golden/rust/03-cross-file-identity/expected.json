@@ -1,0 +1,69 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`. | `crate::` paths and the package's own crate name resolve like module paths.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "origin",
+      "callee": "Point#new",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/geometry.rs",
+      "line": 17
+    },
+    {
+      "caller": "spread",
+      "callee": "Point#dist",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/geometry.rs",
+      "line": 21
+    },
+    {
+      "caller": "spread",
+      "callee": "origin",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/geometry.rs",
+      "line": 21
+    },
+    {
+      "caller": "main",
+      "callee": "Point#new",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 4
+    },
+    {
+      "caller": "main",
+      "callee": "origin",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": "Point#dist",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 6
+    },
+    {
+      "caller": "main",
+      "callee": "spread",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "Point#new",
+    "Point#dist",
+    "origin",
+    "spread"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Package name `shapes`: main.rs reaches geometry.rs through `use shapes::geometry::{self, Point}` and the path shapes::geometry::spread; every reference uses the defining file's ID (Point#new, Point#dist, origin, spread). p: &Point \u2192 Point#dist (&T names the pointee); `let a = Point::new(..)` types a. `pub mod geometry;` is a declaration. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

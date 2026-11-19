@@ -1,0 +1,68 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`. Bare names resolve through local bindings, the module, import lists (with `T (..)` fields and hiding), unqualified imports of scanned modules (following `module M` re-exports and export lists), the Prelude (`Prelude.show`, medium) and the one unlisted external import; qualified imports `Map.size` medium.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Data.Shape.area",
+      "callee": "Prelude.product",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Data/Shape.hs",
+      "line": 4
+    },
+    {
+      "caller": "Data.Shape.perimeter",
+      "callee": "Prelude.product",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Data/Shape.hs",
+      "line": 7
+    },
+    {
+      "caller": "Data.Shape.scaled",
+      "callee": "Data.Shape.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Data/Shape.hs",
+      "line": 10
+    },
+    {
+      "caller": "Data.Shape.scaled",
+      "callee": "Prelude.succ",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Data/Shape.hs",
+      "line": 10
+    },
+    {
+      "caller": "App.summary",
+      "callee": "Data.Shape.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "App.hs",
+      "line": 7
+    },
+    {
+      "caller": "App.summary",
+      "callee": "Data.Shape.perimeter",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "App.hs",
+      "line": 7
+    },
+    {
+      "caller": "App.summary",
+      "callee": "Data.Shape.scaled",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "App.hs",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "Data.Shape.area",
+    "Data.Shape.perimeter",
+    "Data.Shape.scaled"
+  ],
+  "notes": "C1: `area` is called from its own module (`scaled`) and from `App` through the unqualified import; both use `Data.Shape.area`, high. The qualified import alias `S.perimeter` names a scanned module, so it resolves to the defining ID `Data.Shape.perimeter`, high (C1: through an alias), not the as-written `S.perimeter` medium that applies to external qualified imports like `Map.size`. Import declarations are not calls; the list literal is data construction."
+}

@@ -1,0 +1,31 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. **Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` — left as a `metadata.insert` low guess it is wrong. **C7 Complete edges.** Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "core.Walker#walk",
+      "callee": "core.Node#next",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Chain.groovy",
+      "line": 18
+    },
+    {
+      "caller": "core.Walker#walk",
+      "callee": "core.Node#next",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Chain.groovy",
+      "line": 19
+    },
+    {
+      "caller": "core.Walker#walk",
+      "callee": "core.Node#name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Chain.groovy",
+      "line": 20
+    }
+  ],
+  "notes": "root is a field declared Node; each later receiver is a call of a parameterless method with declared return type Node (Decisions 2026-11-09). Every edge is on its own method name's line, not the line of `return root`. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

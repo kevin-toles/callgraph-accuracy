@@ -1,0 +1,55 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). ... **Typing reaches only declarations in the scan**: ... A receiver whose type is only knowable from a library's signatures outside the scan ... stays a low guess, and that is correct. ... Call on a computed receiver (call result, index, literal, ...): `.member`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.io.Closer#close",
+      "callee": "java.util.Map#get",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "com/acme/io/Closer.java",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.io.Closer#close",
+      "callee": ".close",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "com/acme/io/Closer.java",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.io.Closer#close",
+      "callee": "java.lang.String#getClass",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "com/acme/io/Closer.java",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.io.Closer#close",
+      "callee": ".getName",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "com/acme/io/Closer.java",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.io.Closer#close",
+      "callee": "out.println",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "com/acme/io/Closer.java",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.io.Closer#close",
+      "callee": ".trim",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "com/acme/io/Closer.java",
+      "line": 11
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. 8: the value type of Map.get is known only from JDK signatures, so `.close` on the call result is a low guess. 9: `key` is declared String, so getClass is java.lang.String#getClass (declared type names the ID), medium; its result type comes from the JDK, so `.getName` is low. 10: `System.out` is a field whose type is declared only in the JDK, so the receiver is of unknown type and the last receiver segment names it: `out.println`, low (no edge for the field access `System.out`). 11: a string literal is a computed receiver per SPEC's list (call result, index, literal): `.trim`, low. None of these may be dropped (C4)."
+}

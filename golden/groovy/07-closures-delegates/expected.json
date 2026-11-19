@@ -1,0 +1,83 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func`, a Rust `fn` item inside a function body, a PHP `$f = function`/`fn`, a C++ `auto f = [..]`, a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty. Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. Honest low (do not resolve by guessing): calls resolved only at runtime through a closure delegate (Groovy), query/DSL names read by a macro (Ecto `field`, `type`), and types reachable only through more than one wildcard import.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "core.Runner#visit",
+      "callee": "c",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "core/Closures.groovy",
+      "line": 10
+    },
+    {
+      "caller": "core.Runner#configure",
+      "callee": "groovy.lang.Closure#setDelegate",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "core/Closures.groovy",
+      "line": 17
+    },
+    {
+      "caller": "core.Runner#configure",
+      "callee": "core.Spec#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "core/Closures.groovy",
+      "line": 17
+    },
+    {
+      "caller": "core.Runner#configure",
+      "callee": "body",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "core/Closures.groovy",
+      "line": 18
+    },
+    {
+      "caller": "core.Runner#compute",
+      "callee": "core.Runner#visit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Closures.groovy",
+      "line": 23
+    },
+    {
+      "caller": "core.Runner#compute",
+      "callee": "core.Runner#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Closures.groovy",
+      "line": 23
+    },
+    {
+      "caller": "core.Runner#compute",
+      "callee": "core.Runner#configure",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Closures.groovy",
+      "line": 24
+    },
+    {
+      "caller": "core.Runner#compute",
+      "callee": "name",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "core/Closures.groovy",
+      "line": 25
+    },
+    {
+      "caller": "core.Runner#compute",
+      "callee": "core.Runner#compute.twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core/Closures.groovy",
+      "line": 27
+    }
+  ],
+  "nodes_include": [
+    "core.Runner#compute.twice",
+    "core.Runner#log"
+  ],
+  "notes": "`def twice = { \u2026 }` is a local bound directly to a function literal (a closure): named nested function core.Runner#compute.twice, high. Anonymous closures fold into core.Runner#compute. c and body are parameters holding closures: callback, unknown. log(v) resolves through the closure's owner (Runner defines log), so it is core.Runner#log. name(\"x\") is not defined by the owner Runner; it runs only through the delegate set at runtime (Spec#name), so it is an honest low bare name `name`, not core.Spec#name. body is declared Closure (groovy.lang default import): setDelegate is groovy.lang.Closure#setDelegate, medium. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

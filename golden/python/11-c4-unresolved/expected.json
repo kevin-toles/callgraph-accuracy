@@ -1,0 +1,39 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. Silence in the graph means no call, or a `coverage` note. **C7 Complete edges.** Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules. **low**: a guess — receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shop.legacy.run",
+      "callee": "prepare_env",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "shop/legacy.py",
+      "line": 2
+    },
+    {
+      "caller": "shop.legacy.run",
+      "callee": "task.execute",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/legacy.py",
+      "line": 3
+    },
+    {
+      "caller": "shop.legacy.run",
+      "callee": "helpers_missing.compute",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "shop/legacy.py",
+      "line": 4
+    },
+    {
+      "caller": "shop.legacy",
+      "callee": "bootstrap",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "shop/legacy.py",
+      "line": 7
+    }
+  ],
+  "notes": "C4: `prepare_env` and `bootstrap` are bare names defined nowhere (not in the scan, not imported, not builtins) -> emitted as bare-name low guesses, never dropped and never promoted to `shop.legacy.prepare_env`. `helpers_missing` is an undefined name used as a receiver -> `helpers_missing.compute`, low. C7: the module-level call still has a non-empty caller, the module `shop.legacy`."
+}

@@ -1,0 +1,44 @@
+{
+  "rule": "A type alias (`using X = T;`, `typedef T X;`, Zig `const X = a.b.T`) is expanded to its target, so the ID names the real type (`std.map#begin`, not `SafeStringMap#begin`); a declared type resolves through the file's using-directives and using-declarations, including those of headers it includes. Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). **high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition).",
+  "source": "KNOWN_GAP: cpp: types visible through several using-directives (ComPtr) stay unqualified",
+  "edges": [
+    {
+      "caller": "render",
+      "callee": "Microsoft.WRL.ComPtr#Reset",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "render.cpp",
+      "line": 6
+    },
+    {
+      "caller": "render",
+      "callee": "gfx.Device#Present",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "render.cpp",
+      "line": 7
+    },
+    {
+      "caller": "render",
+      "callee": "Microsoft.WRL.ComPtr#Get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "render.cpp",
+      "line": 8
+    },
+    {
+      "caller": "render",
+      "callee": "gfx.Device#Present",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "render.cpp",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "Microsoft.WRL.ComPtr#Reset",
+    "Microsoft.WRL.ComPtr#Get",
+    "gfx.Device#Present"
+  ],
+  "notes": "render.cpp includes common.h, which carries two using-directives (Microsoft::WRL and gfx). SPEC: 'a declared type resolves through the file's using-directives and using-declarations, including those of headers it includes.' ComPtr is declared only in Microsoft::WRL and Device only in gfx, both in the scan, so each name has exactly one in-scan target: ComPtr<Device> → Microsoft.WRL.ComPtr (template argument dropped) and Device → gfx.Device. Reset/Get are ComPtr's own members (the wrapper defines them) → Microsoft.WRL.ComPtr#Reset / #Get, high. The 'honest low' rule for 'types reachable only through more than one wildcard import' does not apply: that rule covers names the tool cannot pin (Java's version is about external types, '(medium)'); here only one of the two directives' namespaces declares each name, and both namespaces are in the scan. Leaving 'ComPtr#Reset' unqualified would violate C1/C2 (an ID that is not the definition's ID)."
+}

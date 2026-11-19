@@ -1,0 +1,50 @@
+{
+  "rule": "C4 Unresolved references are preserved. A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). | Call on a receiver of unknown type: `recv.member`, using the LAST receiver segment | Call on a computed receiver (call result, ...): `.member`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Dyn.go",
+      "callee": "mod.run",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/dyn.ex",
+      "line": 5
+    },
+    {
+      "caller": "MyApp.Dyn.go",
+      "callee": "Phoenix.HTML.html_escape",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/dyn.ex",
+      "line": 6
+    },
+    {
+      "caller": "MyApp.Dyn.chain",
+      "callee": "config.load",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/dyn.ex",
+      "line": 9
+    },
+    {
+      "caller": "MyApp.Dyn.computed",
+      "callee": "MyApp.Dyn.get_mod",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/dyn.ex",
+      "line": 11
+    },
+    {
+      "caller": "MyApp.Dyn.computed",
+      "callee": ".start",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/dyn.ex",
+      "line": 11
+    }
+  ],
+  "nodes_include": [
+    "MyApp.Dyn.get_mod"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. `mod` is a parameter used as a module: unknown receiver, `mod.run`, low. `html_escape` is available only through `import Phoenix.HTML`, which is not in the scan and not known to export it (the Elixir decision needs an import 'known to export the name'; Kernel does not), so it stays a bare low guess, never dropped (C4). `x.config` is field access; the call `.load()` on it uses the last segment: `config.load`, low. `get_mod().start()` calls the scanned defp (high) and then `start` on a call result: `.start`, low."
+}

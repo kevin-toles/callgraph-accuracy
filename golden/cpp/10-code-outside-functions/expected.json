@@ -1,0 +1,61 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer → `Type#field`; C# property accessor → `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter → `Type#x=`; `static {}` block → `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. `implicit`: an execution edge the language runs without a written call — `Type#<clinit>` → `Type#field` (static initializer), `Type#<init>` → `Type#field` (instance field initializer). Line = the field's line. Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). **Typed receivers (decision A) cover every declaration of the receiver's type**: locals, parameters, fields, and file-scope globals/statics (C, C++, ObjC, Zig, Rust `static`).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Registry#limit_",
+      "callee": "init_count",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core/types.h",
+      "line": 11
+    },
+    {
+      "caller": "Registry#<init>",
+      "callee": "Registry#limit_",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "core/types.h",
+      "line": 11
+    },
+    {
+      "caller": "core/registry",
+      "callee": "init_count",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core/registry.cpp",
+      "line": 9
+    },
+    {
+      "caller": "core/registry",
+      "callee": "Registry#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "core/registry.cpp",
+      "line": 10
+    },
+    {
+      "caller": "use",
+      "callee": "Registry#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/registry.cpp",
+      "line": 13
+    },
+    {
+      "caller": "use",
+      "callee": "init_count",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core/registry.cpp",
+      "line": 13
+    }
+  ],
+  "nodes_include": [
+    "Registry#limit_",
+    "Registry#<init>",
+    "Registry#add",
+    "init_count"
+  ],
+  "notes": "'int limit_ = init_count();' is a non-static (instance) field initializer: its call has caller Registry#limit_, and the field gets an implicit edge Registry#<init> → Registry#limit_ on the field's line (core/types.h:11). The implicit edge is high because both ends are defined in the scan (the tier rule; SPEC gives no separate tier for implicit). The file-scope initializers of g_count and g_reg (outside any function or type) have the file path below the scan root without extension as caller: 'core/registry'. g_reg is a file-scope global with declared type Registry* (Decisions 2026-10-29) → g_reg->add names Registry#add. ': cap_(cap)' initialises a scalar: not a call. The prototype 'int init_count();' is a declaration."
+}

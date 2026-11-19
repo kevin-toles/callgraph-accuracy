@@ -1,0 +1,109 @@
+{
+  "rule": "Free function: its name (with the language's module qualifier where it has one). **C / Objective-C**: function-like macros → call_type macro (high if `#define`d in the scan). C functions bare; **high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "cube",
+      "callee": "square",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 9
+    },
+    {
+      "caller": "fact",
+      "callee": "fact",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 15
+    },
+    {
+      "caller": "sum_to",
+      "callee": "cube",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 20
+    },
+    {
+      "caller": "sum_to",
+      "callee": "square",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 20
+    },
+    {
+      "caller": "sum_to",
+      "callee": "fact",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 21
+    },
+    {
+      "caller": "sum_to",
+      "callee": "cube",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 23
+    },
+    {
+      "caller": "sum_to",
+      "callee": "square",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 25
+    },
+    {
+      "caller": "sum_to",
+      "callee": "cube",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 25
+    },
+    {
+      "caller": "main",
+      "callee": "sum_to",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 29
+    },
+    {
+      "caller": "main",
+      "callee": "square",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 29
+    },
+    {
+      "caller": "main",
+      "callee": "cube",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 29
+    },
+    {
+      "caller": "main",
+      "callee": "fact",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.c",
+      "line": 29
+    }
+  ],
+  "nodes_include": [
+    "square",
+    "cube",
+    "fact",
+    "sum_to"
+  ],
+  "notes": "C functions are bare names, static or not. Calls in for-headers, while-conditions, ternaries, nested arguments and recursion are each one edge. The prototypes on lines 1-2 are declarations (SPEC 'Not calls: declarations/function heads'), not calls. Every callee has a body in the scan, so all are high."
+}

@@ -1,0 +1,109 @@
+{
+  "rule": "Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown. Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "hof.apply",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "hof.ml",
+      "line": 3
+    },
+    {
+      "caller": "hof.twice",
+      "callee": "g",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "hof.ml",
+      "line": 5
+    },
+    {
+      "caller": "hof.twice",
+      "callee": "g",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "hof.ml",
+      "line": 5
+    },
+    {
+      "caller": "hof.with_logger",
+      "callee": "log",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "hof.ml",
+      "line": 8
+    },
+    {
+      "caller": "hof.with_logger",
+      "callee": "List.iter",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "hof.ml",
+      "line": 9
+    },
+    {
+      "caller": "hof.fire",
+      "callee": "on_event",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "hof.ml",
+      "line": 11
+    },
+    {
+      "caller": "hof.run",
+      "callee": "Stdlib.print_int",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "hof.ml",
+      "line": 14
+    },
+    {
+      "caller": "hof.run",
+      "callee": "hof.apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "hof.ml",
+      "line": 14
+    },
+    {
+      "caller": "hof.run",
+      "callee": "Stdlib.print_int",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "hof.ml",
+      "line": 15
+    },
+    {
+      "caller": "hof.run",
+      "callee": "hof.twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "hof.ml",
+      "line": 15
+    },
+    {
+      "caller": "hof.run",
+      "callee": "hof.with_logger",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "hof.ml",
+      "line": 16
+    },
+    {
+      "caller": "hof.run",
+      "callee": "hof.fire",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "hof.ml",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "hof.apply",
+    "hof.twice",
+    "hof.with_logger",
+    "hof.fire"
+  ],
+  "notes": "Applying a parameter is unknown (OCaml note): `f x`, both applications in `g (g x)`, and the labelled parameter `log \"start\"` are callback edges whose callee is the parameter's name. `h.on_event 3` calls a function stored in a record field: callee is the field's name `on_event`, callback, unknown (callback rule: stored property holding a function). Passing `log`, `succ`, `pred`, `print_endline` and `print_int` as arguments or in a record literal is not a call."
+}

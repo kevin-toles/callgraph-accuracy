@@ -1,0 +1,63 @@
+{
+  "rule": "Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | **C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. | **low**: a guess \u2014 receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Probe#poke:slot:",
+      "callee": "obj.spin",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Probe.m",
+      "line": 13
+    },
+    {
+      "caller": "Probe#poke:slot:",
+      "callee": "obj.frobnicate:with:",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Probe.m",
+      "line": 14
+    },
+    {
+      "caller": "Probe#poke:slot:",
+      "callee": "bar.go",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Probe.m",
+      "line": 15
+    },
+    {
+      "caller": "Probe#poke:slot:",
+      "callee": ".go",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Probe.m",
+      "line": 17
+    },
+    {
+      "caller": "Probe#poke:slot:",
+      "callee": ".length",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Probe.m",
+      "line": 18
+    },
+    {
+      "caller": "Probe#poke:slot:",
+      "callee": "obj.thing",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Probe.m",
+      "line": 19
+    },
+    {
+      "caller": "Probe#poke:slot:",
+      "callee": ".go",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Probe.m",
+      "line": 19
+    }
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. This is also the C4 case: none of spin/frobnicate:with:/go/thing is declared anywhere in the scan or by Foundation (the file compiles under manual reference counting, where such sends to `id` are warnings), and each send must still be emitted as a low guess. `id` is the dynamic type, so `[obj m]` \u2192 `obj.m` (per-language note). `[s->bar go]`: the field `bar` is declared `id` \u2192 unknown receiver, LAST receiver segment `bar.go`. Index `items[0]`, literal `@\"abc\"` and call result `[obj thing]` are computed receivers \u2192 `.member`, low (the literal rule applies even though the literal's class is NSString). Syntax-checked with clang -fno-objc-arc."
+}

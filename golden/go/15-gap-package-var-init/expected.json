@@ -1,0 +1,34 @@
+{
+  "rule": "Go: calls in package-level `var` initializers have caller `pkg.init` (they run during package initialization). Builtins (`len`, `append`, `make`, `panic`, \u2026) are not calls: no edge.",
+  "source": "KNOWN_GAP: calls in package-level var initializers get no edges",
+  "edges": [
+    {
+      "caller": "example.com/m.init",
+      "callee": "strings.ToUpper",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 8
+    },
+    {
+      "caller": "example.com/m.init",
+      "callee": "example.com/m.loadConfig",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 10
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "fmt.Println",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.go",
+      "line": 19
+    }
+  ],
+  "nodes_include": [
+    "example.com/m.loadConfig"
+  ],
+  "notes": "Calls in package-level var initializers have caller pkg.init = example.com/m.init (Decisions 2026-10-29 Go). len(\"abc\") is a builtin: no edge. Reading greeting/config/size in main is variable access, not a call. The map literal is data construction."
+}

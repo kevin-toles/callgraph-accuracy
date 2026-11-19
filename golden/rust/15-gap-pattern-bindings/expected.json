@@ -1,0 +1,34 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium).",
+  "source": "KNOWN_GAP: receivers bound by match/if-let patterns, turbofish calls and user Deref impls are under-typed (match/if-let part)",
+  "edges": [
+    {
+      "caller": "handle",
+      "callee": "Worker#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 14
+    },
+    {
+      "caller": "handle",
+      "callee": "Worker#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 18
+    },
+    {
+      "caller": "main",
+      "callee": "handle",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 23
+    }
+  ],
+  "nodes_include": [
+    "Worker#run"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. w is bound by the pattern Msg::Job(w) against msg: Msg, whose variant Job is declared `Job(Worker)` \u2192 w: Worker. n is bound by Some(n) against next: Option<Worker> \u2192 n: Worker. Both are pattern bindings whose type comes from scanned declarations \u2192 Worker#run, high; w.run / n.run low guesses are wrong. Patterns and Msg::Stop / None are data, not calls. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

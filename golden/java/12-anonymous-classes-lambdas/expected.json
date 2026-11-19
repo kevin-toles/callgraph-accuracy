@@ -1,0 +1,67 @@
+{
+  "rule": "Anonymous subclass instantiation (`new Iface() {\u2026}`, ...): no constructor edge when the named type is an interface/trait (it has no constructor); when it is a class (including abstract), `Type#<init>`, constructor, as usual. Calls inside the body fold into the enclosing function as before. ... Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.events.Bus#wire",
+      "callee": "com.acme.events.Bus#handle",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/events/Bus.java",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.events.Bus#wire",
+      "callee": "com.acme.events.Job#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/events/Bus.java",
+      "line": 13
+    },
+    {
+      "caller": "com.acme.events.Bus#wire",
+      "callee": "com.acme.events.Bus#handle",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/events/Bus.java",
+      "line": 16
+    },
+    {
+      "caller": "com.acme.events.Bus#wire",
+      "callee": "java.util.List#forEach",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "com/acme/events/Bus.java",
+      "line": 19
+    },
+    {
+      "caller": "com.acme.events.Bus#wire",
+      "callee": "com.acme.events.Bus#handle",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/events/Bus.java",
+      "line": 19
+    },
+    {
+      "caller": "com.acme.events.Bus#wire",
+      "callee": "com.acme.events.Listener#on",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/events/Bus.java",
+      "line": 20
+    },
+    {
+      "caller": "com.acme.events.Bus#wire",
+      "callee": "com.acme.events.Job#exec",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/events/Bus.java",
+      "line": 21
+    }
+  ],
+  "nodes_include": [
+    "com.acme.events.Listener#on",
+    "com.acme.events.Job#exec"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. Line 7 `new Listener() {..}`: Listener is an interface, no constructor edge. Line 13 `new Job(\"x\") {..}`: Job is an abstract class, Job#<init>. The anonymous members on/exec and the lambda `n -> handle(n)` fold into Bus#wire. `handle` inside them is a bare call to Bus's member (no such member on Listener/Job). `l` is declared Listener and `j` declared Job: Listener#on and Job#exec are body-less declarations of scanned types, high (Decisions 2026-11-09). `@Override` is not a call."
+}

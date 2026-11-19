@@ -1,0 +1,39 @@
+{
+  "rule": "Elixir records. `defrecord` and `defrecordp` (bare after `import Record`/`require Record`, or `Record.defrecord`) declare record macros. Like `def` and `defstruct`, they are declarations: no edge. Calls written in their arguments are ordinary edges ... A use of a record macro declared in the file ... emits no edge. ... That covers expression and pattern position alike: `listener(node: n)`, `handler(:id)`, `rec(r, field: v)`. This is data construction. Calls in the use's arguments are ordinary edges.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Shapes",
+      "callee": "String.length",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/shapes.ex",
+      "line": 4
+    },
+    {
+      "caller": "MyApp.Shapes.make",
+      "callee": "Kernel.abs",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/shapes.ex",
+      "line": 8
+    },
+    {
+      "caller": "MyApp.Shapes.make",
+      "callee": "String.length",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/shapes.ex",
+      "line": 8
+    },
+    {
+      "caller": "MyApp.Shapes.widen",
+      "callee": "Kernel.max",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/shapes.ex",
+      "line": 17
+    }
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. Bare Kernel functions resolve to the auto-imported Kernel (Elixir decision: 'with one import known to export the name, that import is the target'): `Kernel.<name>`, medium. Declarations, no edge: bare `defrecord`/`defrecordp` after `import Record` (shapes.ex:3-4) and qualified `Record.defrecord` after `require Record` (pairs.ex:3); `import`/`require` are module dependencies. The call in defrecordp's argument (`String.length(\"ab\")`, line 4) is an ordinary edge; it is module-body code, so its caller is the module (Code outside a method body: 'the caller is its location'). Record uses, no edge: `point()`, `point(x: ...)` (expression), `point(x: x)` in a function head and `box(w: w) = b` (pattern), `box(b, w: ...)` (update), `pair(p, :left)` (read), `pair(left: l, right: r)` (pattern) / `pair(left: r, right: l)` (build). Calls inside use arguments (`abs`, `String.length`, `max`) are ordinary edges with the enclosing function as caller."
+}

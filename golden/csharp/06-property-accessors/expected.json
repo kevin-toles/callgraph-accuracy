@@ -1,0 +1,31 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer \u2192 `Type#field`; C# property accessor \u2192 `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter \u2192 `Type#x=`; `static {}` block \u2192 `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Thermostat#Fahrenheit",
+      "callee": "App.Thermostat#ToF",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Thermostat.cs",
+      "line": 13
+    },
+    {
+      "caller": "App.Thermostat#Fahrenheit=",
+      "callee": "App.Thermostat#ToC",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Thermostat.cs",
+      "line": 17
+    },
+    {
+      "caller": "App.Thermostat#Fahrenheit=",
+      "callee": "App.Thermostat#Notify",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Thermostat.cs",
+      "line": 18
+    }
+  ],
+  "notes": "Calls in a get accessor have caller Type#Prop, calls in a set accessor Type#Prop= (SPEC: C# property accessor). Reading the field celsius and the contextual `value` are not calls."
+}

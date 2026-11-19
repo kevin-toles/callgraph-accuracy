@@ -1,0 +1,77 @@
+{
+  "rule": "Constructor / initializer call: `Type#<init>`. Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) → `Parent#<init>`, constructor. Generic/template type arguments are dropped from every ID (`HashSet#<init>`). Overloads share one ID. **C++**: namespace-qualified with dots: `ns.Class#method`, `ns.func`; `Class::static()` → `Class#static`; template arguments dropped.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "geo.Base#<init>",
+      "callee": "geo.seed",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shapes.cpp",
+      "line": 6
+    },
+    {
+      "caller": "geo.Circle#<init>",
+      "callee": "geo.Circle#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shapes.cpp",
+      "line": 20
+    },
+    {
+      "caller": "geo.Circle#<init>",
+      "callee": "geo.seed",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "shapes.cpp",
+      "line": 20
+    },
+    {
+      "caller": "geo.Circle#<init>",
+      "callee": "geo.Base#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shapes.cpp",
+      "line": 21
+    },
+    {
+      "caller": "geo.Circle#<init>",
+      "callee": "geo.Box#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shapes.cpp",
+      "line": 21
+    },
+    {
+      "caller": "geo.make",
+      "callee": "geo.Circle#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shapes.cpp",
+      "line": 28
+    },
+    {
+      "caller": "geo.make",
+      "callee": "geo.Circle#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shapes.cpp",
+      "line": 29
+    },
+    {
+      "caller": "geo.make",
+      "callee": "geo.Circle#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shapes.cpp",
+      "line": 31
+    }
+  ],
+  "nodes_include": [
+    "geo.Base#<init>",
+    "geo.Circle#<init>",
+    "geo.Box#<init>",
+    "geo.seed"
+  ],
+  "notes": "A C++ constructor definition is the type's initializer, so by C1 its ID is the same Type#<init> that constructor calls use; both Circle constructors share geo.Circle#<init> (overloads share one ID) as caller. Calls in a constructor's mem-initializer list belong to that constructor. ': Base(r)' is a superclass constructor call (the C++ form of ': base(...)') → geo.Base#<init>, constructor; ': Circle(seed())' delegates (the form of ': this(...)') → geo.Circle#<init>. 'new Box<int>(r)' drops the template argument → geo.Box#<init>. Circle(r) (explicit temporary), new Circle() and new Circle(r) are constructor calls on the line of the type name. Member initializers v_(...) and box_(...) of scalar/pointer members are not calls themselves; only the calls inside them are. '(void)t' / '(void)tmp' are casts."
+}

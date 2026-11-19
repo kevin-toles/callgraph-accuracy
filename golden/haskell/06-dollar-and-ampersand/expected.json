@@ -1,0 +1,76 @@
+{
+  "rule": "`f $ x` and `x & f` call f. **C3 Operation classification.** Each written construct is exactly one of:",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Pipe.clean",
+      "callee": "Prelude.reverse",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Pipe.hs",
+      "line": 6
+    },
+    {
+      "caller": "Pipe.shout",
+      "callee": "Prelude.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Pipe.hs",
+      "line": 9
+    },
+    {
+      "caller": "Pipe.viaDollar",
+      "callee": "Pipe.shout",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Pipe.hs",
+      "line": 12
+    },
+    {
+      "caller": "Pipe.viaDollar",
+      "callee": "Pipe.clean",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Pipe.hs",
+      "line": 12
+    },
+    {
+      "caller": "Pipe.viaAmp",
+      "callee": "Pipe.clean",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Pipe.hs",
+      "line": 15
+    },
+    {
+      "caller": "Pipe.viaAmp",
+      "callee": "Pipe.shout",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Pipe.hs",
+      "line": 15
+    },
+    {
+      "caller": "Pipe.main",
+      "callee": "Prelude.putStrLn",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Pipe.hs",
+      "line": 18
+    },
+    {
+      "caller": "Pipe.main",
+      "callee": "Pipe.viaDollar",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Pipe.hs",
+      "line": 18
+    }
+  ],
+  "nodes_include": [
+    "Pipe.clean",
+    "Pipe.shout",
+    "Pipe.viaDollar"
+  ],
+  "notes": "`f $ x` and `x & f` call f (Haskell note): `shout $ clean s` calls shout and clean; `s & clean & shout` calls clean then shout; `putStrLn $ viaDollar \"abc\"` calls putStrLn and viaDollar. Per C3 each written construct is exactly one operation, and the spec classifies `f $ x` as an invocation of f, so `$` and `&` emit no edge of their own. (General operator applications are the separate spec_gap in 16-known-gap-operators; this case only uses the two operators the spec rules on.) The `import Data.Function ((&))` declaration is not a call."
+}

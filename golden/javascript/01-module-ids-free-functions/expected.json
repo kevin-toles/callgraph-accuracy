@@ -1,0 +1,69 @@
+{
+  "rule": "module = the file's path below the scan root without extension and trailing `/index` (`src/chat` for src/chat/index.ts; basenames collide across directories): `src/app.f`, `src/app.C#m`, `#<init>`/`#<clinit>`/`#field` as in Java. | Free function: its name (with the language's module qualifier where it has one). | Top-level / file-level code (outside any function or type): the caller is the file's module ID. | Imports, `require`, re-exports (`export *`, `export * as`) and workspace packages (package.json `exports`) resolve to the defining module; packages outside the scan are named as written (`node:http.createServer`, `zod.z.object`, medium). | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "lib/math.square",
+      "callee": "lib/math.mul",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/math.js",
+      "line": 2
+    },
+    {
+      "caller": "lib/math.cube",
+      "callee": "lib/math.mul",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/math.js",
+      "line": 10
+    },
+    {
+      "caller": "lib/math.cube",
+      "callee": "lib/math.square",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/math.js",
+      "line": 10
+    },
+    {
+      "caller": "app.run",
+      "callee": "lib/math.square",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.js",
+      "line": 4
+    },
+    {
+      "caller": "app.run",
+      "callee": "lib/math.cube",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.js",
+      "line": 4
+    },
+    {
+      "caller": "app",
+      "callee": "app.run",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.js",
+      "line": 7
+    },
+    {
+      "caller": "app",
+      "callee": "lib/math.cube",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.js",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "lib/math.square",
+    "lib/math.cube",
+    "lib/math.mul",
+    "app.run"
+  ],
+  "notes": "Module = path below src/ without extension: lib/math.js -> `lib/math`, app.js -> `app`. Top-level calls in app.js have caller `app` (top-level rule). `square` is called inside its own file (line 10) and via import (line 4) with the same ID (C1). The ESM import on line 1 is not a call (JS note: 'Import statements are not calls')."
+}

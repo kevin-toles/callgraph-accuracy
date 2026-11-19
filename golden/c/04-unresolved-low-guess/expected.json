@@ -1,0 +1,42 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. Silence in the graph means no call, or a `coverage` note. **low**: a guess — receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "report",
+      "callee": "known",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "report.c",
+      "line": 6
+    },
+    {
+      "caller": "report",
+      "callee": "log_event",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "report.c",
+      "line": 7
+    },
+    {
+      "caller": "report",
+      "callee": "format_code",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "report.c",
+      "line": 8
+    },
+    {
+      "caller": "report",
+      "callee": "known",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "report.c",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "known"
+  ],
+  "notes": "log_event and format_code are neither defined nor declared anywhere in src/ (implicit declarations, C89). C4: they must still appear, as bare-name low guesses, never dropped. They must not appear in nodes as definitions. Syntax-checked with -std=gnu89."
+}

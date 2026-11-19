@@ -1,0 +1,7 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer → `Type#field`; C# property accessor → `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter → `Type#x=`; `static {}` block → `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). An empty caller or `<global>` is a wrong caller.",
+  "source": "SPEC",
+  "spec_gap": "Ruby class/module body code: (1) is the caller of `Struct.new(...)` / `.new` on line 2 `Geo` (the module, as Python's class-body rule), or `Geo#ORIGIN` as a constant/field initializer with an `implicit` edge `Geo#<clinit>` -> `Geo#ORIGIN`? (2) Are `attr_accessor :name` and `include Comparable` calls (to `Module#attr_accessor` / `Module#include`, or bare low guesses), or declarations/module dependencies with no edge? If calls, their caller is `Geo.Shape`?",
+  "edges": [],
+  "notes": "SPEC fixes class-body callers for Python (`pkg.mod.C`) and field initializers in general (`Type#field` + implicit edge), but says nothing for Ruby class/module bodies."
+}

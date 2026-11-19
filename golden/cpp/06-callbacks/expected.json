@@ -1,0 +1,92 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown. **unknown**: a dynamic call (function value, callback, closure, function pointer).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "ev.Emitter#fire",
+      "callee": "on_done_",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.cpp",
+      "line": 10
+    },
+    {
+      "caller": "ev.Emitter#fire",
+      "callee": "on_done_",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.cpp",
+      "line": 11
+    },
+    {
+      "caller": "ev.apply",
+      "callee": "op",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.cpp",
+      "line": 19
+    },
+    {
+      "caller": "ev.apply",
+      "callee": "op",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.cpp",
+      "line": 19
+    },
+    {
+      "caller": "ev.apply",
+      "callee": "fn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.cpp",
+      "line": 19
+    },
+    {
+      "caller": "ev.relay",
+      "callee": "notify",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.cpp",
+      "line": 22
+    },
+    {
+      "caller": "ev.wire",
+      "callee": "local",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "events.cpp",
+      "line": 26
+    },
+    {
+      "caller": "ev.wire",
+      "callee": "ev.Emitter#fire",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "events.cpp",
+      "line": 26
+    },
+    {
+      "caller": "ev.wire",
+      "callee": "ev.apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "events.cpp",
+      "line": 27
+    },
+    {
+      "caller": "ev.wire",
+      "callee": "ev.relay",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "events.cpp",
+      "line": 27
+    }
+  ],
+  "nodes_include": [
+    "ev.Emitter#fire",
+    "ev.apply",
+    "ev.relay"
+  ],
+  "notes": "on_done_ is a stored property holding a function (std::function): callback, unknown, callee = the member name, with or without this->. op (function-pointer parameter; op(v) and (*op)(v) are two calls), fn (std::function parameter) and local (function-pointer local) are calls through values. In relay the parameter 'notify' shadows ev::notify, so notify(1) is a callback, not ev.notify high. '&ev::notify', passing notify / ev::notify / a lambda as arguments, and 'on_done_ = cb' are references, not calls; the lambda body contains no call. std::function's call operator is not reported as std.function#operator(): the value holds a function, so the callback rule applies."
+}

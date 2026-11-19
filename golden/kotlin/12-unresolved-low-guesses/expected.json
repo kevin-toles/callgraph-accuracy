@@ -1,0 +1,95 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). ... **Typing reaches only declarations in the scan**: ... A receiver whose type is only knowable from a library's signatures outside the scan ... stays a low guess, and that is correct.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.jobs.Scheduler#kick",
+      "callee": "java.util.ArrayList#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "com/acme/jobs/Scheduler.kt",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.jobs.Scheduler#kick",
+      "callee": "java.util.ArrayList#add",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "com/acme/jobs/Scheduler.kt",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.jobs.Scheduler#kick",
+      "callee": "com.acme.jobs.Job#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/jobs/Scheduler.kt",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.jobs.Scheduler#kick",
+      "callee": "java.util.ArrayList#get",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "com/acme/jobs/Scheduler.kt",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.jobs.Scheduler#kick",
+      "callee": ".start",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "com/acme/jobs/Scheduler.kt",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.jobs.Scheduler#kick",
+      "callee": "com.acme.jobs.Registry#lookup",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/jobs/Scheduler.kt",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.jobs.Scheduler#kick",
+      "callee": "com.acme.jobs.Job#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/jobs/Scheduler.kt",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.jobs.Scheduler#kick",
+      "callee": "com.acme.jobs.Registry#first",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/jobs/Scheduler.kt",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.jobs.Scheduler#kick",
+      "callee": "com.acme.jobs.Job#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/jobs/Scheduler.kt",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.jobs.Registry#lookup",
+      "callee": "com.acme.jobs.Job#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/jobs/Registry.kt",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.jobs.Registry#first",
+      "callee": "com.acme.jobs.Job#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/jobs/Registry.kt",
+      "line": 9
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. `list` is typed java.util.ArrayList by `= ArrayList<Job>()` (explicit import, type argument dropped), so add/get are medium. Line 9: the element type of `get(0)` comes only from the JDK's signature, so `.start` stays a low guess. Line 10: `lookup(\"a\")` takes a parameter, so its result is a computed receiver: `.start`, low, even though lookup's return type is declared in the scan (the parameterless rule covers only parameterless calls). Line 11: `first()` is parameterless with declared return type Job, so Job#start, high. Neither low guess may be dropped or promoted (C4, C5)."
+}

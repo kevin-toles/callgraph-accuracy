@@ -1,0 +1,39 @@
+{
+  "rule": "**Zig**: file-qualified: `file.Struct#fn`, `file.fn`; `@import` bindings make `std.x.y` medium. | A type alias (`using X = T;`, `typedef T X;`, Zig `const X = a.b.T`) is expanded to its target | a module dependency (an import declaration; the binding carries it)",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.check",
+      "callee": "std.debug.print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 5
+    },
+    {
+      "caller": "app.check",
+      "callee": "std.mem.eql",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 6
+    },
+    {
+      "caller": "app.check",
+      "callee": "std.mem.indexOf",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 9
+    },
+    {
+      "caller": "app.check",
+      "callee": "std.fmt.parseInt",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 10
+    }
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). `const std = @import(\"std\")` is an import binding, not a call (C3 module dependency). Through it, std functions are `std.x.y`, medium. `const mem = std.mem` is a `const X = a.b.T` alias (a Zig namespace is a struct type) and is expanded \u2192 `std.mem.indexOf`. `try` and the anonymous tuple `.{a}` are not calls."
+}

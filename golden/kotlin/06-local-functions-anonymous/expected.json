@@ -1,0 +1,109 @@
+{
+  "rule": "A local bound directly to a function literal (... local `fun`/`def`/`func`, ... a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function ... Anonymous subclass instantiation ...: no constructor edge when the named type is an interface/trait ...; when it is a class (including abstract), `Type#<init>`, constructor",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.fn.Worker#run.shout",
+      "callee": "com.acme.fn.Worker#emit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.fn.Worker#run.whisper",
+      "callee": "com.acme.fn.Worker#emit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.fn.Worker#run",
+      "callee": "com.acme.fn.Worker#run.shout",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.fn.Worker#run",
+      "callee": "com.acme.fn.Worker#run.whisper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.fn.Worker#run",
+      "callee": "com.acme.fn.Worker#each",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.fn.Worker#run",
+      "callee": "com.acme.fn.Worker#emit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.fn.Worker#run",
+      "callee": "com.acme.fn.Worker#emit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 14
+    },
+    {
+      "caller": "com.acme.fn.Worker#run",
+      "callee": "com.acme.fn.Task#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 17
+    },
+    {
+      "caller": "com.acme.fn.Worker#run",
+      "callee": "com.acme.fn.Worker#emit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 19
+    },
+    {
+      "caller": "com.acme.fn.Worker#run",
+      "callee": "com.acme.fn.Listener#on",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 22
+    },
+    {
+      "caller": "com.acme.fn.Worker#run",
+      "callee": "com.acme.fn.Task#exec",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 23
+    },
+    {
+      "caller": "com.acme.fn.Worker#each",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "com/acme/fn/Worker.kt",
+      "line": 28
+    }
+  ],
+  "nodes_include": [
+    "com.acme.fn.Worker#run.shout",
+    "com.acme.fn.Worker#run.whisper",
+    "com.acme.fn.Listener#on",
+    "com.acme.fn.Task#exec"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. `val shout = { .. }` and the local `fun whisper` are named nested functions `com.acme.fn.Worker#run.shout` / `#run.whisper` (Python form `pkg.mod.C#m.inner`); calls inside their bodies have them as caller. The trailing lambda `{ emit(it) }` (line 11), the anonymous Listener member (14) and the anonymous Task member (19) fold into Worker#run. `object : Listener` makes no constructor edge (interface); `object : Task(\"x\")` is Task#<init> (abstract class) on line 17. `l`/`t` are declared Listener/Task; on/exec are body-less declarations of scanned types, high. `f(x)` calls a function-typed parameter: callee `f`, callback, unknown. The for loop's hidden iterator calls are not written calls: no edge."
+}

@@ -1,0 +1,55 @@
+{
+  "rule": "With exactly one on-demand import (`import a.b.*`), a simple type name that is not in the file's package, not imported singly and not a java.lang type is `a.b.Name` (medium); with more than one such import it stays unqualified, low. ... Honest low (do not resolve by guessing): ... types reachable only through more than one wildcard import.",
+  "source": "KNOWN_GAP: types reachable only through several wildcard imports stay medium",
+  "edges": [
+    {
+      "caller": "com.acme.multi.Mixed#run",
+      "callee": "ArrayList#<init>",
+      "call_type": "constructor",
+      "confidence": "low",
+      "file": "com/acme/multi/Mixed.java",
+      "line": 8
+    },
+    {
+      "caller": "com.acme.multi.Mixed#run",
+      "callee": "List#add",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "com/acme/multi/Mixed.java",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.multi.Mixed#run",
+      "callee": "StringWriter#<init>",
+      "call_type": "constructor",
+      "confidence": "low",
+      "file": "com/acme/multi/Mixed.java",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.multi.Mixed#run",
+      "callee": "StringWriter#write",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "com/acme/multi/Mixed.java",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.multi.Mixed#run",
+      "callee": "List#size",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "com/acme/multi/Mixed.java",
+      "line": 12
+    },
+    {
+      "caller": "com.acme.multi.Mixed#run",
+      "callee": "java.lang.String#length",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "com/acme/multi/Mixed.java",
+      "line": 12
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. Two on-demand imports (java.io.*, java.util.*): List, ArrayList and StringWriter are reachable only through them, so the type names stay unqualified and the edges are low, even though a reader can tell which package holds each. String is a java.lang type, excluded from the wildcard rule, so java.lang.String#length stays medium."
+}

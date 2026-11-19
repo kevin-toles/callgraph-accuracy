@@ -1,0 +1,58 @@
+{
+  "rule": "Constructor / initializer call: `Type#<init>`. **Java / Kotlin / C# / Groovy / Scala**: package/namespace-qualified: `com.x.C#m`; an external type is qualified through its explicit import. Kotlin top-level functions `com.x.f`. A Groovy script (a file with top-level code or functions) is a class named after the file: its functions are `pkg.Script#f`, its top-level code `pkg.Script#run`. Generic/template type arguments are dropped from every ID (`HashSet#<init>`). Overloads share one ID. Companion-object members flatten onto the class. **Implicitly imported names are qualified**: Java/Scala/Groovy `java.lang.String`, Groovy's default imports (`java.util.List`, `groovy.lang.Closure`, …). With exactly one on-demand import (`import a.b.*`), a simple type name that is not in the file's package, not imported singly and not a java.lang type is `a.b.Name` (medium); with more than one such import it stays unqualified, low. Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). An enum constant `E.C` has type `E`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Factory#build",
+      "callee": "java.util.ArrayList#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "app/Factory.scala",
+      "line": 10
+    },
+    {
+      "caller": "app.Factory#build",
+      "callee": "java.util.ArrayList#add",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/Factory.scala",
+      "line": 11
+    },
+    {
+      "caller": "app.Factory#build",
+      "callee": "app.Item#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "app/Factory.scala",
+      "line": 11
+    },
+    {
+      "caller": "app.Factory#build",
+      "callee": "java.util.concurrent.ConcurrentHashMap#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "app/Factory.scala",
+      "line": 12
+    },
+    {
+      "caller": "app.Factory#build",
+      "callee": "java.util.concurrent.ConcurrentHashMap#clear",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/Factory.scala",
+      "line": 13
+    },
+    {
+      "caller": "app.Factory#fail",
+      "callee": "java.lang.IllegalStateException#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "app/Factory.scala",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "app.Item#<init>"
+  ],
+  "notes": "ArrayList is qualified through its explicit import; type arguments are dropped (java.util.ArrayList#<init>). ConcurrentHashMap is reachable through exactly one explicit on-demand import (java.util.concurrent._), is not in package app, not imported singly and not java.lang, so it is java.util.concurrent.ConcurrentHashMap (medium); Scala's implicit java.lang._/scala._ imports are not counted as 'such' imports because SPEC handles java.lang names separately. list and cache are bound by `= new T(...)` (decision A), so their calls are T#m, medium (external). IllegalStateException is an implicitly imported java.lang name. The class parameter `val name` is a declaration, not a call. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

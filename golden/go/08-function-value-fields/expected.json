@@ -1,0 +1,31 @@
+{
+  "rule": "A call through a function value is ONE edge whose callee is the variable/field name, callback, unknown. | Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.Server#Serve",
+      "callee": "h",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "main.go",
+      "line": 10
+    },
+    {
+      "caller": "example.com/m.Server#Serve",
+      "callee": "handler",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "main.go",
+      "line": 12
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Server#Serve",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 21
+    }
+  ],
+  "notes": "s.handler(path) calls through a struct field holding a func: ONE edge, callee = the field name `handler`, callback, unknown (Go note) \u2014 no extra low edge to the closure main$1 even though type flow shows it reaches the field. h() calls through a for-loop variable holding a func: callee `h`. Assigning the function literal and appending `ping` are references, not calls (append is a builtin: no edge). The closure main$1 contains no calls."
+}

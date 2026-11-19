@@ -1,0 +1,230 @@
+[
+ {
+  "id": "call-type-ruling",
+  "rule": "call_type",
+  "disposition": "ruling 2026-11-10 direct vs method",
+  "note": "relabel only: call_type now follows the direct-vs-method ruling (wire.normalizeCallTypes)."
+ },
+ {
+  "id": "c7-file-module-caller",
+  "kind": "caller",
+  "language": "*",
+  "match": {
+   "old_caller": "^(<global>)?$"
+  },
+  "disposition": "implementation defect fixed",
+  "note": "C7: an empty or <global> caller is now the file's module (wire.nameEmptyCallers)."
+ },
+ {
+  "id": "python-init-identity",
+  "kind": "caller",
+  "language": "*",
+  "match": {
+   "file": "\\.py$",
+   "old_caller": "#__init__($|\\.)",
+   "new_caller": "#<init>($|\\.)"
+  },
+  "disposition": "implementation defect fixed",
+  "note": "C1: a Python constructor is T#<init>, the ID its callers use (python memberName)."
+ },
+ {
+  "id": "lua-table-identity-caller",
+  "kind": "caller",
+  "language": "lua",
+  "match": {
+   "file": "\\.lua$"
+  },
+  "disposition": "ruling 2026-11-10 Lua functions stored on a table",
+  "note": "a function on a table with a static identity is mod.T#f; on a table without one it folds into the enclosing function."
+ },
+ {
+  "id": "python-init-identity-nested",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.py$",
+   "caller": "#(__init__|<init>)($|\\.)"
+  },
+  "disposition": "implementation defect fixed",
+  "note": "C1: edges from a constructor or a function nested in one, renamed __init__ -> <init> together with a callee in the same constructor or a call_type relabel; checked one-to-one (every removed edge has its renamed counterpart)."
+ },
+ {
+  "id": "python-super-init-callee",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.py$",
+   "callee": "#(__init__|<init>)$"
+  },
+  "disposition": "implementation defect fixed",
+  "note": "C1: super().__init__() names the base constructor T#<init>."
+ },
+ {
+  "id": "elixir-records",
+  "kind": "removed",
+  "language": "elixir",
+  "match": {
+   "file": "\\.exs?$",
+   "callee": "^(Record\\.defrecordp?|cell|certificate|file_info|handler|hostent|listener|module|net_address|paragraph|plugin|source|table|tbscertificate|timestamp|user|validity|vec|rsa_public_key|otp_tbs_certificate|signature_algorithm|otp_subject_public_key_info|public_key_algorithm|attr|extension|basic_constraints|otp_certificate|defaults|Mix\\.Compilers\\.Elixir\\.source)$"
+  },
+  "disposition": "ruling 2026-11-10 Elixir records",
+  "note": "record declarations and uses (local, imported, or remote through a require alias of the scanned module that declares them) emit no edge; every name checked against its defrecord/defrecordp."
+ },
+ {
+  "id": "php-use-function",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.php$"
+  },
+  "disposition": "implementation defect fixed",
+  "note": "`use function` imports now resolve (php phpFunctionUses): an imported global builtin is medium, an imported namespaced function names its namespace."
+ },
+ {
+  "id": "jsts-binding-no-evidence-id",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(m?[jt]sx?|cjs)$",
+   "old": "unknown/callback",
+   "new": "unknown/callback",
+   "new_callee": "\\.[A-Za-z_$][\\w$]*$"
+  },
+  "disposition": "ruling 2026-11-10 JS/TS module-level bindings",
+  "note": "No evidence: a call through a top-level binding is mod.name, callback, unknown (was the bare name)."
+ },
+ {
+  "id": "jsts-binding-alias",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(m?[jt]sx?|cjs)$",
+   "old_callee": "^packages/shared/src/general\\.(isArray|extend)$",
+   "new_callee": "^(Array\\.isArray|Object\\.assign)$"
+  },
+  "disposition": "ruling 2026-11-10 JS/TS module-level bindings",
+  "note": "Alias: isArray = Array.isArray and extend = Object.assign resolve to the target's ID (the ruling's own example). Two pairs cross the names only because both calls share a line."
+ },
+ {
+  "id": "jsts-binding-alias-scanned",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "third_party\\.bundle\\.js$|demo\\.js$",
+   "old_callee": "\\.nx$",
+   "new_callee": "\\.ix$",
+   "new": "high/direct"
+  },
+  "disposition": "ruling 2026-11-10 JS/TS module-level bindings",
+  "note": "Alias nx=ix, ix a scanned function: the alias takes its target's ID and tier (high)."
+ },
+ {
+  "id": "jsts-binding-factory-or-literal",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(m?[jt]sx?|cjs)$",
+   "old": "unknown/callback",
+   "new": "medium/direct",
+   "new_callee": "\\.[A-Za-z_$][\\w$]*$"
+  },
+  "disposition": "ruling 2026-11-10 JS/TS module-level bindings",
+  "note": "Function factory (makeMap(...), cacheStringFunction(...)) or function-literal evidence: mod.name, direct, medium."
+ },
+ {
+  "id": "jsts-imported-declaration",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.(m?[jt]sx?|cjs)$",
+   "old": "unknown/callback",
+   "new": "high/direct",
+   "old_callee": "^[A-Za-z_$][\\w$]*$"
+  },
+  "disposition": "ruling 2026-11-10 JS/TS module-level bindings",
+  "note": "a bare call of an imported function declaration now resolves to its definition (createBuffer -> render.createBuffer, high)."
+ },
+ {
+  "id": "lua-table-identity-keepdirect-removed",
+  "kind": "removed",
+  "match": {
+   "file": "\\.lua$",
+   "old": "high/method"
+  },
+  "language": "*",
+  "disposition": "ruling 2026-11-10 Lua functions stored on a table; direct vs method (Lua T.f() is direct)",
+  "note": "callers renamed by table identity together with the Lua `.`-call relabel method -> direct; add/remove pairs checked one-to-one."
+ },
+ {
+  "id": "lua-table-identity-keepdirect-added",
+  "kind": "added",
+  "match": {
+   "file": "\\.lua$",
+   "new": "high/direct"
+  },
+  "language": "*",
+  "disposition": "ruling 2026-11-10 Lua functions stored on a table; direct vs method (Lua T.f() is direct)",
+  "note": "callers renamed by table identity together with the Lua `.`-call relabel method -> direct; add/remove pairs checked one-to-one."
+ },
+ {
+  "id": "lua-dot-call-direct",
+  "kind": "change",
+  "match": {
+   "file": "\\.lua$",
+   "old": "high/method",
+   "new": "high/direct"
+  },
+  "language": "*",
+  "disposition": "ruling 2026-11-10 Lua functions stored on a table; direct vs method (Lua T.f() is direct)",
+  "note": "callers renamed by table identity together with the Lua `.`-call relabel method -> direct; add/remove pairs checked one-to-one."
+ },
+ {
+  "id": "c7-empty-caller-java-kotlin",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "tainted_args\\.java$|InterceptorOverridesTest\\.kt$"
+  },
+  "disposition": "implementation defect fixed",
+  "note": "C7: the empty caller is now the file module (java) or the enum property's getter OverrideParam#paramName (kotlin enum_class_body); call_type per the direct-vs-method ruling."
+ },
+ {
+  "id": "lua-external-module-library-call",
+  "kind": "change",
+  "language": "lua",
+  "match": {
+   "file": "\\.lua$",
+   "old": "high/method",
+   "new": "medium/direct",
+   "callee": "^(pl\\.path#exists|resty\\.acme\\.util#create_pkey)$"
+  },
+  "disposition": "ruling 2026-11-10 (amendment) Lua tables of external modules",
+  "note": "A spec's mock (pl_path.exists = function, util.create_pkey = function) no longer defines the library function, so pl_path.exists(x) is the library call: medium, and direct as a `.` call. Both modules are external to the scan (checked)."
+ },
+ {
+  "id": "lua-external-mock-original-call",
+  "kind": "added",
+  "language": "lua",
+  "match": {
+   "file": "\\.lua$",
+   "new": "medium/direct",
+   "callee": "^(pl\\.path#exists|opentelemetry\\.trace\\.id_generator#new_ids)$"
+  },
+  "disposition": "ruling 2026-11-10 (amendment) Lua tables of external modules",
+  "note": "old_exists(path) / original_new_ids() inside the mock: HEAD named the mock as the library function, so the call was a self-loop (removed). It is now the module file's call of the library function, medium. Checked line by line (03-conf_loader_spec.lua:1060, opentelemetry.lua:281)."
+ },
+ {
+  "id": "lua-alias-reexported-module",
+  "kind": "change",
+  "language": "lua",
+  "match": {
+   "file": "\\.lua$",
+   "old": "low/direct",
+   "new": "medium/direct",
+   "old_callee": "^file\\.read$",
+   "new_callee": "^pl\\.file#read$"
+  },
+  "disposition": "defect fix (C2): a local alias of a re-exported module's member resolves as the written path does",
+  "note": "local read = helpers.file.read with spec.helpers returning { file = require(\"pl.file\") }; TestLuaCallGraph_AliasThroughReexportedModule."
+ }
+]

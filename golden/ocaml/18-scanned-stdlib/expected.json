@@ -1,0 +1,60 @@
+{
+  "rule": "A scanned standard library is the scan's own code (SPEC Decisions 2026-11-12): when the scan contains the standard library's sources, a Stdlib call, bare or written Stdlib.f, resolves to that definition at high, as List.map resolves to list.map. Names it does not define keep the external form Stdlib.f, medium.",
+  "source": "SPEC Decisions (2026-11-12): the OCaml compiler repo's stdlib/stdlib.ml",
+  "edges": [
+    {
+      "caller": "list.map",
+      "callee": "Stdlib.ignore",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "stdlib/list.ml",
+      "line": 1
+    },
+    {
+      "caller": "stdlib.print_string",
+      "callee": "Stdlib.ignore",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "stdlib/stdlib.ml",
+      "line": 1
+    },
+    {
+      "caller": "stdlib.failwith",
+      "callee": "Stdlib.raise",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "stdlib/stdlib.ml",
+      "line": 2
+    },
+    {
+      "caller": "a.run",
+      "callee": "stdlib.print_string",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "utils/a.ml",
+      "line": 2
+    },
+    {
+      "caller": "a.run",
+      "callee": "stdlib.failwith",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "utils/a.ml",
+      "line": 3
+    },
+    {
+      "caller": "a.run",
+      "callee": "list.map",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "utils/a.ml",
+      "line": 4
+    }
+  ],
+  "nodes_include": [
+    "stdlib.print_string",
+    "stdlib.failwith",
+    "list.map"
+  ],
+  "notes": "print_string (bare) and Stdlib.failwith (qualified) are defined in the scanned stdlib.ml: high, one ID with the definition (C1). ignore and raise are not defined in this stdlib.ml, so they stay Stdlib.ignore / Stdlib.raise, medium."
+}

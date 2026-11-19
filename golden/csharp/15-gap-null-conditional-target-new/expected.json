@@ -1,0 +1,67 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | Constructor / initializer call: `Type#<init>`. | Code outside a method body: the caller is its location. Field/val initializer \u2192 `Type#field`; C# property accessor \u2192 `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter \u2192 `Type#x=`; `static {}` block \u2192 `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not.",
+  "source": "KNOWN_GAP: ?. calls and target-typed new() are missed",
+  "edges": [
+    {
+      "caller": "App.Service#seen",
+      "callee": "List#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "Service.cs",
+      "line": 14
+    },
+    {
+      "caller": "App.Service#<init>",
+      "callee": "App.Service#seen",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "Service.cs",
+      "line": 14
+    },
+    {
+      "caller": "App.Service#<init>",
+      "callee": "App.Logger#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Service.cs",
+      "line": 20
+    },
+    {
+      "caller": "App.Service#Handle",
+      "callee": "App.Logger#Log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Service.cs",
+      "line": 25
+    },
+    {
+      "caller": "App.Service#Handle",
+      "callee": "App.Logger#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Service.cs",
+      "line": 26
+    },
+    {
+      "caller": "App.Service#Handle",
+      "callee": "App.Logger#Log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Service.cs",
+      "line": 27
+    },
+    {
+      "caller": "App.Service#Handle",
+      "callee": "List#Add",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Service.cs",
+      "line": 28
+    }
+  ],
+  "nodes_include": [
+    "App.Logger#<init>",
+    "App.Logger#Log"
+  ],
+  "notes": "Target-typed `new()` constructs the declared type of its target: the field seen (List<string> \u2192 System.Collections.Generic.List#<init>, medium, type resolved through the file's single using-directive; generic argument dropped), the field logger (App.Logger#<init>, high) and the local backup. The field initializer's caller is App.Service#seen plus the implicit <init> edge (high: callee defined in the scan). `x?.M()` is a call of M on x (null-conditional only skips it when x is null): logger/backup are typed by their declarations (Logger#Log, high), seen by its field type (List#Add, medium)."
+}

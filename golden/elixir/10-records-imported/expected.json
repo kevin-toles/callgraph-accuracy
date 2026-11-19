@@ -1,0 +1,31 @@
+{
+  "rule": "Elixir records. ... Calls written in their arguments are ordinary edges, for example `Record.extract(:x, from_lib: ...)`, medium. A use of a record macro declared in the file, or imported from a scanned module, emits no edge. ... That covers expression and pattern position alike ... Calls in the use's arguments are ordinary edges.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Records",
+      "callee": "Record.extract",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/records.ex",
+      "line": 3
+    },
+    {
+      "caller": "MyApp.Users.new",
+      "callee": "String.trim",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/users.ex",
+      "line": 4
+    },
+    {
+      "caller": "MyApp.Users.leaf",
+      "callee": "Enum.empty?",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/users.ex",
+      "line": 13
+    }
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. records.ex declares `user` and `tree` with `Record.defrecord` (declarations, no edge); `Record.extract(...)` in the first one's argument is an ordinary call, caller the module body `MyApp.Records`, medium (standard library). users.ex imports the scanned module MyApp.Records; its uses `user(name: ...)` (build), `user(name: n)` (function-head pattern), `user(u, name: n)` (update), `tree(children: [])` / `tree(children: kids)` (case patterns) emit no edges. `String.trim` inside a use's argument and `Enum.empty?` in a clause body are ordinary edges."
+}

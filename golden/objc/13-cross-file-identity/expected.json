@@ -1,0 +1,93 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. | A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "clampTwice",
+      "callee": "clampValue",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "util.m",
+      "line": 8
+    },
+    {
+      "caller": "clampTwice",
+      "callee": "clampValue",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "util.m",
+      "line": 8
+    },
+    {
+      "caller": "Counter#init",
+      "callee": ".init",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Counter.m",
+      "line": 8
+    },
+    {
+      "caller": "Counter#increment",
+      "callee": "Counter#incrementBy:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Counter.m",
+      "line": 12
+    },
+    {
+      "caller": "Counter#incrementBy:",
+      "callee": "clampValue",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Counter.m",
+      "line": 15
+    },
+    {
+      "caller": "main",
+      "callee": "Counter#alloc",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "main.m",
+      "line": 6
+    },
+    {
+      "caller": "main",
+      "callee": "Counter#init",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.m",
+      "line": 6
+    },
+    {
+      "caller": "main",
+      "callee": "Counter#increment",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.m",
+      "line": 7
+    },
+    {
+      "caller": "main",
+      "callee": "Counter#incrementBy:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.m",
+      "line": 8
+    },
+    {
+      "caller": "main",
+      "callee": "clampValue",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.m",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "Counter#init",
+    "Counter#increment",
+    "Counter#incrementBy:",
+    "clampValue"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. C1: `clampValue` is called from its defining file util.m, from Counter.m and from main.m through the util.h prototype; `Counter#incrementBy:` from Counter.m (self) and main.m (typed local `Counter *c`). Each reference uses the one ID and is high because the definition is scanned (the prototype rule's medium applies only when the definition is not in the scan). `[super init]` with NSObject outside the scan \u2192 `.init` low. `Counter#alloc` medium (inherited from NSObject). Header declarations emit no edges. `@autoreleasepool` is a language construct."
+}

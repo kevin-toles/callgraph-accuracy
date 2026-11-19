@@ -1,0 +1,69 @@
+{
+  "rule": "module = the file's path below the scan root without extension and trailing `/index` (`src/chat` for src/chat/index.ts; basenames collide across directories): `src/app.f`, `src/app.C#m`, `#<init>`/`#<clinit>`/`#field` as in Java. | Imports, `require`, re-exports (`export *`, `export * as`) and workspace packages (package.json `exports`) resolve to the defining module; packages outside the scan are named as written (`node:http.createServer`, `zod.z.object`, medium). | Globals: `JSON.stringify`, `globalThis.parseInt` (medium). | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "lib/strings.shout",
+      "callee": "lib/strings.trim",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/strings.ts",
+      "line": 5
+    },
+    {
+      "caller": "lib/nums.clamp",
+      "callee": "Math.min",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/nums.ts",
+      "line": 2
+    },
+    {
+      "caller": "lib.banner",
+      "callee": "lib/strings.shout",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/index.ts",
+      "line": 6
+    },
+    {
+      "caller": "cli.main",
+      "callee": "lib.banner",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "cli.ts",
+      "line": 5
+    },
+    {
+      "caller": "cli.main",
+      "callee": "lib/strings.trim",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "cli.ts",
+      "line": 5
+    },
+    {
+      "caller": "cli.main",
+      "callee": "lib/strings.shout",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "cli.ts",
+      "line": 6
+    },
+    {
+      "caller": "cli.main",
+      "callee": "lib/nums.clamp",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "cli.ts",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "lib/strings.trim",
+    "lib/strings.shout",
+    "lib/nums.clamp",
+    "lib.banner"
+  ],
+  "notes": "lib/index.ts is module `lib` (trailing `/index` dropped). `trim` imported through `export *` from `./lib` resolves to its defining module `lib/strings`, the same ID as the call in strings.ts line 5 (C1); `nums.clamp` through `export * as nums` resolves to `lib/nums.clamp`. `Math.min` is a global, medium. `arg.length` is field access. Strings are not used as method receivers here so no primitive-typed receiver is involved."
+}

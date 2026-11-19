@@ -1,0 +1,59 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer → `Type#field`; C# property accessor → `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter → `Type#x=`; `static {}` block → `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. `implicit`: an execution edge the language runs without a written call — `Type#<clinit>` → `Type#field` (static initializer), `Type#<init>` → `Type#field` (instance field initializer). Line = the field's line.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "core.Config#DEFAULTS",
+      "callee": "core.Config#compute",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Config.groovy",
+      "line": 4
+    },
+    {
+      "caller": "core.Config#<clinit>",
+      "callee": "core.Config#DEFAULTS",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "core/Config.groovy",
+      "line": 4
+    },
+    {
+      "caller": "core.Config#items",
+      "callee": "core.Config#load",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Config.groovy",
+      "line": 5
+    },
+    {
+      "caller": "core.Config#<init>",
+      "callee": "core.Config#items",
+      "call_type": "implicit",
+      "confidence": "high",
+      "file": "core/Config.groovy",
+      "line": 5
+    },
+    {
+      "caller": "core.Config#<clinit>",
+      "callee": "core.Config#compute",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Config.groovy",
+      "line": 9
+    },
+    {
+      "caller": "core.Config#load",
+      "callee": "java.util.ArrayList#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "core/Config.groovy",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "core.Config#compute",
+    "core.Config#load"
+  ],
+  "notes": "Static field initializer: caller core.Config#DEFAULTS plus implicit core.Config#<clinit> → core.Config#DEFAULTS on the field's line. Instance field initializer: caller core.Config#items plus implicit core.Config#<init> → core.Config#items. The `static {}` block's caller is core.Config#<clinit>. `static int counter` has no initializer: no edge. The assignment inside the static block is not a call. Implicit edges are high (field in the scan). call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

@@ -1,0 +1,102 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. **Body-less member declarations of scanned types are defined in the scan (high)**: a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are. **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) → `Parent#<init>`, constructor. An ID is never invented: a medium or high callee that names a member of a scanned module or type (`mod.T#f`, `mod.f`) is defined there, or is inherited from a base outside the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Shape#describe",
+      "callee": "Shape#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "hierarchy.cpp",
+      "line": 7
+    },
+    {
+      "caller": "Square#twice",
+      "callee": "Shape#describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "hierarchy.cpp",
+      "line": 13
+    },
+    {
+      "caller": "Square#twice",
+      "callee": "Shape#describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "hierarchy.cpp",
+      "line": 13
+    },
+    {
+      "caller": "total",
+      "callee": "Handler#on_error",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "hierarchy.cpp",
+      "line": 23
+    },
+    {
+      "caller": "total",
+      "callee": "Shape#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "hierarchy.cpp",
+      "line": 24
+    },
+    {
+      "caller": "total",
+      "callee": "Square#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "hierarchy.cpp",
+      "line": 24
+    },
+    {
+      "caller": "total",
+      "callee": "Shape#describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "hierarchy.cpp",
+      "line": 24
+    },
+    {
+      "caller": "total",
+      "callee": "Square#twice",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "hierarchy.cpp",
+      "line": 24
+    },
+    {
+      "caller": "Panel#<init>",
+      "callee": "QWidget#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "hierarchy.cpp",
+      "line": 29
+    },
+    {
+      "caller": "Panel#refresh",
+      "callee": "Panel#update",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "hierarchy.cpp",
+      "line": 31
+    },
+    {
+      "caller": "Panel#refresh",
+      "callee": "QWidget#setVisible",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "hierarchy.cpp",
+      "line": 32
+    }
+  ],
+  "nodes_include": [
+    "Shape#area",
+    "Shape#describe",
+    "Square#area",
+    "Square#twice",
+    "Handler#on_error"
+  ],
+  "notes": "this->describe() and bare describe() in Square: describe is defined only on the in-scan superclass Shape → Shape#describe. sq->describe() on a Square*: C2 forbids naming Square#describe (it is not defined on Square and Square's base is in the scan), so the callee is the defining base, Shape#describe. sq->area() names the override Square#area; s.area() on Shape& names Shape#area (call as written, like Go interface calls). h.on_error(1) resolves to a pure-virtual declaration of the in-scan class Handler → high (Decisions 2026-11-09, body-less members), and Handler#on_error is in nodes (C1). Panel's base QWidget comes from <QWidget>, outside the scan: ': QWidget(parent)' → QWidget#<init>, constructor, medium; this->update() is a self call inherited from a base outside the scan → Panel#update, medium (medium tier; C2 allows a scanned type's member inherited from an outside base); QWidget::setVisible(true) names the external type statically → QWidget#setVisible, medium. '= default' destructors and '= 0' are declarations. call_type: free functions are 'direct'; calls naming a member of a type (including static members called as Class::m() and implicit-this bare member calls) are 'method'; SPEC does not define the split further."
+}

@@ -1,0 +1,51 @@
+{
+  "rule": "module = the `module` header (else the file name); top-level functions, class methods and record fields `Module.f` Bare names resolve through local bindings, the module, import lists (with `T (..)` fields and hiding), unqualified imports of scanned modules (following `module M` re-exports and export lists), the Prelude (`Prelude.show`, medium) and the one unlisted external import; qualified imports `Map.size` medium. **Body-less member declarations of scanned types are defined in the scan (high)**: a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are.",
+  "source": "KNOWN_GAP: class methods exported via Class(..) stay low bare names",
+  "edges": [
+    {
+      "caller": "Shapes.Shape.Square.area",
+      "callee": "Prelude.product",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Shapes.hs",
+      "line": 10
+    },
+    {
+      "caller": "Report.line",
+      "callee": "Prelude.unwords",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Report.hs",
+      "line": 6
+    },
+    {
+      "caller": "Report.line",
+      "callee": "Shapes.name",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Report.hs",
+      "line": 6
+    },
+    {
+      "caller": "Report.line",
+      "callee": "Prelude.show",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Report.hs",
+      "line": 6
+    },
+    {
+      "caller": "Report.line",
+      "callee": "Shapes.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Report.hs",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "Shapes.area",
+    "Shapes.name"
+  ],
+  "notes": "Shapes exports `Shape (..)`, which exports the class methods `area` and `name`. Report's unqualified import of the scanned module follows the export list, so bare `area`/`name` resolve to the class method IDs `Shapes.area`/`Shapes.name` (class methods are `Module.f`), high because they are body-less declarations of a class in the scan (Decisions 2026-11-09) — not low bare names. The instance equations have caller `Shapes.Shape.Square.area`; `name _ = \"square\"` makes no call."
+}

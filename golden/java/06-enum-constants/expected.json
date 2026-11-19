@@ -1,0 +1,55 @@
+{
+  "rule": "Java enum constants: each constant declaration is a call from `Enum#<clinit>` to `Enum#<init>`, constructor (high when the enum is in the scan), on the constant's line.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.color.Color#<clinit>",
+      "callee": "com.acme.color.Color#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/color/Color.java",
+      "line": 4
+    },
+    {
+      "caller": "com.acme.color.Color#<clinit>",
+      "callee": "com.acme.color.Color#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/color/Color.java",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.color.Color#<clinit>",
+      "callee": "com.acme.color.Color#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/color/Color.java",
+      "line": 6
+    },
+    {
+      "caller": "com.acme.color.Dir#<clinit>",
+      "callee": "com.acme.color.Dir#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/color/Dir.java",
+      "line": 4
+    },
+    {
+      "caller": "com.acme.color.Dir#<clinit>",
+      "callee": "com.acme.color.Dir#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/color/Dir.java",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.color.Palette#pick",
+      "callee": "com.acme.color.Color#hex",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/color/Palette.java",
+      "line": 5
+    }
+  ],
+  "notes": "Every constant is a constructor call, with or without arguments and with or without a written constructor (Dir has none; the rule makes it high because the enum is in the scan). `c` is a parameter declared Color (decision A), so Color#hex, high. Line of each edge is the constant's own line."
+}

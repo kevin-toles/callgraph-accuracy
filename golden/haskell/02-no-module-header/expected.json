@@ -1,0 +1,42 @@
+{
+  "rule": "module = the `module` header (else the file name); top-level functions, class methods and record fields `Module.f` Bare names resolve through local bindings, the module, import lists (with `T (..)` fields and hiding), unqualified imports of scanned modules (following `module M` re-exports and export lists), the Prelude (`Prelude.show`, medium) and the one unlisted external import; qualified imports `Map.size` medium.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Tool.normalize",
+      "callee": "Data.List.sort",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Tool.hs",
+      "line": 4
+    },
+    {
+      "caller": "Tool.normalize",
+      "callee": "Prelude.reverse",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Tool.hs",
+      "line": 4
+    },
+    {
+      "caller": "Tool.main",
+      "callee": "Prelude.print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Tool.hs",
+      "line": 7
+    },
+    {
+      "caller": "Tool.main",
+      "callee": "Tool.normalize",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Tool.hs",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "Tool.normalize"
+  ],
+  "notes": "No `module` header, so the module is the file name `Tool` (Haskell note: \"else the file name\"), not Haskell's implicit `Main`. `sort` is bound by the external import list `import Data.List (sort)` and named through its module like `Prelude.show`: `Data.List.sort`, medium (external, not defined in the scan). The import declaration itself is not a call (C3: module dependency)."
+}

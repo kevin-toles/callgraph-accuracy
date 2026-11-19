@@ -1,0 +1,34 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\".",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.build",
+      "callee": "app.Builder#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 12
+    },
+    {
+      "caller": "app.build",
+      "callee": "app.Builder#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 13
+    },
+    {
+      "caller": "app.build",
+      "callee": "app.Builder#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 14
+    }
+  ],
+  "nodes_include": [
+    "app.Builder#add"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). Each call is on the line of its own `.add`. Only the first has a declared receiver (`b: Builder`); the next two are called on the result of a call that takes an argument \u2192 computed receiver `.add`, low."
+}

@@ -1,0 +1,52 @@
+{
+  "rule": "**Rust**: no module prefix: `Type#method` (impl and trait methods), free functions bare; module paths keep `::` (`std::env::var`); `Type::assoc` \u2192 `Type#assoc`. | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. | **Rust constructors type their binding**: `let x = T { .. }` and `let x = T::new(..)` / `T::default()` / `T::with_capacity(..)` give `x` type T",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Counter#new",
+      "callee": "Counter#with_start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 7
+    },
+    {
+      "caller": "Counter#bump",
+      "callee": "Counter#check",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 16
+    },
+    {
+      "caller": "Counter#bump",
+      "callee": "Counter#check_static",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 17
+    },
+    {
+      "caller": "main",
+      "callee": "Counter#new",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 26
+    },
+    {
+      "caller": "main",
+      "callee": "Counter#bump",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 27
+    }
+  ],
+  "nodes_include": [
+    "Counter#with_start",
+    "Counter#check_static",
+    "Counter#bump"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Self::/Counter:: associated calls \u2192 Counter#assoc. `Counter { count }` is data construction (no edge); `self.count += 1` is field access. `let mut c = Counter::new()` types c as Counter \u2192 Counter#bump high. main is a bare free function. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

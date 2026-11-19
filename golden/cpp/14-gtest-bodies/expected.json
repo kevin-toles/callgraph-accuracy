@@ -1,0 +1,84 @@
+{
+  "rule": "**gtest bodies are the methods gtest generates**: `TEST_F(Suite, Name) { … }` / `TEST_P` / `TYPED_TEST` define class `Suite_Name_Test` derived from the fixture `Suite` (`TEST` from `testing::Test`); the body's caller is `Suite_Name_Test#TestBody`, and bare calls and fields in it resolve through the fixture. gtest/gmock assertions (`ASSERT_*`, `EXPECT_*`, `GTEST_SKIP`, `SCOPED_TRACE`, …) are function-like macros: macro, medium. `self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Calc#ok",
+      "callee": "add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "calc.cpp",
+      "line": 5
+    },
+    {
+      "caller": "CalcTest#twice",
+      "callee": "add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "calc_unittest.cpp",
+      "line": 7
+    },
+    {
+      "caller": "CalcTest_Adds_Test#TestBody",
+      "callee": "EXPECT_EQ",
+      "call_type": "macro",
+      "confidence": "medium",
+      "file": "calc_unittest.cpp",
+      "line": 12
+    },
+    {
+      "caller": "CalcTest_Adds_Test#TestBody",
+      "callee": "CalcTest#twice",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "calc_unittest.cpp",
+      "line": 12
+    },
+    {
+      "caller": "CalcTest_Adds_Test#TestBody",
+      "callee": "ASSERT_TRUE",
+      "call_type": "macro",
+      "confidence": "medium",
+      "file": "calc_unittest.cpp",
+      "line": 13
+    },
+    {
+      "caller": "CalcTest_Adds_Test#TestBody",
+      "callee": "Calc#ok",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "calc_unittest.cpp",
+      "line": 13
+    },
+    {
+      "caller": "CalcTest_Chains_Test#TestBody",
+      "callee": "CalcTest#twice",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "calc_unittest.cpp",
+      "line": 17
+    },
+    {
+      "caller": "CalcTest_Chains_Test#TestBody",
+      "callee": "add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "calc_unittest.cpp",
+      "line": 17
+    },
+    {
+      "caller": "CalcTest_Chains_Test#TestBody",
+      "callee": "EXPECT_GT",
+      "call_type": "macro",
+      "confidence": "medium",
+      "file": "calc_unittest.cpp",
+      "line": 18
+    }
+  ],
+  "nodes_include": [
+    "CalcTest#twice",
+    "Calc#ok",
+    "add"
+  ],
+  "notes": "Each TEST_F body is the TestBody method of the generated class Suite_Name_Test derived from the fixture CalcTest (Decisions 2026-11-09). Bare twice(...) resolves through the fixture: twice is defined only on the in-scan superclass CalcTest → CalcTest#twice, high. calc_ is a fixture field typed Calc → Calc#ok, high. EXPECT_EQ/ASSERT_TRUE/EXPECT_GT are gtest assertion macros: macro, medium; the calls inside their arguments are separate ordinary edges. The TEST_F(...) head itself is the declaration of the generated class and method (SPEC 'Not calls: declarations/function heads'), so it emits no edge. <gtest/gtest.h> is outside the scan; the file name calc_unittest.cpp has no path segment named test/tests, so it is in scope."
+}

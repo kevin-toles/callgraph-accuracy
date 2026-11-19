@@ -1,0 +1,79 @@
+{
+  "rule": "Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` → `client.get`; `a.b.c()` → `b.c`). Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` — a leading dot means \"receiver unknown\". **low**: a guess — receiver of unknown type (`recv.m`, `.m`), or a bare name not found in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Fetcher#fetch",
+      "callee": "conn.get",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/fetcher.rb",
+      "line": 10
+    },
+    {
+      "caller": "Fetcher#fetch",
+      "callee": "opts.fetch",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/fetcher.rb",
+      "line": 11
+    },
+    {
+      "caller": "Fetcher#fetch",
+      "callee": ".strip",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/fetcher.rb",
+      "line": 11
+    },
+    {
+      "caller": "Fetcher#fetch",
+      "callee": ".upcase",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/fetcher.rb",
+      "line": 12
+    },
+    {
+      "caller": "Fetcher#fetch",
+      "callee": ".first",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/fetcher.rb",
+      "line": 13
+    },
+    {
+      "caller": "Fetcher#fetch",
+      "callee": "conn.pool",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/fetcher.rb",
+      "line": 14
+    },
+    {
+      "caller": "Fetcher#fetch",
+      "callee": ".checkout",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/fetcher.rb",
+      "line": 14
+    },
+    {
+      "caller": "Fetcher#fetch",
+      "callee": "Fetcher#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "lib/fetcher.rb",
+      "line": 15
+    },
+    {
+      "caller": "Fetcher#fetch",
+      "callee": "f.run",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/fetcher.rb",
+      "line": 16
+    }
+  ],
+  "notes": "Parameters of unknown type -> `recv.m`, low. A call result (`opts.fetch(:a)`, `conn.pool()`), a string literal and an array literal are computed receivers -> `.m`, low. In Ruby `conn.pool()` is a method call, so `.checkout` is on a call result (not `pool.checkout`). `f = Fetcher.new; f.run()` stays `f.run`, low: decision A applies to statically typed languages and typed PHP/Groovy declarations only. Symbol `:a` is not a call."
+}

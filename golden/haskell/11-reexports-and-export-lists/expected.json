@@ -1,0 +1,84 @@
+{
+  "rule": "Bare names resolve through local bindings, the module, import lists (with `T (..)` fields and hiding), unqualified imports of scanned modules (following `module M` re-exports and export lists), the Prelude (`Prelude.show`, medium) and the one unlisted external import; qualified imports `Map.size` medium. **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Shape.Core.area",
+      "callee": "Prelude.product",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Shape/Core.hs",
+      "line": 4
+    },
+    {
+      "caller": "Util.slug",
+      "callee": "Prelude.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Util.hs",
+      "line": 6
+    },
+    {
+      "caller": "Util.slug",
+      "callee": "Util.toUpper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Util.hs",
+      "line": 6
+    },
+    {
+      "caller": "Util.toUpper",
+      "callee": "Prelude.reverse",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Util.hs",
+      "line": 9
+    },
+    {
+      "caller": "Main.main",
+      "callee": "Prelude.print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Main.hs",
+      "line": 9
+    },
+    {
+      "caller": "Main.main",
+      "callee": "Shape.Core.area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Main.hs",
+      "line": 9
+    },
+    {
+      "caller": "Main.main",
+      "callee": "Prelude.putStrLn",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Main.hs",
+      "line": 10
+    },
+    {
+      "caller": "Main.main",
+      "callee": "Data.Char.toUpper",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Main.hs",
+      "line": 10
+    },
+    {
+      "caller": "Main.main",
+      "callee": "Util.slug",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Main.hs",
+      "line": 10
+    }
+  ],
+  "nodes_include": [
+    "Shape.Core.area",
+    "Util.slug",
+    "Util.toUpper"
+  ],
+  "notes": "`Shape` re-exports `module Shape.Core`; Main's `area` follows the re-export to the defining module, `Shape.Core.area`, high (C1: through a re-export). Util's export list is `(slug)`, so its own `toUpper` is not visible in Main; Main's bare `toUpper` resolves to its one unlisted external import `Data.Char`: `Data.Char.toUpper`, medium. Inside Util, bare `toUpper` is the module's own definition: `Util.toUpper`, high. `C.toLower` is passed to `map`, not applied: no edge."
+}

@@ -1,0 +1,51 @@
+{
+  "rule": "C1 Symbol identity. Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. | Elixir: aliases (lexical, in source order ...) resolve to the full module",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Util.slug",
+      "callee": "String.downcase",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/util.ex",
+      "line": 3
+    },
+    {
+      "caller": "MyApp.Util.slug",
+      "callee": "MyApp.Util.dashes",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/util.ex",
+      "line": 3
+    },
+    {
+      "caller": "MyApp.Util.dashes",
+      "callee": "String.replace",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/util.ex",
+      "line": 6
+    },
+    {
+      "caller": "MyApp.Page.title",
+      "callee": "MyApp.Util.slug",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/page.ex",
+      "line": 5
+    },
+    {
+      "caller": "MyApp.Page.raw",
+      "callee": "MyApp.Util.dashes",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/page.ex",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "MyApp.Util.slug",
+    "MyApp.Util.dashes"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. `MyApp.Util.dashes` is reached by a bare local call in its own file (util.ex:3) and by a fully qualified remote call from page.ex:8; `MyApp.Util.slug` through `alias MyApp.Util` (page.ex:5). Same ID everywhere (C1). `alias` is a module dependency, not a call."
+}

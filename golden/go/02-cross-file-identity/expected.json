@@ -1,0 +1,68 @@
+{
+  "rule": "C1 Symbol identity. Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m/store.Normalize",
+      "callee": "strings.TrimSpace",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "store/cache.go",
+      "line": 10
+    },
+    {
+      "caller": "example.com/m/store.Cache#Put",
+      "callee": "example.com/m/store.Normalize",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "store/cache.go",
+      "line": 14
+    },
+    {
+      "caller": "example.com/m/store.Fill",
+      "callee": "example.com/m/store.Cache#Put",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "store/fill.go",
+      "line": 5
+    },
+    {
+      "caller": "example.com/m/store.Fill",
+      "callee": "example.com/m/store.Normalize",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "store/fill.go",
+      "line": 5
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m/store.Fill",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 7
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m/store.Cache#Put",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 8
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m/store.Normalize",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "example.com/m/store.Normalize",
+    "example.com/m/store.Cache#Put",
+    "example.com/m/store.Fill"
+  ],
+  "notes": "store.Normalize is defined in store/cache.go and called from cache.go (same file), fill.go (same package, other file) and main.go (through the import): all three use example.com/m/store.Normalize (C1). The method Cache#Put is reached from fill.go through the parameter type *Cache and from main.go through `var c store.Cache` (decision A; a pointer names the pointee per Decisions 2026-10-29). Methods use call_type method."
+}

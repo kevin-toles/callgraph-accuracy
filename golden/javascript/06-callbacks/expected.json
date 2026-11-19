@@ -1,0 +1,77 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | `this.x` assigned a value is a callback. | **unknown**: a dynamic call (function value, callback, closure, function pointer). | Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. | Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "cb.each",
+      "callee": "fn",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "cb.js",
+      "line": 3
+    },
+    {
+      "caller": "cb.Button#click",
+      "callee": "onClick",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "cb.js",
+      "line": 12
+    },
+    {
+      "caller": "cb.run",
+      "callee": "cb.pick",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "cb.js",
+      "line": 21
+    },
+    {
+      "caller": "cb.run",
+      "callee": "chosen",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "cb.js",
+      "line": 22
+    },
+    {
+      "caller": "cb.run",
+      "callee": "cb.Button#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "cb.js",
+      "line": 23
+    },
+    {
+      "caller": "cb.run",
+      "callee": "cb.Button#click",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "cb.js",
+      "line": 24
+    },
+    {
+      "caller": "cb.run",
+      "callee": "cb.each",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "cb.js",
+      "line": 25
+    },
+    {
+      "caller": "cb.run",
+      "callee": "handler",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "cb.js",
+      "line": 25
+    }
+  ],
+  "nodes_include": [
+    "cb.each",
+    "cb.pick",
+    "cb.Button#<init>",
+    "cb.Button#click"
+  ],
+  "notes": "`fn(x)` calls a parameter; `this.onClick()` calls a stored property assigned a value in the constructor ('`this.x` assigned a value is a callback'), callee is the property name `onClick`; `chosen(...)` calls a local bound to a call result. All callback/unknown with the variable's name. `b` is bound by `= new Button(...)` so `b.click()` is `cb.Button#click` (decision A, high because defined in scan). `each` on line 17 and `handler` passed as an argument on lines 22-23 are references, not calls. `handler(v)` inside the anonymous arrow folds into `cb.run`."
+}

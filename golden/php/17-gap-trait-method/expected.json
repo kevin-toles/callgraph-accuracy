@@ -1,0 +1,27 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID | **C2 Resolution consistency.** ... An ID is never invented: a medium or high callee that names a member of a scanned module or type (`mod.T#f`, `mod.f`) is defined there, or is inherited from a base outside the scan.",
+  "source": "KNOWN_GAP: methods from traits resolve to the using class at medium",
+  "edges": [
+    {
+      "caller": "App.Greets#hello",
+      "callee": "App.Greets#name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Greets.php",
+      "line": 8
+    },
+    {
+      "caller": "App.Person#intro",
+      "callee": "App.Greets#hello",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Person.php",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "App.Greets#hello",
+    "App.Greets#name"
+  ],
+  "notes": "hello is defined once, in the scanned trait App\\Greets \u2192 its ID is App.Greets#hello, and the call from the using class must use that ID (C1), high because it is defined in the scan. App.Person#hello at medium invents an ID (Person defines no hello and has no base outside the scan; C2) and lowers the tier. Inside the trait, $this->name() names the trait's abstract (body-less) App.Greets#name, high (Decision 2026-11-09). `use Greets;` is not a call. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

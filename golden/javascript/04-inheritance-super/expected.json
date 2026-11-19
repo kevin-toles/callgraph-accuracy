@@ -1,0 +1,69 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. | Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) \u2192 `Parent#<init>`, constructor. | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. | An ID is never invented: a medium or high callee that names a member of a scanned module or type (`mod.T#f`, `mod.f`) is defined there, or is inherited from a base outside the scan. | Imports, `require`, re-exports (`export *`, `export * as`) and workspace packages (package.json `exports`) resolve to the defining module; packages outside the scan are named as written (`node:http.createServer`, `zod.z.object`, medium).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "base.Animal#speak",
+      "callee": "base.Animal#sound",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "base.js",
+      "line": 6
+    },
+    {
+      "caller": "dog.Dog#<init>",
+      "callee": "base.Animal#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "dog.js",
+      "line": 6
+    },
+    {
+      "caller": "dog.Dog#bark",
+      "callee": "base.Animal#speak",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "dog.js",
+      "line": 12
+    },
+    {
+      "caller": "dog.Dog#bark",
+      "callee": "base.Animal#sound",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "dog.js",
+      "line": 12
+    },
+    {
+      "caller": "dog.Bus#<init>",
+      "callee": "events.EventEmitter#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "dog.js",
+      "line": 18
+    },
+    {
+      "caller": "dog.Bus#fire",
+      "callee": "dog.Bus#emit",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "dog.js",
+      "line": 21
+    },
+    {
+      "caller": "dog.Bus#fire",
+      "callee": ".removeAllListeners",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "dog.js",
+      "line": 22
+    }
+  ],
+  "nodes_include": [
+    "base.Animal#<init>",
+    "base.Animal#speak",
+    "base.Animal#sound",
+    "dog.Dog#sound"
+  ],
+  "notes": "`this.sound()` inside Animal#speak is `Type#m` with the enclosing type Animal (static rule; dispatch to Dog#sound is not modelled). `this.speak()` in Dog: speak is defined only on the in-scan superclass -> `base.Animal#speak`. `super.sound()` with the superclass in the scan names the superclass member `base.Animal#sound` (the `.member` form is only 'when the superclass is not in the scan'). `super(name)` -> `Parent#<init>`. Bus extends EventEmitter from package `events` (not scanned): `super()` -> `events.EventEmitter#<init>`, medium (named as written); `this.emit()` is a `this.m()` inherited from a base outside the scan -> `Type#m` = `dog.Bus#emit`, medium (medium tier explicitly lists it; C2 allows an inherited-from-external member). `super.removeAllListeners()` with external superclass -> `.removeAllListeners`, low."
+}

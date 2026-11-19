@@ -1,0 +1,47 @@
+{
+  "rule": "Globals: `JSON.stringify`, `globalThis.parseInt` (medium). | **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. | Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. | Import statements are not calls.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "glob.Logger#log",
+      "callee": "console.log",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "glob.js",
+      "line": 5
+    },
+    {
+      "caller": "glob.Logger#log",
+      "callee": "JSON.stringify",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "glob.js",
+      "line": 5
+    },
+    {
+      "caller": "glob.Logger#log",
+      "callee": "globalThis.parseInt",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "glob.js",
+      "line": 6
+    },
+    {
+      "caller": "glob.Logger#ref",
+      "callee": "Math.max",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "glob.js",
+      "line": 12
+    },
+    {
+      "caller": "glob",
+      "callee": "globalThis.parseInt",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "glob.js",
+      "line": 16
+    }
+  ],
+  "notes": "Globals are medium and named per the JS note: namespace objects as written (`JSON.stringify`, `console.log`, `Math.max`), a bare global function as `globalThis.parseInt`; the explicit `globalThis.parseInt(...)` on line 16 is the same ID. call_type direct: these are functions of namespace objects (ECMA-262/WHATWG namespaces), named without `#`, like module functions; SPEC does not give call_type for globals explicitly (see report). Not calls: the side-effect `import \"./side.js\"` (line 1), `this.log` read without a call (method reference, line 9), `typeof f` (operator, line 10), `this.size` (field access, line 11). side.js has no calls."
+}

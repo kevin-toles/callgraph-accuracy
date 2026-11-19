@@ -1,0 +1,59 @@
+{
+  "rule": "Body-less member declarations of scanned types are defined in the scan (high): a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are. | A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). | C1 ... A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods)",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Shape#Doubled",
+      "callee": "App.Shape#Area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Service.cs",
+      "line": 14
+    },
+    {
+      "caller": "App.Service#Store",
+      "callee": "App.IRepo#Save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Service.cs",
+      "line": 28
+    },
+    {
+      "caller": "App.Service#Store",
+      "callee": "System.Console#WriteLine",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Service.cs",
+      "line": 29
+    },
+    {
+      "caller": "App.Service#Store",
+      "callee": "App.Shape#Area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Service.cs",
+      "line": 29
+    },
+    {
+      "caller": "App.Service#SaveAll",
+      "callee": "App.IRepo#Save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Service.cs",
+      "line": 34
+    },
+    {
+      "caller": "App.Service#Show",
+      "callee": "value.ToString",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Service.cs",
+      "line": 39
+    }
+  ],
+  "nodes_include": [
+    "App.IRepo#Save",
+    "App.Shape#Area"
+  ],
+  "notes": "IRepo.Save (interface method) and Shape.Area (abstract) have no bodies but their declaring types are in the scan: high, and both IDs must be in nodes (C1). repo is a field of declared type IRepo. In SaveAll, r's type T is bounded by IRepo: IRepo#Save. In Show, T is unconstrained, so value.ToString() stays a low guess `value.ToString`. The VTA low edges of the SPEC are a Go rule only; no implementation edges here (there are no implementations)."
+}

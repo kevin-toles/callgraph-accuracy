@@ -1,0 +1,52 @@
+{
+ "s-dafny-vscode_report.v11.md": {
+  "wrong": 27,
+  "judged": 1434,
+  "ruling": "adjudications.md: ## s-dafny-vscode: 4 unannotated for-of loop-variable edges are a spec gap (31-4)"
+ },
+ "s-newman_report.v10.md": {
+  "wrong": 18,
+  "judged": 1171,
+  "ruling": "adjudications.md: ## s-newman: 7 _.assign/_.assignIn member edges are a spec gap (25-7)"
+ },
+ "s-orc_report.v7.md": {
+  "wrong": 282,
+  "judged": 14925,
+  "ruling": "adjudications.md: rr34 s-orc v7: 91 unimported same-package external types are a spec gap (373-91)"
+ },
+ "s-orc_report.v9.md": {
+  "wrong": 69,
+  "judged": 14925,
+  "ruling": "adjudications.md: Round 2026-11-17 s-orc v9: same P1 spec-gap ruling (160-91)"
+ },
+ "s-orc_report.v10.md": {
+  "wrong": 65,
+  "judged": 14925,
+  "ruling": "adjudications.md: Round 2026-11-17 s-orc v10: same P1 spec-gap ruling (156-91)"
+ },
+ "s-coil_report.v25.md": {
+  "wrong": 240,
+  "judged": 12067,
+  "ruling": "adjudications.md: Round 2026-11-17 s-coil v25: 4 fixed regression, 2 kotlin/16 spec gap, 12 partial-parse file excluded (258-18)"
+ },
+ "s-grails-data-mongodb_report.v17.md": {
+  "wrong": 26,
+  "judged": 2253,
+  "ruling": "adjudications.md: rr37/rr38 s-grails-data-mongodb v17: 18 external-interface Converter ctor edges wrong per SPEC line 23 (8+18)"
+ },
+ "s-grails-data-mongodb_report.v19.md": {
+  "wrong": 44,
+  "judged": 2253,
+  "ruling": "adjudications.md: Round 2026-11-17 s-grails-data-mongodb v19: 17 Converter ctor edges wrong per SPEC line 23 (27+17)"
+ },
+ "s-input_report.v8.md": {
+  "wrong": 12,
+  "judged": 730,
+  "ruling": "adjudications.md: ## s-input: 5 builtin.target.* @import-binding edges follow SPEC line 49 (17-5)"
+ },
+ "s-config_report.v10.md": {
+  "wrong": 19,
+  "judged": 1148,
+  "ruling": "adjudications.md: s-config v10: 11 builtin.target.* @import-binding edges follow SPEC line 49 (30-11)"
+ }
+}

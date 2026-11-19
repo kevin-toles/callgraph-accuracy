@@ -1,0 +1,51 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func`, a Rust `fn` item inside a function body, a PHP `$f = function`/`fn`, a C++ `auto f = [..]`, a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty. **unknown**: a dynamic call (function value, callback, closure, function pointer).",
+  "source": "KNOWN_GAP: .call on a Proc or lambda is a method call, not a callback",
+  "edges": [
+    {
+      "caller": "Hooks#fire",
+      "callee": "cb",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "lib/hooks.rb",
+      "line": 3
+    },
+    {
+      "caller": "Hooks#fire",
+      "callee": "block",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "lib/hooks.rb",
+      "line": 4
+    },
+    {
+      "caller": "Hooks#fire",
+      "callee": "cb",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "lib/hooks.rb",
+      "line": 5
+    },
+    {
+      "caller": "Hooks#fire.fmt",
+      "callee": "Hooks#notify",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/hooks.rb",
+      "line": 6
+    },
+    {
+      "caller": "Hooks#fire",
+      "callee": "Hooks#fire.fmt",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/hooks.rb",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "Hooks#fire.fmt",
+    "Hooks#notify"
+  ],
+  "notes": "`cb.call(...)`, `cb.(...)` and `block.call(...)` invoke the function held by a parameter (a Proc/lambda): callback named by the variable, unknown \u2014 not a `cb.call` method edge. `fmt = ->(x) {...}` is a local bound directly to a function literal: a named nested function `Hooks#fire.fmt` (`outer.f` form); its body's call has caller `Hooks#fire.fmt`, and invoking it with `fmt.call` is a high call to it."
+}

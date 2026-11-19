@@ -1,0 +1,31 @@
+{
+  "rule": "Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown. **C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. Silence in the graph means no call, or a `coverage` note.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "mixed.label",
+      "callee": "concat",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "mixed.ml",
+      "line": 4
+    },
+    {
+      "caller": "mixed.odd",
+      "callee": "frobnicate",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "mixed.ml",
+      "line": 6
+    },
+    {
+      "caller": "mixed.safe",
+      "callee": "Stdlib.print_string",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "mixed.ml",
+      "line": 8
+    }
+  ],
+  "notes": "Two external opens, so there is no \"one external open\" to resolve `concat` through; it is not a Stdlib top-level value and stays a low bare-name guess (C4: emitted, never dropped, never promoted to `Filename.concat`). `frobnicate` is defined nowhere: low bare name (C4). `print_string` is found in Stdlib, which comes before the opens in the resolution order: `Stdlib.print_string`, medium."
+}

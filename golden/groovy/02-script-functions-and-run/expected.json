@@ -1,0 +1,51 @@
+{
+  "rule": "**Java / Kotlin / C# / Groovy / Scala**: package/namespace-qualified: `com.x.C#m`; an external type is qualified through its explicit import. Kotlin top-level functions `com.x.f`. A Groovy script (a file with top-level code or functions) is a class named after the file: its functions are `pkg.Script#f`, its top-level code `pkg.Script#run`. Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). **Implicitly imported names are qualified**: Java/Scala/Groovy `java.lang.String`, Groovy's default imports (`java.util.List`, `groovy.lang.Closure`, …). With exactly one on-demand import (`import a.b.*`), a simple type name that is not in the file's package, not imported singly and not a java.lang type is `a.b.Name` (medium); with more than one such import it stays unqualified, low.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "ci.Build#compile",
+      "callee": "java.lang.String#trim",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "ci/Build.groovy",
+      "line": 4
+    },
+    {
+      "caller": "ci.Build#deploy",
+      "callee": "ci.Build#compile",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "ci/Build.groovy",
+      "line": 8
+    },
+    {
+      "caller": "ci.Build#run",
+      "callee": "ci.Build#compile",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "ci/Build.groovy",
+      "line": 11
+    },
+    {
+      "caller": "ci.Build#run",
+      "callee": "ci.Build#compile",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "ci/Build.groovy",
+      "line": 12
+    },
+    {
+      "caller": "ci.Build#run",
+      "callee": "ci.Build#deploy",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "ci/Build.groovy",
+      "line": 13
+    }
+  ],
+  "nodes_include": [
+    "ci.Build#compile",
+    "ci.Build#deploy"
+  ],
+  "notes": "Build.groovy has top-level code and functions, so it is a script class named after the file: functions ci.Build#compile / ci.Build#deploy, top-level code ci.Build#run. Bare calls to script functions are calls to members of the enclosing (script) type. `compile \"web\"` is a Groovy command expression: a call written without parentheses, still a call. target is declared String: java.lang.String#trim, medium. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

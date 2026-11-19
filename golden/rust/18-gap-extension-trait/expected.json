@@ -1,0 +1,51 @@
+{
+  "rule": "**Rust**: no module prefix: `Type#method` (impl and trait methods), free functions bare | **high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition).",
+  "source": "KNOWN_GAP: extension-trait methods on external types are named as the external type at medium",
+  "edges": [
+    {
+      "caller": "String#shout",
+      "callee": "String#new",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 7
+    },
+    {
+      "caller": "str#shout",
+      "callee": "String#new",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 13
+    },
+    {
+      "caller": "main",
+      "callee": "String#from",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 18
+    },
+    {
+      "caller": "main",
+      "callee": "String#shout",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 19
+    },
+    {
+      "caller": "main",
+      "callee": "str#shout",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 21
+    }
+  ],
+  "nodes_include": [
+    "String#shout",
+    "str#shout"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. The scanned extension trait Shout is implemented for the external types String and str; impl methods are Type#method, so the scan defines String#shout and str#shout. s: String and r: &str (&T \u2192 pointee) resolve to those definitions \u2192 high, not medium (C5: confidence reports the evidence, and the tool has the definition). String::new / String::from are std associated functions \u2192 medium. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

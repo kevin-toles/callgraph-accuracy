@@ -1,0 +1,66 @@
+{
+  "rule": "Imports, `require`, re-exports (`export *`, `export * as`) and workspace packages (package.json `exports`) resolve to the defining module; packages outside the scan are named as written (`node:http.createServer`, `zod.z.object`, medium). | Globals: `JSON.stringify`, `globalThis.parseInt` (medium). | **Typing reaches only declarations in the scan**: decision A and the parameterless-member rule use declared types written in the scanned source (including vendored code). A receiver whose type is only knowable from a library's signatures outside the scan (`project.tasks.named`, `entrySet().removeIf` on a JDK/Gradle type) stays a low guess, and that is correct. | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). | **C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "misc.Reader#read",
+      "callee": "node:fs.readFileSync",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "misc.ts",
+      "line": 5
+    },
+    {
+      "caller": "misc.Reader#read",
+      "callee": ".toString",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "misc.ts",
+      "line": 5
+    },
+    {
+      "caller": "misc.Reader#read",
+      "callee": "JSON.parse",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "misc.ts",
+      "line": 6
+    },
+    {
+      "caller": "misc.Reader#read",
+      "callee": "obj.normalize",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "misc.ts",
+      "line": 7
+    },
+    {
+      "caller": "misc.Reader#read",
+      "callee": "missingHelper",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "misc.ts",
+      "line": 8
+    },
+    {
+      "caller": "misc.Reader#read",
+      "callee": "JSON.parse",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "misc.ts",
+      "line": 9
+    },
+    {
+      "caller": "misc.Reader#read",
+      "callee": "title.trim",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "misc.ts",
+      "line": 9
+    }
+  ],
+  "nodes_include": [
+    "misc.Reader#read"
+  ],
+  "notes": "`fs.readFileSync` via a namespace import of the unscanned `node:fs` -> `node:fs.readFileSync`, medium. Its result's type is only knowable from library signatures outside the scan, so `.toString()` on it stays `.toString`, low (2026-11-09). `obj` is a local with no declared type bound to a call result -> `obj.normalize`, low. `missingHelper` is a bare name defined nowhere -> low guess that must be emitted (C4). `JSON.parse(raw).title.trim()`: last receiver segment is `title` -> `title.trim`, low."
+}

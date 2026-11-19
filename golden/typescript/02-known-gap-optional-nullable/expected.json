@@ -1,0 +1,35 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | **high**: the callee is a function/method/constructor defined in the scanned source (the tool matched it to a definition).",
+  "source": "KNOWN_GAP: receivers whose declared type is optional or nullable (T | undefined) stay low",
+  "edges": [
+    {
+      "caller": "cache.Loader#load",
+      "callee": "cache.Cache#get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "cache.ts",
+      "line": 14
+    },
+    {
+      "caller": "cache.Loader#load",
+      "callee": "cache.Cache#get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "cache.ts",
+      "line": 15
+    },
+    {
+      "caller": "cache.Loader#load",
+      "callee": "cache.Cache#get",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "cache.ts",
+      "line": 16
+    }
+  ],
+  "nodes_include": [
+    "cache.Cache#get",
+    "cache.Loader#load"
+  ],
+  "notes": "Each receiver's type is given by a declaration: local `c: Cache | undefined`, optional parameter `fallback?: Cache`, field `cache: Cache | null`. Decision A applies to declarations; the only member `get` that can run at any of these call sites is Cache's (optional chaining `?.` and non-null `!` only guard null/undefined, and Decisions sections pick 'what the code does at runtime'), so the callee is `cache.Cache#get`, high (defined in scan). `undefined`/`null` members of the union contribute no method. `cache ?? null` on line 10 is not a call."
+}

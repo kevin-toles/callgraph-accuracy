@@ -1,0 +1,83 @@
+{
+  "rule": "An ID is never invented (C2): a member that a scanned type and all its scanned bases do not define as a def, val or nested type stays a low receiver guess (ZStream.fromEffect, z.bracket; ZIO(1) on a trait with no apply and no constructor stays the bare name). Members of a type with an external base (Chunk extends Seq), universal members (toString) and case-class synthesized members keep their medium ID. Applying a value whose declared type is an alias of a function type (pipe: Pipe[I, O], type Pipe[I, O] = I => O) is a call through that value (callback).",
+  "source": "s-zio v13 and h-fs2 v15 re-reviews (2026-11-12): zio scalafix fixtures and benchmarks (ZIO-1 names on ZIO-2 types), fs2 Pipe/Cont/ZipWithLeft aliases",
+  "edges": [
+    {
+      "caller": "zio.App#run",
+      "callee": "ZStream.fromEffect",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "zio/App.scala",
+      "line": 7
+    },
+    {
+      "caller": "zio.App#run",
+      "callee": "ZIO",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "zio/App.scala",
+      "line": 8
+    },
+    {
+      "caller": "zio.App#run",
+      "callee": "zio.ZIO#succeed",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "zio/App.scala",
+      "line": 9
+    },
+    {
+      "caller": "zio.App#run",
+      "callee": "zio.ZStream#fromZIO",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "zio/App.scala",
+      "line": 10
+    },
+    {
+      "caller": "zio.App#run",
+      "callee": "zio.ZIOBase#map",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "zio/App.scala",
+      "line": 11
+    },
+    {
+      "caller": "zio.App#run",
+      "callee": "z.bracket",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "zio/App.scala",
+      "line": 12
+    },
+    {
+      "caller": "zio.App#run",
+      "callee": "zio.Chunk#take",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "zio/App.scala",
+      "line": 13
+    },
+    {
+      "caller": "zio.App#run",
+      "callee": "zio.ZIO#toString",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "zio/App.scala",
+      "line": 14
+    },
+    {
+      "caller": "zio.App#run",
+      "callee": "pipe",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "zio/App.scala",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "zio.ZStream#fromZIO",
+    "zio.ZIOBase#map"
+  ],
+  "notes": "Fixed defects of the 2026-11-12 cycle."
+}

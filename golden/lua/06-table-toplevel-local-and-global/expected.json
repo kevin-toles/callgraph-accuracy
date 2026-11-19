@@ -1,0 +1,61 @@
+{
+  "rule": "Lua functions stored on a table. ... Both forms get the same ID: ... another top-level local: `mod.T#f`; a global: `T#f`; ... Calls `T.f()` and `T:f()` on such a table resolve to that ID (high when defined). | Lua: ... on another file-local table `mod.T#fn`, on a global table `T#fn`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Registry#add",
+      "callee": "registry.Cache#put",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "registry.lua",
+      "line": 14
+    },
+    {
+      "caller": "Registry#add",
+      "callee": "registry.Cache#get",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "registry.lua",
+      "line": 15
+    },
+    {
+      "caller": "Registry#count",
+      "callee": "Registry#add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "registry.lua",
+      "line": 19
+    },
+    {
+      "caller": "main",
+      "callee": "_G#require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.lua",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "Registry#add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "Registry#count",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.lua",
+      "line": 3
+    }
+  ],
+  "nodes_include": [
+    "registry.Cache#get",
+    "registry.Cache#put",
+    "Registry#add",
+    "Registry#count"
+  ],
+  "notes": "Each `require` is an invocation of the loader: `_G#require`, medium, direct, on its line (Decisions 2026-11-10, CommonJS / Lua `require`). main.lua is not itself required; it sits at the require root (src/) that explains every require string in the case, so the name a require from that root gives it is `main` (Lua note: 'module = the name the scan's `require` strings give the file'). call_type convention (SPEC lists the types but gives no Lua mapping): a `:` call is method, a `.` or bare call is direct (the 2026-11-10 require ruling makes `_G#require` direct), a call through a value is callback. registry.lua returns `true`, not a table, so Cache is 'another top-level local' (`registry.Cache#get` via `function Cache.get`, `registry.Cache#put` via `Cache.put = function`) and Registry (assigned without `local`) is a global table (`Registry#add`, `Registry#count`). `self.add` inside `function Registry:count` is a self call: `Registry#add`. main.lua reaches the global Registry with no binding; C1 gives the same IDs. `Cache[key]` reads/writes are index access, not calls."
+}

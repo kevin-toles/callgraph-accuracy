@@ -1,0 +1,55 @@
+{
+  "rule": "`self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shop.models.Base#save",
+      "callee": "shop.models.Base#validate",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/models.py",
+      "line": 6
+    },
+    {
+      "caller": "shop.models.Order#submit",
+      "callee": "shop.models.Base#save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/models.py",
+      "line": 14
+    },
+    {
+      "caller": "shop.models.Order#submit",
+      "callee": "shop.models.Order#audit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/models.py",
+      "line": 15
+    },
+    {
+      "caller": "shop.models.Order#audit",
+      "callee": "shop.models.Base#validate",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/models.py",
+      "line": 18
+    },
+    {
+      "caller": "shop.models.Record#persist",
+      "callee": "shop.models.Record#commit",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "shop/models.py",
+      "line": 23
+    },
+    {
+      "caller": "shop.models.Record#persist",
+      "callee": "shop.models.Record#describe",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/models.py",
+      "line": 24
+    }
+  ],
+  "notes": "`self.save()` / `self.validate()` from Order: defined only on the scanned superclass Base -> `Base#m`, high. `self.commit()` in Record, whose base `extlib.orm.Model` is outside the scan: tier medium (\"`self.m()` inherited from a base outside the scan\"); the ID is `Type#m` of the enclosing class per the self rule, which C2 explicitly permits (\"or is inherited from a base outside the scan\"). The import line and class base lists are not calls."
+}

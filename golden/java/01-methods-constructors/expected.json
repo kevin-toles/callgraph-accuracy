@@ -1,0 +1,100 @@
+{
+  "rule": "Method: `Type#member`. ... Constructor / initializer call: `Type#<init>`. ... `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`. ... Overloads share one ID. ... **Java / Kotlin / C# / Groovy / Scala**: package/namespace-qualified: `com.x.C#m`",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "com.acme.shop.Cart#<init>",
+      "callee": "com.acme.shop.Cart#reset",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.java",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.shop.Cart#add",
+      "callee": "com.acme.shop.Cart#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.java",
+      "line": 20
+    },
+    {
+      "caller": "com.acme.shop.Cart#add",
+      "callee": "com.acme.shop.Cart#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.java",
+      "line": 24
+    },
+    {
+      "caller": "com.acme.shop.Cart#add",
+      "callee": "com.acme.shop.Pricing#parse",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.java",
+      "line": 24
+    },
+    {
+      "caller": "com.acme.shop.Cart#withItem",
+      "callee": "com.acme.shop.Cart#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.java",
+      "line": 31
+    },
+    {
+      "caller": "com.acme.shop.Cart#withItem",
+      "callee": "com.acme.shop.Cart#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Cart.java",
+      "line": 32
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Cart#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.java",
+      "line": 9
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Cart#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.java",
+      "line": 10
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Cart#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.java",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Pricing#parse",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.java",
+      "line": 11
+    },
+    {
+      "caller": "com.acme.shop.Pricing#total",
+      "callee": "com.acme.shop.Pricing#parse",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/shop/Pricing.java",
+      "line": 12
+    }
+  ],
+  "nodes_include": [
+    "com.acme.shop.Cart#<init>",
+    "com.acme.shop.Cart#add",
+    "com.acme.shop.Pricing#parse"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. Both constructors are `Cart#<init>` and both add overloads are `Cart#add` (Overloads share one ID), so the call in add(String) at Cart.java:24 has caller and callee Cart#add. `this.total = 0` and `total += amount` are field access, not calls. `cart` is typed by its declaration `Cart cart` (decision A). Bare `parse(b)` is a bare call to a member of the enclosing type."
+}

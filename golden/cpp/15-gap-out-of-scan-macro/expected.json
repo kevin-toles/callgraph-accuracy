@@ -1,0 +1,59 @@
+{
+  "rule": "`macro`: a macro invocation (C/C++/ObjC function-like macros, Rust `name!`). Calls written inside macro arguments are separate ordinary edges. **C / Objective-C**: function-like macros → call_type macro (high if `#define`d in the scan). C functions bare; **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "KNOWN_GAP: cpp: out-of-scan function-like macros are tagged direct, not macro",
+  "edges": [
+    {
+      "caller": "guard.check",
+      "callee": "assert",
+      "call_type": "macro",
+      "confidence": "medium",
+      "file": "guard.cpp",
+      "line": 9
+    },
+    {
+      "caller": "guard.check",
+      "callee": "guard.validate",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "guard.cpp",
+      "line": 9
+    },
+    {
+      "caller": "guard.check",
+      "callee": "assert",
+      "call_type": "macro",
+      "confidence": "medium",
+      "file": "guard.cpp",
+      "line": 10
+    },
+    {
+      "caller": "guard.check",
+      "callee": "CHECK_POSITIVE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "guard.cpp",
+      "line": 10
+    },
+    {
+      "caller": "guard.check",
+      "callee": "CHECK_POSITIVE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "guard.cpp",
+      "line": 11
+    },
+    {
+      "caller": "guard.check",
+      "callee": "guard.validate",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "guard.cpp",
+      "line": 11
+    }
+  ],
+  "nodes_include": [
+    "CHECK_POSITIVE",
+    "guard.validate"
+  ],
+  "notes": "assert is a function-like macro (the C/C++ standards specify it as one) defined in <cassert>, outside the scan: call_type macro, and since it is named statically but not defined in the scan, medium — the same treatment SPEC gives the out-of-scan gtest assertion macros (Decisions 2026-11-09: 'function-like macros: macro, medium'). CHECK_POSITIVE is #defined in the scan: macro, high. Macros are preprocessor names, never namespace-qualified, even when invoked inside namespace guard. validate(v) inside the macro arguments are separate ordinary edges."
+}

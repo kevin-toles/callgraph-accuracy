@@ -1,0 +1,84 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | A local bound directly to a function literal | Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "apply",
+      "callee": "fp",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Runner.m",
+      "line": 10
+    },
+    {
+      "caller": "useOps",
+      "callee": "cb",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Runner.m",
+      "line": 14
+    },
+    {
+      "caller": "Runner#each:",
+      "callee": "cb",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Runner.m",
+      "line": 30
+    },
+    {
+      "caller": "Runner#run.blk",
+      "callee": "Runner#helper",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Runner.m",
+      "line": 36
+    },
+    {
+      "caller": "Runner#run",
+      "callee": "Runner#run.blk",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Runner.m",
+      "line": 38
+    },
+    {
+      "caller": "Runner#run",
+      "callee": "Runner#each:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Runner.m",
+      "line": 39
+    },
+    {
+      "caller": "Runner#run",
+      "callee": "Runner#helper",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Runner.m",
+      "line": 40
+    },
+    {
+      "caller": "Runner#run",
+      "callee": "handler",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Runner.m",
+      "line": 42
+    },
+    {
+      "caller": "Runner#run",
+      "callee": "apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Runner.m",
+      "line": 43
+    }
+  ],
+  "nodes_include": [
+    "Runner#helper",
+    "Runner#each:",
+    "apply"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. Function-pointer parameter `fp`, struct field `cb` (stored property holding a function), block parameter `cb` and block property `handler` are calls through values \u2192 callee is the variable's name, callback, unknown (the dot access `self.handler` itself is not a call). `blk` is a local bound directly to a function literal (a block) \u2192 named nested function `Runner#run.blk` (Python form `C#m.inner`); calls to it are high and calls in its body have caller `Runner#run.blk`. The anonymous block passed to each: folds into `Runner#run`. `inc` passed to apply is a function reference, not a call."
+}

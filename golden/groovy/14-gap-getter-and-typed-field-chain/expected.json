@@ -1,0 +1,51 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). An enum constant `E.C` has type `E`. **Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` — left as a `metadata.insert` low guess it is wrong.",
+  "source": "KNOWN_GAP: properties declared by getters and typed field chains are left as low recv.m",
+  "edges": [
+    {
+      "caller": "core.Conf#getStore",
+      "callee": "core.Store#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "core/Props.groovy",
+      "line": 10
+    },
+    {
+      "caller": "core.App#run",
+      "callee": "core.Conf#getStore",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Props.groovy",
+      "line": 22
+    },
+    {
+      "caller": "core.App#run",
+      "callee": "core.Store#save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Props.groovy",
+      "line": 22
+    },
+    {
+      "caller": "core.App#run",
+      "callee": "core.Store#save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Props.groovy",
+      "line": 23
+    },
+    {
+      "caller": "core.App#run",
+      "callee": "core.Store#save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "core/Props.groovy",
+      "line": 24
+    }
+  ],
+  "nodes_include": [
+    "core.Store#save",
+    "core.Conf#getStore"
+  ],
+  "notes": "conf.getStore() is a call of a parameterless getter with declared return type Store, so `.save()` on it is core.Store#save, not `.save` (Decisions 2026-11-09). this.holder.store and holder.store are `obj.field` chains whose fields are declared (holder: Holder, store: Store; `public` makes them fields, not properties), so `.save()` is core.Store#save, not `store.save` (decision A). The field reads themselves are not calls. The implicit-getter property form (`conf.store` with only getStore() declared) is in groovy/16 as a spec_gap because whether the read itself is an edge is undecided. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

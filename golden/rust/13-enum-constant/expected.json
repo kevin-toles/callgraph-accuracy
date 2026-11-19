@@ -1,0 +1,27 @@
+{
+  "rule": "An enum constant `E.C` has type `E`. | **Rust**: no module prefix: `Type#method` (impl and trait methods), free functions bare; module paths keep `::` (`std::env::var`); `Type::assoc` \u2192 `Type#assoc`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "main",
+      "callee": "Dir#flip",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 20
+    },
+    {
+      "caller": "main",
+      "callee": "Dir#label",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 21
+    }
+  ],
+  "nodes_include": [
+    "Dir#flip",
+    "Dir#label"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Dir::North / Dir::South are enum constants of type Dir (decision A) \u2192 Dir#flip / Dir#label high. The variants in match patterns and arm values are data, not calls. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

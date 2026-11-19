@@ -1,0 +1,15 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Registry#check",
+      "callee": "Registry#store",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/registry.rb",
+      "line": 10
+    }
+  ],
+  "notes": "Only `store(...)` is a call. Not calls: `defined?` (language construct), the constant reference `Registry`, the symbol `:symbol`, array/hash literals, local assignments and reads, string interpolation of locals (no written call), and the `def` heads."
+}

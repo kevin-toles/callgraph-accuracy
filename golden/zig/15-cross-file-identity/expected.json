@@ -1,0 +1,77 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. | A high edge's callee is always in `nodes`. | A type alias (`using X = T;`, `typedef T X;`, Zig `const X = a.b.T`) is expanded to its target | **Lua / Zig**: a local or const alias of a function (`local insert = table.insert`, `const assert = std.debug.assert`) resolves to its target.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "util.Vec#len",
+      "callee": "util.abs",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "util.zig",
+      "line": 5
+    },
+    {
+      "caller": "util.add",
+      "callee": "util.abs",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "util.zig",
+      "line": 14
+    },
+    {
+      "caller": "util.add",
+      "callee": "util.abs",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "util.zig",
+      "line": 14
+    },
+    {
+      "caller": "app.run",
+      "callee": "util.add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 8
+    },
+    {
+      "caller": "app.run",
+      "callee": "util.Vec#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 8
+    },
+    {
+      "caller": "app.run",
+      "callee": "util.Vec#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 8
+    },
+    {
+      "caller": "app.run",
+      "callee": "util.add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 8
+    },
+    {
+      "caller": "app.run",
+      "callee": "util.abs",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "util.abs",
+    "util.add",
+    "util.Vec#len",
+    "app.run"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). C1: `util.abs` is called from its own file (bare `abs`) and from app.zig (`util.abs`); `util.add` through the import binding (`util.add`) and through the const alias `add`; `util.Vec#len` on `w: util.Vec` and on `v: Vec` where `const Vec = util.Vec` is expanded to its target. Each reference uses the one file-qualified ID and is high."
+}

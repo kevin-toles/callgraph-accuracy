@@ -1,0 +1,6 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | C2 ... An ID is never invented: a medium or high callee that names a member of a scanned module or type (`mod.T#f`, `mod.f`) is defined there, or is inherited from a base outside the scan.",
+  "source": "SPEC",
+  "spec_gap": "Which ID does a C# extension-method call get? In Note#Loud, `this.Shout()` (and `n.Shout()` on any receiver typed Note) runs the static method App.TextExt.Shout. Decision A says a typed receiver gives `T#m` = App.Note#Shout, but C2 forbids that ID because Note defines no Shout. Is the callee App.TextExt#Shout (method, high), App.Note#Shout, or a low guess? The same question decides LINQ (`list.Where(...)` on a List<T>: System.Linq.Enumerable#Where vs System.Collections.Generic.List#Where, medium).",
+  "notes": "TextExt#Shout \u2192 App.Note#Body (method, high, parameter n typed Note) is decidable; the extension call is not."
+}

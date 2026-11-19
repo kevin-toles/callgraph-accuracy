@@ -1,0 +1,43 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown. | Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Handler#fire",
+      "callee": "cb",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "app.zig",
+      "line": 5
+    },
+    {
+      "caller": "app.apply",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "app.zig",
+      "line": 14
+    },
+    {
+      "caller": "app.run",
+      "callee": "app.apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 19
+    },
+    {
+      "caller": "app.run",
+      "callee": "app.Handler#fire",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 19
+    }
+  ],
+  "nodes_include": [
+    "app.apply",
+    "app.Handler#fire"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). `self.cb(v)` calls through a stored field holding a fn pointer and `f(v)` through a fn-pointer parameter \u2192 callee is the variable's name (`cb`, `f`), callback, unknown. `&double` (in the struct literal and as an argument) is a function reference, not a call; `double` gets no incoming edge."
+}

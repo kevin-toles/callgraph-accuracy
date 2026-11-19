@@ -1,0 +1,7 @@
+{
+  "rule": "top-level `file.fun` (file basename); nested modules/functors dotted (`file.Make.connect`); local function lets `outer.f`, local value lets fold into the enclosing binding; module-level code's caller is the module. **C3 Operation classification.** Each written construct is exactly one of:",
+  "source": "KNOWN_GAP: operators are not emitted",
+  "spec_gap": "Is an OCaml operator application an invocation edge: a built-in infix operator (`List.length xs + 1`), a user-defined operator defined in the scan (`a +++ b`, defined as `let ( +++ ) a b`), and the application operators `|>` and `@@`? If so, what are the callee IDs (`Stdlib.+`, `ops.+++` or `ops.( +++ )`) and the call_type? Does `x |> f` / `f @@ x` call f, as the Haskell note says `x & f` / `f $ x` do, and does the operator itself also get an edge? What is the definition ID of `let ( +++ ) a b`?",
+  "edges": [],
+  "notes": "SPEC gives no OCaml rule for operator applications (the `$`/`&` rule is in the Haskell note only). Undecided: edges for `+`, `+++`, `|>`, `@@`, and whether `List.rev` / `List.length` after `|>` and `print_int` before `@@` are calls of those functions."
+}

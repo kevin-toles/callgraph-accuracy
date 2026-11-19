@@ -1,0 +1,47 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. | Parameterless members are typed receivers (decision A): a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\".",
+  "source": "ADVERSARIAL: chain typing via parameterless methods vs a call result with arguments",
+  "edges": [
+    {
+      "caller": "App.Repo#Find",
+      "callee": "App.Query#Select",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Query.cs",
+      "line": 22
+    },
+    {
+      "caller": "App.Repo#Find",
+      "callee": "App.Query#Distinct",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Query.cs",
+      "line": 23
+    },
+    {
+      "caller": "App.Repo#Find",
+      "callee": "App.Query#Build",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Query.cs",
+      "line": 24
+    },
+    {
+      "caller": "App.Repo#Filter",
+      "callee": "App.Query#Where",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Query.cs",
+      "line": 29
+    },
+    {
+      "caller": "App.Repo#Filter",
+      "callee": ".Where",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Query.cs",
+      "line": 30
+    }
+  ],
+  "notes": "Lines are those of each method name. Distinct and Build have receivers that are calls of parameterless methods with declared return type Query (in the scan): Query#m, high (Decisions 2026-11-09 parameterless members). The second Where's receiver is the result of Where(\"a\"), a call WITH an argument, which the parameterless-member rule does not cover: computed receiver `.Where`, low."
+}

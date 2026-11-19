@@ -1,0 +1,43 @@
+{
+  "rule": "**Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` — left as a `metadata.insert` low guess it is wrong. `self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). An enum constant `E.C` has type `E`.",
+  "source": "KNOWN_GAP: calls written without parentheses are never emitted",
+  "edges": [
+    {
+      "caller": "app.Box#report",
+      "callee": "app.Box#size",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Sizes.scala",
+      "line": 6
+    },
+    {
+      "caller": "app.Inspector#check",
+      "callee": "app.Box#size",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Sizes.scala",
+      "line": 10
+    },
+    {
+      "caller": "app.Inspector#deep",
+      "callee": "app.Box#doubled",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Sizes.scala",
+      "line": 11
+    },
+    {
+      "caller": "app.Inspector#deep",
+      "callee": "app.Box#size",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Sizes.scala",
+      "line": 11
+    }
+  ],
+  "nodes_include": [
+    "app.Box#size",
+    "app.Box#doubled"
+  ],
+  "notes": "size and doubled are `def`s without a parameter list: every mention of them is a call (SPEC's parameterless-member decision calls them 'a call of … a def without a parameter list'), unlike a `val`, whose read is field access. The bare `size` in report() is a bare call to a member of the enclosing type. b.doubled is a call of a parameterless def with declared type Box, so `.size` on it is app.Box#size (Decisions 2026-11-09). Both edges of deep() are on the same line. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

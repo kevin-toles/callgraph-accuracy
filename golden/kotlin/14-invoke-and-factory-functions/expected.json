@@ -1,0 +1,59 @@
+{
+  "rule": "Constructor / initializer call: `Type#<init>`. ... Free function: its name (with the language's module qualifier ...) ... Kotlin top-level functions `com.x.f`. ... Companion-object members flatten onto the class. ... Overloads share one ID.",
+  "source": "KNOWN_GAP: companion operator invoke and factory functions named like a type are reported as constructors",
+  "edges": [
+    {
+      "caller": "com.acme.parse.Parser#invoke",
+      "callee": "com.acme.parse.Parser#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/parse/Parser.kt",
+      "line": 6
+    },
+    {
+      "caller": "com.acme.parse.Token",
+      "callee": "com.acme.parse.Token#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/parse/Parser.kt",
+      "line": 14
+    },
+    {
+      "caller": "com.acme.parse.Use#go",
+      "callee": "com.acme.parse.Parser#invoke",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/parse/Use.kt",
+      "line": 5
+    },
+    {
+      "caller": "com.acme.parse.Use#go",
+      "callee": "com.acme.parse.Parser#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/parse/Use.kt",
+      "line": 6
+    },
+    {
+      "caller": "com.acme.parse.Use#go",
+      "callee": "com.acme.parse.Token",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "com/acme/parse/Use.kt",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.parse.Use#go",
+      "callee": "com.acme.parse.Token#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "com/acme/parse/Use.kt",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "com.acme.parse.Parser#invoke",
+    "com.acme.parse.Token"
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type or object name) is method; a class-name call `T(..)` that resolves to a constructor, and `: this(..)` / `: super(..)` / a supertype-list call, are constructor. Kotlin has no `new`; a `val x = T(..)` constructor call is treated as decision A's `= new T(...)`. Kotlin resolves `Parser(3)` (Int) to the companion's `operator fun invoke(n: Int)`, because the only constructor takes a String. It runs `Parser.Companion.invoke(3)`, so the callee is the flattened companion member Parser#invoke, not Parser#<init>. call_type is method because the companion object `Parser` is the receiver of the desugared `Parser.invoke(3)`. `Parser(\"q\")` matches the constructor: Parser#<init>. `fun Token(text: String)` is a top-level function, ID `com.acme.parse.Token`. `Token(\"a\")` (one argument) resolves to it: direct, high, not Token#<init>. `Token(\"b\", 1)` matches the class constructor. Inside the factory, `Token(text, 0)` is the constructor, caller `com.acme.parse.Token`."
+}

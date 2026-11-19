@@ -1,0 +1,118 @@
+{
+  "rule": "A top-level binding has one ID, `mod.name`, from its own file and from every importer, per C1. That covers `const`/`let`/`var`/`export const`, a function declaration and a class. A call through it uses that ID everywhere, never the bare name in its own file. | **Function literal.** The initializer is a function literal: a named function (existing rule). | **Alias.** The initializer, after removing parentheses, `as`, `satisfies` and `!`, is an identifier or member path that names a function (`isArray = Array.isArray`, `render = baseRender as RootRenderFunction`). The call resolves to that function's ID, as Lua/Zig aliases do. | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. | A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "core.sub",
+      "callee": "core.add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core.js",
+      "line": 3
+    },
+    {
+      "caller": "core.Acc#<init>",
+      "callee": "core.add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core.js",
+      "line": 10
+    },
+    {
+      "caller": "core",
+      "callee": "core.mul",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core.js",
+      "line": 17
+    },
+    {
+      "caller": "core",
+      "callee": "JSON.stringify",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "core.js",
+      "line": 18
+    },
+    {
+      "caller": "core",
+      "callee": "core.sub",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "core.js",
+      "line": 18
+    },
+    {
+      "caller": "core",
+      "callee": "core.Acc#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "core.js",
+      "line": 19
+    },
+    {
+      "caller": "use.compute",
+      "callee": "core.Acc#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "use.js",
+      "line": 4
+    },
+    {
+      "caller": "use.compute",
+      "callee": "JSON.stringify",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "use.js",
+      "line": 5
+    },
+    {
+      "caller": "use.compute",
+      "callee": "core.add",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "use.js",
+      "line": 5
+    },
+    {
+      "caller": "use.compute",
+      "callee": "core.sub",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "use.js",
+      "line": 5
+    },
+    {
+      "caller": "use.compute",
+      "callee": "core.mul",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "use.js",
+      "line": 5
+    },
+    {
+      "caller": "use.compute",
+      "callee": "core.mul",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "use.js",
+      "line": 5
+    },
+    {
+      "caller": "use.compute",
+      "callee": "core.sub",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "use.js",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "core.add",
+    "core.sub",
+    "core.mul",
+    "core.Acc#<init>",
+    "use.compute"
+  ],
+  "notes": "Function-literal evidence: `add` (arrow), `sub` (function expression), `mul` (function declaration) and class `Acc` keep `core.<name>` in their own file and in the importer (never the bare name); calls to them are high. Alias evidence: `times = mul` resolves to `core.mul` (high: the target is defined in the scan; the 'Medium, not high' sentence explains the function-type/factory tiers, where only a binding was matched, whereas an alias resolves to the target's own definition, as the Lua/Zig alias decision does); `minus = (sub)` resolves to `core.sub` after removing parentheses; `toJson = JSON.stringify` (member path) resolves to the global `JSON.stringify`, medium. On use.js line 5 the six calls are toJson, add, sub, mul, times(->mul), minus(->sub)."
+}

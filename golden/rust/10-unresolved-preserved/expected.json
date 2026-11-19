@@ -1,0 +1,79 @@
+{
+  "rule": "**C4 Unresolved references are preserved.** A call the tool cannot resolve is still emitted as a low guess (`recv.m`, `.m`, a bare name). It is never dropped and never promoted to a resolved ID. | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` | **Typing reaches only declarations in the scan**",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "load",
+      "callee": "std::fs::read_to_string",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 2
+    },
+    {
+      "caller": "load",
+      "callee": ".unwrap",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 2
+    },
+    {
+      "caller": "load",
+      "callee": "raw.len",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 3
+    },
+    {
+      "caller": "load",
+      "callee": "extcrate::open",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 4
+    },
+    {
+      "caller": "load",
+      "callee": "handle.spin",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 5
+    },
+    {
+      "caller": "load",
+      "callee": "extcrate::open",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "src/main.rs",
+      "line": 6
+    },
+    {
+      "caller": "load",
+      "callee": ".spin",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 6
+    },
+    {
+      "caller": "load",
+      "callee": ".to_uppercase",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "src/main.rs",
+      "line": 7
+    },
+    {
+      "caller": "main",
+      "callee": "load",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 12
+    }
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. extcrate (a dependency, not scanned) and std paths are named statically \u2192 medium, IDs keep `::`. Their results' types are knowable only from library signatures outside the scan, so read_to_string(..).unwrap() is .unwrap, the untyped locals raw/handle give raw.len/handle.spin and the chained call is .spin, all low and all present (C4). A string literal is a computed receiver \u2192 .to_uppercase, low. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

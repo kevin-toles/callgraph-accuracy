@@ -1,0 +1,108 @@
+{
+  "rule": "top-level `file.fun` (file basename); nested modules/functors dotted (`file.Make.connect`); local function lets `outer.f`, local value lets fold into the enclosing binding; module-level code's caller is the module. Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown. Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "calc.double",
+      "callee": "Stdlib.abs",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "calc.ml",
+      "line": 1
+    },
+    {
+      "caller": "calc.describe",
+      "callee": "String.concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "calc.ml",
+      "line": 4
+    },
+    {
+      "caller": "calc.describe",
+      "callee": "Stdlib.string_of_int",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "calc.ml",
+      "line": 4
+    },
+    {
+      "caller": "calc.describe",
+      "callee": "calc.double",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "calc.ml",
+      "line": 4
+    },
+    {
+      "caller": "calc.report",
+      "callee": "String.concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "calc.ml",
+      "line": 7
+    },
+    {
+      "caller": "calc.report",
+      "callee": "List.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "calc.ml",
+      "line": 9
+    },
+    {
+      "caller": "calc.report",
+      "callee": "List.rev",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "calc.ml",
+      "line": 11
+    },
+    {
+      "caller": "calc",
+      "callee": "Stdlib.print_endline",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "calc.ml",
+      "line": 14
+    },
+    {
+      "caller": "calc",
+      "callee": "calc.describe",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "calc.ml",
+      "line": 14
+    },
+    {
+      "caller": "calc",
+      "callee": "Stdlib.print_int",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "calc.ml",
+      "line": 15
+    },
+    {
+      "caller": "calc",
+      "callee": "String.length",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "calc.ml",
+      "line": 15
+    },
+    {
+      "caller": "calc",
+      "callee": "calc.report",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "calc.ml",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "calc.double",
+    "calc.describe",
+    "calc.report"
+  ],
+  "notes": "Top-level functions are `file.fun` with the file basename `calc`. Bare Stdlib values are `Stdlib.<name>`, medium (OCaml note: then Stdlib (`Stdlib.invalid_arg`)); qualified Stdlib submodule calls are named as written, medium (`List.length` medium). `let () = ...` is module-level code: caller is the module `calc`. In `report`, each callee of the multi-line application is on its own name's line (`String.concat` line 7, `List.map` line 9, `List.rev` line 11); `describe` on line 10 is passed, not applied: no edge. List literals are data construction."
+}

@@ -1,0 +1,26 @@
+{
+  "rule": "Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). An empty caller or `<global>` is a wrong caller.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "crate::config",
+      "callee": "limit",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/config.rs",
+      "line": 5
+    },
+    {
+      "caller": "crate::config",
+      "callee": "limit",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/config.rs",
+      "line": 7
+    }
+  ],
+  "nodes_include": [
+    "limit"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. The const and static initializers are outside any function or type, so their caller is the file's module path, crate::config (src/config.rs). They are not fields of a type, so no `implicit` <clinit> edge applies. limit is a scanned free function \u2192 bare ID, high. Reading config::MAX in main is not a call; `mod config;` is a declaration."
+}

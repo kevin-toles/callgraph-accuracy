@@ -1,0 +1,31 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. **Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` — left as a `metadata.insert` low guess it is wrong. **C7 Complete edges.** Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Walker#walk",
+      "callee": "app.Node#next",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Chain.scala",
+      "line": 11
+    },
+    {
+      "caller": "app.Walker#walk",
+      "callee": "app.Node#next",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Chain.scala",
+      "line": 12
+    },
+    {
+      "caller": "app.Walker#walk",
+      "callee": "app.Node#name",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Chain.scala",
+      "line": 13
+    }
+  ],
+  "notes": "root is a class parameter with declared type Node (decision A). Each later receiver is a call of a parameterless method with declared return type Node, so it names Node (Decisions 2026-11-09), not a `.next` low guess. Each edge is on its own method name's line, not the chain's first line (line of `root`). `label` in name() is a val read: field access, not a call. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

@@ -1,0 +1,91 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). An enum constant `E.C` has type `E`. **Body-less member declarations of scanned types are defined in the scan (high)**: a call that resolves to a method declared without a body by a trait, interface, protocol, abstract class or pure-virtual C++ declaration (`fn now() -> u64;`, `virtual void OnError() = 0;`, `def m: Int`, an interface method) is high when that declaring type is in the scan, exactly as Go interface calls are.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Holder#viaField",
+      "callee": "app.Svc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Typed.scala",
+      "line": 12
+    },
+    {
+      "caller": "app.Holder#viaParam",
+      "callee": "app.FastSvc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Typed.scala",
+      "line": 14
+    },
+    {
+      "caller": "app.Holder#viaLocal",
+      "callee": "app.FastSvc#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "app/Typed.scala",
+      "line": 17
+    },
+    {
+      "caller": "app.Holder#viaLocal",
+      "callee": "app.FastSvc#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "app/Typed.scala",
+      "line": 18
+    },
+    {
+      "caller": "app.Holder#viaLocal",
+      "callee": "app.Svc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Typed.scala",
+      "line": 19
+    },
+    {
+      "caller": "app.Holder#viaLocal",
+      "callee": "app.FastSvc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Typed.scala",
+      "line": 20
+    },
+    {
+      "caller": "app.Holder#viaPattern",
+      "callee": "app.FastSvc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Typed.scala",
+      "line": 24
+    },
+    {
+      "caller": "app.Holder#viaCatch",
+      "callee": "java.lang.IllegalArgumentException#getMessage",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/Typed.scala",
+      "line": 31
+    },
+    {
+      "caller": "app.Holder#viaBound",
+      "callee": "app.Svc#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Typed.scala",
+      "line": 34
+    },
+    {
+      "caller": "app.Holder#viaFree",
+      "callee": "t.toString",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "app/Typed.scala",
+      "line": 36
+    }
+  ],
+  "nodes_include": [
+    "app.Svc#run",
+    "app.FastSvc#run"
+  ],
+  "notes": "Field (constructor val svc: Svc), parameter, local declared `: Svc`, local `= new FastSvc()`, pattern binding `fs: FastSvc` and catch pattern `e: IllegalArgumentException` all give T#m. The declared type wins over the initializer (`val s: Svc = new FastSvc()` → app.Svc#run). Svc#run is a body-less trait member of a scanned type, so it is high (Decisions 2026-11-09) and must be in nodes (C1). getMessage on the external java.lang type (Scala's IllegalArgumentException alias expands to java.lang) is medium. viaBound's T resolves to its bound Svc; viaFree's T is unconstrained and stays a low recv.m guess. `x match {}` and the literal `0` are not calls. FastSvc mixes in a trait without parentheses: no constructor edge. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

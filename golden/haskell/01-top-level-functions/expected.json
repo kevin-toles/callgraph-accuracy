@@ -1,0 +1,116 @@
+{
+  "rule": "module = the `module` header (else the file name); top-level functions, class methods and record fields `Module.f` Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. **C7 Complete edges.** Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Geo.Calc.double",
+      "callee": "Prelude.sum",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 4
+    },
+    {
+      "caller": "Geo.Calc.describe",
+      "callee": "Prelude.unwords",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 7
+    },
+    {
+      "caller": "Geo.Calc.describe",
+      "callee": "Prelude.show",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 7
+    },
+    {
+      "caller": "Geo.Calc.describe",
+      "callee": "Geo.Calc.double",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Geo/Calc.hs",
+      "line": 7
+    },
+    {
+      "caller": "Geo.Calc.report",
+      "callee": "Prelude.concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 11
+    },
+    {
+      "caller": "Geo.Calc.report",
+      "callee": "Prelude.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 12
+    },
+    {
+      "caller": "Geo.Calc.report",
+      "callee": "Prelude.reverse",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 14
+    },
+    {
+      "caller": "Geo.Calc.banner",
+      "callee": "Prelude.replicate",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 17
+    },
+    {
+      "caller": "Geo.Calc.main",
+      "callee": "Prelude.putStrLn",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 21
+    },
+    {
+      "caller": "Geo.Calc.main",
+      "callee": "Geo.Calc.describe",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Geo/Calc.hs",
+      "line": 21
+    },
+    {
+      "caller": "Geo.Calc.main",
+      "callee": "Prelude.print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 22
+    },
+    {
+      "caller": "Geo.Calc.main",
+      "callee": "Prelude.length",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Geo/Calc.hs",
+      "line": 22
+    },
+    {
+      "caller": "Geo.Calc.main",
+      "callee": "Geo.Calc.report",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Geo/Calc.hs",
+      "line": 22
+    }
+  ],
+  "nodes_include": [
+    "Geo.Calc.double",
+    "Geo.Calc.describe",
+    "Geo.Calc.report"
+  ],
+  "notes": "Module ID comes from the `module Geo.Calc` header. Prelude functions are `Prelude.<name>`, medium (Haskell note: the Prelude (`Prelude.show`, medium)). `describe` on the line after `(map` is passed as an argument, not applied: a function reference, not a call (Not calls). Each callee of the multi-line application in `report` is reported on the line of its own name (multi-line rule / C7). Type signatures are typespecs: no edge. List literals are data construction: no edge. `banner` is a parameterless top-level binding; the Haskell note gives every top-level binding the ID `Module.f`, so its body's caller is `Geo.Calc.banner`. All Haskell applications are call_type direct (no receiver)."
+}

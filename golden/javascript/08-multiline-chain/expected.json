@@ -1,0 +1,51 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. | **C7 Complete edges.** Caller and callee are never empty. The line is the line of the callee's name, per the ID-format rules. | Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\". | Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "chain.report",
+      "callee": "items.filter",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "chain.js",
+      "line": 7
+    },
+    {
+      "caller": "chain.report",
+      "callee": ".map",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "chain.js",
+      "line": 8
+    },
+    {
+      "caller": "chain.report",
+      "callee": "chain.format",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "chain.js",
+      "line": 8
+    },
+    {
+      "caller": "chain.report",
+      "callee": ".join",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "chain.js",
+      "line": 9
+    },
+    {
+      "caller": "chain.format",
+      "callee": "x.toFixed",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "chain.js",
+      "line": 13
+    }
+  ],
+  "nodes_include": [
+    "chain.report",
+    "chain.format"
+  ],
+  "notes": "The chain starts on line 6 (`return items`) but each call is on the line of its own method name (7, 8, 9). `.filter` is on `items` (unknown-type parameter) -> `items.filter`; `.map`/`.join` are on call results -> `.map`/`.join`. `isOk` on line 7 is passed, not called (no edge). `format` is declared after its use and resolves to `chain.format` (function declarations are top-level bindings, C1); the arrow folds into `chain.report`."
+}

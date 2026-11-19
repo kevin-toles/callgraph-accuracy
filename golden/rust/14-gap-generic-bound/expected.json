@@ -1,0 +1,51 @@
+{
+  "rule": "A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). | **Body-less member declarations of scanned types are defined in the scan (high)**",
+  "source": "KNOWN_GAP: generic type parameters are named instead of their single bound (T#m, Backend#now)",
+  "edges": [
+    {
+      "caller": "tick",
+      "callee": "Clock#now",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 18
+    },
+    {
+      "caller": "tock",
+      "callee": "Clock#now",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 25
+    },
+    {
+      "caller": "Service#poll",
+      "callee": "Backend#now",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 34
+    },
+    {
+      "caller": "main",
+      "callee": "tick",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 39
+    },
+    {
+      "caller": "main",
+      "callee": "tock",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "src/main.rs",
+      "line": 40
+    }
+  ],
+  "nodes_include": [
+    "Clock#now",
+    "Backend#now"
+  ],
+  "notes": "Layout: src/ (the scan root) holds a Cargo package, Cargo.toml plus src/*.rs, so module paths are crate-relative. Each type parameter has exactly one bound: inline `T: Clock`, a where-clause `T: Clock`, and the struct/impl parameter `B: Backend` behind the field backend: B. The receiver resolves to the bound \u2192 Clock#now / Backend#now, high (body-less trait methods of scanned traits, Decision 2026-11-09). T#now / B#now are wrong. Service<B> drops its generic argument \u2192 Service#poll. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (including path calls Type::assoc()) and direct for free functions, module-path functions and named nested functions."
+}

@@ -1,0 +1,36 @@
+{
+  "rule": "An enum constant `E.C` has type `E`. | **PHP**: namespace-qualified with dots: `App.Svc#run`; `$this->m()` \u2192 `App.Svc#m`; `Cls::m()` \u2192 resolved class `#m`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Suit#color",
+      "callee": "App.Suit#isRed",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Suit.php",
+      "line": 11
+    },
+    {
+      "caller": "App.Table#paint",
+      "callee": "App.Suit#first",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Table.php",
+      "line": 8
+    },
+    {
+      "caller": "App.Table#paint",
+      "callee": "App.Suit#color",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Table.php",
+      "line": 9
+    }
+  ],
+  "nodes_include": [
+    "App.Suit#color",
+    "App.Suit#first",
+    "App.Suit#isRed"
+  ],
+  "notes": "Suit::Hearts is an enum constant of type App.Suit (decision A) \u2192 ->color() is App.Suit#color, high. Case declarations and the constant reads (Suit::Hearts, self::Hearts) are not calls. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

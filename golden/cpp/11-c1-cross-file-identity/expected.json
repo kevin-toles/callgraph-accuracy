@@ -1,0 +1,77 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`. **C++**: namespace-qualified with dots: `ns.Class#method`, `ns.func`; `Class::static()` → `Class#static`; template arguments dropped.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "geom.Shape#scaled",
+      "callee": "geom.Shape#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "geom/shape.cpp",
+      "line": 8
+    },
+    {
+      "caller": "geom.total_area",
+      "callee": "geom.Shape#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "geom/shape.cpp",
+      "line": 10
+    },
+    {
+      "caller": "geom.total_area",
+      "callee": "geom.Shape#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "geom/shape.cpp",
+      "line": 10
+    },
+    {
+      "caller": "main",
+      "callee": "geom.Shape#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "app/main.cpp",
+      "line": 4
+    },
+    {
+      "caller": "main",
+      "callee": "geom.Shape#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "app/main.cpp",
+      "line": 5
+    },
+    {
+      "caller": "main",
+      "callee": "geom.Shape#area",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/main.cpp",
+      "line": 6
+    },
+    {
+      "caller": "main",
+      "callee": "geom.Shape#scaled",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/main.cpp",
+      "line": 6
+    },
+    {
+      "caller": "main",
+      "callee": "geom.total_area",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/main.cpp",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "geom.Shape#area",
+    "geom.Shape#scaled",
+    "geom.Shape#<init>",
+    "geom.total_area"
+  ],
+  "notes": "C1: geom::Shape::area is declared in geom/shape.h, defined in geom/shape.cpp, and called from shape.cpp (bare area() in scaled; a.area()/b.area() on typed parameters) and from app/main.cpp (s.area()); every reference uses the single ID geom.Shape#area, and it is in nodes. Same for geom.Shape#<init> (constructor definition and the two constructor calls) and geom.total_area. 'geom::Shape s = geom::Shape(2.0);' writes one constructor call (the copy-initialisation from the temporary is not a call). static_cast is a cast. The header declarations are not calls."
+}

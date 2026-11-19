@@ -1,0 +1,43 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. **Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` \u2014 left as a `metadata.insert` low guess it is wrong. Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\".",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "q.assemble",
+      "callee": "q.Builder#self",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "builder.cpp",
+      "line": 17
+    },
+    {
+      "caller": "q.assemble",
+      "callee": "q.Builder#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "builder.cpp",
+      "line": 18
+    },
+    {
+      "caller": "q.assemble",
+      "callee": "q.Builder#add",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "builder.cpp",
+      "line": 19
+    },
+    {
+      "caller": "q.assemble",
+      "callee": "q.Builder#build",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "builder.cpp",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "q.Builder#self",
+    "q.Builder#add"
+  ],
+  "notes": "Each call is on the line of its own name (17, 18, 19, 20), not the chain's first line. b is a parameter typed Builder& \u2192 q.Builder#self. The receiver of .add(1) is b.self(), a call of a PARAMETERLESS method with declared type Builder& (Decisions 2026-11-09) \u2192 q.Builder#add, high. The receivers of .add(2) and .build() are results of add(int), a call WITH a parameter: the parameterless-member rule does not apply, so they are computed receivers (SPEC: 'call result') \u2192 '.add' and '.build', low. ': count_(0)' initialises a scalar member: not a call."
+}

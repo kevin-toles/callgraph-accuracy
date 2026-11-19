@@ -1,0 +1,7 @@
+{
+  "rule": "Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` → `client.get`; `a.b.c()` → `b.c`). Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "spec_gap": "Ruby instance-variable receivers: is `@client.post(1)` `client.post` (property name, as `self.client.get()` -> `client.get`) or `@client.post` (sigil kept)? And is the stored-proc call `@hook.call(2)` a callback named `hook` or `@hook`?",
+  "edges": [],
+  "notes": "The unknown-receiver rule's example is `self.client.get()` -> `client.get`; Ruby's `@client` is the same stored property written differently."
+}

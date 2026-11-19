@@ -1,0 +1,42 @@
+{
+  "rule": "Code outside a method body: the caller is its location. | Elixir: ... code outside any module has the file's module as caller. | Not calls: ... enum-variant/data construction ... declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Boot",
+      "callee": "String.upcase",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/boot.ex",
+      "line": 3
+    },
+    {
+      "caller": "MyApp.Boot.start",
+      "callee": "Keyword.new",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/boot.ex",
+      "line": 9
+    },
+    {
+      "caller": "MyApp.Boot",
+      "callee": "IO.puts",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/boot.ex",
+      "line": 12
+    },
+    {
+      "caller": "lib/boot",
+      "callee": "MyApp.Boot.start",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/boot.ex",
+      "line": 15
+    }
+  ],
+  "nodes_include": [
+    "MyApp.Boot.start"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. Line 3: the module attribute is not a call, but `String.upcase` in its value is, executed in the module body: caller `MyApp.Boot` (as Python class-body code has caller `pkg.mod.C`). Line 12 is module-body code likewise. Line 15 is outside any module; the file defines exactly one module, so the file's module is `MyApp.Boot`. No edges: `@moduledoc`, `defstruct` (declaration) reading `@default_name`, the `@spec` typespec including `String.t()`, and the struct literals `%__MODULE__{...}` (data construction)."
+}

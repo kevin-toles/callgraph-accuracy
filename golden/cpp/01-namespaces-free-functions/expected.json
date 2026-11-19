@@ -1,0 +1,102 @@
+{
+  "rule": "**C++**: namespace-qualified with dots: `ns.Class#method`, `ns.func`; `Class::static()` → `Class#static`; template arguments dropped. Free function: its name (with the language's module qualifier where it has one). Generic/template type arguments are dropped from every ID (`HashSet#<init>`). Overloads share one ID.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "util.log",
+      "callee": "util.clamp",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 4
+    },
+    {
+      "caller": "util.log",
+      "callee": "util.log",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 5
+    },
+    {
+      "caller": "util.log",
+      "callee": "util.log",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 5
+    },
+    {
+      "caller": "util.detail.mix",
+      "callee": "util.clamp",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 8
+    },
+    {
+      "caller": "util.detail.mix",
+      "callee": "util.clamp",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 8
+    },
+    {
+      "caller": "util.blend",
+      "callee": "util.detail.mix",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 11
+    },
+    {
+      "caller": "util.blend",
+      "callee": "util.detail.mix",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 11
+    },
+    {
+      "caller": "global_helper",
+      "callee": "util.log",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 14
+    },
+    {
+      "caller": "main",
+      "callee": "global_helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 16
+    },
+    {
+      "caller": "main",
+      "callee": "util.blend",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 16
+    },
+    {
+      "caller": "main",
+      "callee": "global_helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "math.cpp",
+      "line": 16
+    }
+  ],
+  "nodes_include": [
+    "util.clamp",
+    "util.log",
+    "util.detail.mix",
+    "util.blend",
+    "global_helper"
+  ],
+  "notes": "Namespace-qualified with dots: nested namespaces give util.detail.mix. The two log overloads share the ID util.log (both as callers and callees). A bare clamp(b) inside util::detail resolves lexically to util::clamp, the same ID as the qualified util::clamp(a) (C1). detail::mix and util::detail::mix are one ID. Functions in the global namespace (global_helper, main) are bare; ::global_helper is the same function. call_type: free functions are 'direct'; calls naming a member of a type (including static members called as Class::m() and implicit-this bare member calls) are 'method'; SPEC does not define the split further."
+}

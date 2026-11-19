@@ -1,0 +1,387 @@
+[
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:change:medium/direct>high/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:change:high/direct>medium/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "high/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:change:medium/direct>medium/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:change:high/direct>high/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "high/direct",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:change:low/direct>medium/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "low/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:change:low/direct>high/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "low/direct",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:change:high/direct>low/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "high/direct",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:change:medium/direct>low/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:caller:high/direct>high/direct",
+  "kind": "caller",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "high/direct",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:caller:medium/direct>medium/direct",
+  "kind": "caller",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:removed:high/direct>",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:caller:low/direct>low/direct",
+  "kind": "caller",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "old": "low/direct",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "h-dune-dune-visibility-2026-11-15:added:>high/direct",
+  "kind": "added",
+  "language": "*",
+  "match": {
+   "file": "/programming-languages/dune/.*\\.mli?$",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune library/stanza visibility, test-fixture stdlib no longer hijacks open Stdlib, open struct \u2026 end, implementations of virtual libraries)",
+  "note": "Source-checked 2026-11-15 (final28): buffer/filename/list/lazy/string/mutex.* were in-scan fixture modules (stdlib-hijack), now Stdlib medium; dune-rpc Make(Fiber) functor parameter \u2192 Fiber.* medium; Cmd \u2192 import.Cmd (include struct module Cmd, info high, others medium); print_rules atom \u2192 t.atom (Dune_lang includes Dune_sexp includes T); module aliases (Dune_lang.Decoder \u2192 decoder, Mode.Dict) high; Ctypes.* \u2192 low (open F, F : Ctypes.FOREIGN parameter); duneboot Map.Make update/mapi/filter \u2192 low (include Map.Make(K), external functor); common.Term.* caller renames (open struct module Term); dune_rpc tests Chan.write through include in a functor argument \u2192 low (honest; old Rpc.Server.write wrong). Tests: dune_visibility_contract_test.go, open_struct_contract_test.go."
+ },
+ {
+  "id": "s-ocaml-dune-visibility-2026-11-15:change:medium/direct>high/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/ocaml/compiler/ocaml/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune stanza visibility; open struct \u2026 end; module aliases and functor applications resolved)",
+  "note": "Source-checked 2026-11-15 (final28): module aliases/functor applications (W, EC, P = Printf, IntMap = Map.Make, S = Set.Make) medium\u2192high; manual/src/html_processing is its own dune project (stdlib not the compiler project's \u2192 medium; open Soup/Printf/Common with Common generated from common.ml.in \u2192 bare names low; Re.Str.(\u2026) local open \u2192 Re.Str medium); generalized-open fixtures (gpr1506 open struct, accepted_batch Set.Make.String). D1 fix (file outside the only stanza's modules) restored lintapidiff/ocamltex Str/Unix high. Tests: FileOutsideTheOnlyStanzasModules, OpenAnonymousStructure."
+ },
+ {
+  "id": "s-ocaml-dune-visibility-2026-11-15:change:high/direct>medium/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/ocaml/compiler/ocaml/.*\\.mli?$",
+   "old": "high/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune stanza visibility; open struct \u2026 end; module aliases and functor applications resolved)",
+  "note": "Source-checked 2026-11-15 (final28): module aliases/functor applications (W, EC, P = Printf, IntMap = Map.Make, S = Set.Make) medium\u2192high; manual/src/html_processing is its own dune project (stdlib not the compiler project's \u2192 medium; open Soup/Printf/Common with Common generated from common.ml.in \u2192 bare names low; Re.Str.(\u2026) local open \u2192 Re.Str medium); generalized-open fixtures (gpr1506 open struct, accepted_batch Set.Make.String). D1 fix (file outside the only stanza's modules) restored lintapidiff/ocamltex Str/Unix high. Tests: FileOutsideTheOnlyStanzasModules, OpenAnonymousStructure."
+ },
+ {
+  "id": "s-ocaml-dune-visibility-2026-11-15:change:high/direct>low/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/ocaml/compiler/ocaml/.*\\.mli?$",
+   "old": "high/direct",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune stanza visibility; open struct \u2026 end; module aliases and functor applications resolved)",
+  "note": "Source-checked 2026-11-15 (final28): module aliases/functor applications (W, EC, P = Printf, IntMap = Map.Make, S = Set.Make) medium\u2192high; manual/src/html_processing is its own dune project (stdlib not the compiler project's \u2192 medium; open Soup/Printf/Common with Common generated from common.ml.in \u2192 bare names low; Re.Str.(\u2026) local open \u2192 Re.Str medium); generalized-open fixtures (gpr1506 open struct, accepted_batch Set.Make.String). D1 fix (file outside the only stanza's modules) restored lintapidiff/ocamltex Str/Unix high. Tests: FileOutsideTheOnlyStanzasModules, OpenAnonymousStructure."
+ },
+ {
+  "id": "s-ocaml-dune-visibility-2026-11-15:change:medium/direct>medium/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/ocaml/compiler/ocaml/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune stanza visibility; open struct \u2026 end; module aliases and functor applications resolved)",
+  "note": "Source-checked 2026-11-15 (final28): module aliases/functor applications (W, EC, P = Printf, IntMap = Map.Make, S = Set.Make) medium\u2192high; manual/src/html_processing is its own dune project (stdlib not the compiler project's \u2192 medium; open Soup/Printf/Common with Common generated from common.ml.in \u2192 bare names low; Re.Str.(\u2026) local open \u2192 Re.Str medium); generalized-open fixtures (gpr1506 open struct, accepted_batch Set.Make.String). D1 fix (file outside the only stanza's modules) restored lintapidiff/ocamltex Str/Unix high. Tests: FileOutsideTheOnlyStanzasModules, OpenAnonymousStructure."
+ },
+ {
+  "id": "s-ocaml-dune-visibility-2026-11-15:change:medium/direct>low/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/ocaml/compiler/ocaml/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune stanza visibility; open struct \u2026 end; module aliases and functor applications resolved)",
+  "note": "Source-checked 2026-11-15 (final28): module aliases/functor applications (W, EC, P = Printf, IntMap = Map.Make, S = Set.Make) medium\u2192high; manual/src/html_processing is its own dune project (stdlib not the compiler project's \u2192 medium; open Soup/Printf/Common with Common generated from common.ml.in \u2192 bare names low; Re.Str.(\u2026) local open \u2192 Re.Str medium); generalized-open fixtures (gpr1506 open struct, accepted_batch Set.Make.String). D1 fix (file outside the only stanza's modules) restored lintapidiff/ocamltex Str/Unix high. Tests: FileOutsideTheOnlyStanzasModules, OpenAnonymousStructure."
+ },
+ {
+  "id": "s-ocaml-dune-visibility-2026-11-15:change:low/direct>medium/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/ocaml/compiler/ocaml/.*\\.mli?$",
+   "old": "low/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune stanza visibility; open struct \u2026 end; module aliases and functor applications resolved)",
+  "note": "Source-checked 2026-11-15 (final28): module aliases/functor applications (W, EC, P = Printf, IntMap = Map.Make, S = Set.Make) medium\u2192high; manual/src/html_processing is its own dune project (stdlib not the compiler project's \u2192 medium; open Soup/Printf/Common with Common generated from common.ml.in \u2192 bare names low; Re.Str.(\u2026) local open \u2192 Re.Str medium); generalized-open fixtures (gpr1506 open struct, accepted_batch Set.Make.String). D1 fix (file outside the only stanza's modules) restored lintapidiff/ocamltex Str/Unix high. Tests: FileOutsideTheOnlyStanzasModules, OpenAnonymousStructure."
+ },
+ {
+  "id": "s-ocaml-dune-visibility-2026-11-15:change:low/direct>high/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/ocaml/compiler/ocaml/.*\\.mli?$",
+   "old": "low/direct",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune stanza visibility; open struct \u2026 end; module aliases and functor applications resolved)",
+  "note": "Source-checked 2026-11-15 (final28): module aliases/functor applications (W, EC, P = Printf, IntMap = Map.Make, S = Set.Make) medium\u2192high; manual/src/html_processing is its own dune project (stdlib not the compiler project's \u2192 medium; open Soup/Printf/Common with Common generated from common.ml.in \u2192 bare names low; Re.Str.(\u2026) local open \u2192 Re.Str medium); generalized-open fixtures (gpr1506 open struct, accepted_batch Set.Make.String). D1 fix (file outside the only stanza's modules) restored lintapidiff/ocamltex Str/Unix high. Tests: FileOutsideTheOnlyStanzasModules, OpenAnonymousStructure."
+ },
+ {
+  "id": "s-semgrep-dune-visibility-2026-11-15:change:medium/direct>medium/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/static-analysis/sast/semgrep/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune visibility; module aliases)",
+  "note": "Source-checked 2026-11-15: F = Formula alias \u2192 Formula high; Printf.* low\u2192medium; Alcotest.(check \u2026) local open \u2192 Alcotest.check medium (old Pat_AST.check wrong); Unit_Match printf \u2192 low is backlog ocaml/14 (dune (flags -open Aliengrep) not honored; honest abstention)."
+ },
+ {
+  "id": "s-semgrep-dune-visibility-2026-11-15:change:low/direct>medium/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/static-analysis/sast/semgrep/.*\\.mli?$",
+   "old": "low/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune visibility; module aliases)",
+  "note": "Source-checked 2026-11-15: F = Formula alias \u2192 Formula high; Printf.* low\u2192medium; Alcotest.(check \u2026) local open \u2192 Alcotest.check medium (old Pat_AST.check wrong); Unit_Match printf \u2192 low is backlog ocaml/14 (dune (flags -open Aliengrep) not honored; honest abstention)."
+ },
+ {
+  "id": "s-semgrep-dune-visibility-2026-11-15:change:medium/direct>low/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/static-analysis/sast/semgrep/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune visibility; module aliases)",
+  "note": "Source-checked 2026-11-15: F = Formula alias \u2192 Formula high; Printf.* low\u2192medium; Alcotest.(check \u2026) local open \u2192 Alcotest.check medium (old Pat_AST.check wrong); Unit_Match printf \u2192 low is backlog ocaml/14 (dune (flags -open Aliengrep) not honored; honest abstention)."
+ },
+ {
+  "id": "s-semgrep-dune-visibility-2026-11-15:change:high/direct>medium/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/static-analysis/sast/semgrep/.*\\.mli?$",
+   "old": "high/direct",
+   "new": "medium/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune visibility; module aliases)",
+  "note": "Source-checked 2026-11-15: F = Formula alias \u2192 Formula high; Printf.* low\u2192medium; Alcotest.(check \u2026) local open \u2192 Alcotest.check medium (old Pat_AST.check wrong); Unit_Match printf \u2192 low is backlog ocaml/14 (dune (flags -open Aliengrep) not honored; honest abstention)."
+ },
+ {
+  "id": "s-semgrep-dune-visibility-2026-11-15:change:medium/direct>high/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/static-analysis/sast/semgrep/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: dune visibility; module aliases)",
+  "note": "Source-checked 2026-11-15: F = Formula alias \u2192 Formula high; Printf.* low\u2192medium; Alcotest.(check \u2026) local open \u2192 Alcotest.check medium (old Pat_AST.check wrong); Unit_Match printf \u2192 low is backlog ocaml/14 (dune (flags -open Aliengrep) not honored; honest abstention)."
+ },
+ {
+  "id": "s-spark2014-dune-visibility-2026-11-15:change:medium/direct>high/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/languages/ada/spark2014/.*\\.mli?$",
+   "old": "medium/direct",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-13..15: OCaml functor applications and module aliases)",
+  "note": "why3: PQ = Pqueue.Make(\u2026), SCC = Wstdlib.MakeSCC(\u2026), RS = ReadShapes, M = LatexInd: module aliases of in-scan functors now their members (high)."
+ },
+ {
+  "id": "s-zio-fixture-own-supertypes:suite",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/scala/effects/zio/scalafix/",
+   "old_callee": "^zio\\.test\\.(ZIOSpec|Assertion)#(suite|test)$",
+   "new_callee": "^zio\\.test\\.(suite|test)$",
+   "old": "high/method",
+   "new": "high/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-14/15: a declaration resolves bare calls through its own supertypes; import X._ opens object X only)",
+  "note": "Source-checked 2026-11-15 (final29): scalafix input fixture objects (extends DefaultRunnableSpec, outside the scan) no longer inherit ZIOSpec: suite/test \u2192 zio.test package object's (import zio.test._); IO.fail/UIO.succeed/Managed.*/ZIO.effectTotal in ZIO-1 fixtures \u2192 low (no IO/UIO/Managed term in the ZIO 2 scan, a type alias makes no term; members absent from closed ZIO types now Serializable/Product add none); paired on the same lines with receiver chains low\u2192high. Tests: DuplicateDeclarationsKeepTheirOwnSupertypes, WildcardImportOfCompanionSkipsClassMembers, WildcardImportOfSelfExtendingObject, ProductAndSerializableAddNoMembers."
+ },
+ {
+  "id": "s-zio-fixture-own-supertypes:low/method>low/method",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/scala/effects/zio/(scalafix/|benchmarks/|streams/)",
+   "old": "low/method",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed (2026-11-14/15: closed ZIO types, fixture supertypes; cross-paired edges on the same line)",
+  "note": "Source-checked 2026-11-15 (final29): scalafix input fixture objects (extends DefaultRunnableSpec, outside the scan) no longer inherit ZIOSpec: suite/test \u2192 zio.test package object's (import zio.test._); IO.fail/UIO.succeed/Managed.*/ZIO.effectTotal in ZIO-1 fixtures \u2192 low (no IO/UIO/Managed term in the ZIO 2 scan, a type alias makes no term; members absent from closed ZIO types now Serializable/Product add none); paired on the same lines with receiver chains low\u2192high. Tests: DuplicateDeclarationsKeepTheirOwnSupertypes, WildcardImportOfCompanionSkipsClassMembers, WildcardImportOfSelfExtendingObject, ProductAndSerializableAddNoMembers. Benchmarks: cats IO under import cats.effect.IO (scala/14 backlog for the one remaining ZIO#flatMap). ChannelExecutor.scala:416 bracketOut.acquire paired with a .foldCauseZIO guess on the same line."
+ },
+ {
+  "id": "s-zio-fixture-own-supertypes:high/method>high/method",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/scala/effects/zio/(scalafix/|benchmarks/|streams/)",
+   "old": "high/method",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (2026-11-14/15: closed ZIO types, fixture supertypes; cross-paired edges on the same line)",
+  "note": "Source-checked 2026-11-15 (final29): scalafix input fixture objects (extends DefaultRunnableSpec, outside the scan) no longer inherit ZIOSpec: suite/test \u2192 zio.test package object's (import zio.test._); IO.fail/UIO.succeed/Managed.*/ZIO.effectTotal in ZIO-1 fixtures \u2192 low (no IO/UIO/Managed term in the ZIO 2 scan, a type alias makes no term; members absent from closed ZIO types now Serializable/Product add none); paired on the same lines with receiver chains low\u2192high. Tests: DuplicateDeclarationsKeepTheirOwnSupertypes, WildcardImportOfCompanionSkipsClassMembers, WildcardImportOfSelfExtendingObject, ProductAndSerializableAddNoMembers. Benchmarks: cats IO under import cats.effect.IO (scala/14 backlog for the one remaining ZIO#flatMap). ChannelExecutor.scala:416 bracketOut.acquire paired with a .foldCauseZIO guess on the same line."
+ },
+ {
+  "id": "s-zio-fixture-own-supertypes:low/method>low/direct",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/scala/effects/zio/(scalafix/|benchmarks/|streams/)",
+   "old": "low/method",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-14/15: closed ZIO types, fixture supertypes; cross-paired edges on the same line)",
+  "note": "Source-checked 2026-11-15 (final29): scalafix input fixture objects (extends DefaultRunnableSpec, outside the scan) no longer inherit ZIOSpec: suite/test \u2192 zio.test package object's (import zio.test._); IO.fail/UIO.succeed/Managed.*/ZIO.effectTotal in ZIO-1 fixtures \u2192 low (no IO/UIO/Managed term in the ZIO 2 scan, a type alias makes no term; members absent from closed ZIO types now Serializable/Product add none); paired on the same lines with receiver chains low\u2192high. Tests: DuplicateDeclarationsKeepTheirOwnSupertypes, WildcardImportOfCompanionSkipsClassMembers, WildcardImportOfSelfExtendingObject, ProductAndSerializableAddNoMembers. Benchmarks: cats IO under import cats.effect.IO (scala/14 backlog for the one remaining ZIO#flatMap). ChannelExecutor.scala:416 bracketOut.acquire paired with a .foldCauseZIO guess on the same line."
+ },
+ {
+  "id": "h-fs2-inherited-over-import:attempt",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "/fs2/core/.*Pull\\.scala$",
+   "old_callee": "^fs2\\.Pull#attempt$",
+   "old": "high/method",
+   "new": "low/direct"
+  },
+  "disposition": "implementation defect fixed (2026-11-15: import Pull._ opens object Pull only)",
+  "note": "PullSyncInstance#forceR: attempt(fa) is inherited from cats MonadError via PullMonadErrorInstance (outside the scan), not class Pull's instance method attempt; the old high was wrong credit, low is honest."
+ },
+ {
+  "id": "h-fs2-stream-encoder-pairing",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "StreamEncoder\\.scala$",
+   "old": "low/method",
+   "new": "low/method"
+  },
+  "disposition": "pairing artifact (2026-11-14 typed chains)",
+  "note": "StreamEncoder.scala:67: two receiver guesses on one line; one became typed (high), the remaining low pairs with the other."
+ }
+]

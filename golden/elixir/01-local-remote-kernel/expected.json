@@ -1,0 +1,66 @@
+{
+  "rule": "Elixir: `Module.fun`; ... remote calls `Mod.fun` medium unless defined in the scan | `:erlang_mod.f` and an imported Erlang module are `erlang_mod.f`. | Anonymous functions, lambdas ... fold into the nearest enclosing named function | Not calls: passing a method reference",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "MyApp.Text.normalize",
+      "callee": "Enum.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/text.ex",
+      "line": 4
+    },
+    {
+      "caller": "MyApp.Text.normalize",
+      "callee": "MyApp.Text.clean",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "lib/text.ex",
+      "line": 4
+    },
+    {
+      "caller": "MyApp.Text.normalize",
+      "callee": "Enum.reject",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/text.ex",
+      "line": 5
+    },
+    {
+      "caller": "MyApp.Text.count",
+      "callee": "Kernel.length",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/text.ex",
+      "line": 9
+    },
+    {
+      "caller": "MyApp.Text.clean",
+      "callee": "String.downcase",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/text.ex",
+      "line": 13
+    },
+    {
+      "caller": "MyApp.Text.clean",
+      "callee": "String.trim",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/text.ex",
+      "line": 13
+    },
+    {
+      "caller": "MyApp.Text.reversed",
+      "callee": "lists.reverse",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "lib/text.ex",
+      "line": 19
+    }
+  ],
+  "nodes_include": [
+    "MyApp.Text.clean"
+  ],
+  "notes": "call_type convention (SPEC gives no Elixir mapping; Elixir has no methods and the `macro` type is defined only for C/C++/ObjC and Rust `name!`): every local, imported and remote call is direct, a call through a value is callback. Operators and special forms (`|>`, `=`, `case`, `fn`, `%{}`, `__MODULE__`) are language constructs, not calls. Bare Kernel functions resolve to the auto-imported Kernel (Elixir decision: 'with one import known to export the name, that import is the target'): `Kernel.<name>`, medium. `clean(w)` is inside an anonymous `fn` passed to Enum.map, so it folds into `MyApp.Text.normalize`; it is a local call to a defp of the module (high). `&blank?/1` is a function capture (a reference), not a call. The two `blank?` clauses are declarations. Each pipe stage is on its own line."
+}

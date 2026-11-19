@@ -1,0 +1,6 @@
+[
+ {"id": "drift-before-0da1d8a", "kind": "any", "language": "*",
+  "match": {"file": "."},
+  "disposition": "methodology limitation",
+  "note": "the frozen fanout scan predates builder commits that are in 0da1d8a (rounds 12-16); the HEAD rescan is the tool's real output. These repos are re-reviewed on the new output (E8)."}
+]

@@ -1,0 +1,35 @@
+{
+  "rule": "Method: `Type#member`. Nested types are dotted: `Outer.Inner#m`. Some languages prefix a module/package qualifier with dots (see per-language notes). **Ruby**: `Outer.Inner#method` (constants dotted); `Foo.new` → `Foo#<init>`; constants resolve lexically. A class whose ancestry reaches outside the scan — an external superclass or include, a reopened external class (`class ActiveSupport::TestCase`), or a computed superclass expression (`< Devise.parent_controller.constantize`) — names bare calls not defined by any scanned ancestor `Scope#m`, medium. Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). An empty caller or `<global>` is a wrong caller.",
+  "source": "KNOWN_GAP: methods inside Const = Struct.new do … end blocks get the enclosing class as caller",
+  "edges": [
+    {
+      "caller": "lib/point",
+      "callee": "Struct#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "lib/point.rb",
+      "line": 7
+    },
+    {
+      "caller": "Point#norm",
+      "callee": "Calc#square",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/point.rb",
+      "line": 9
+    },
+    {
+      "caller": "Point#describe",
+      "callee": "Point#norm",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/point.rb",
+      "line": 13
+    }
+  ],
+  "nodes_include": [
+    "Point#norm",
+    "Point#describe"
+  ],
+  "notes": "`Struct.new` -> `Struct#<init>` (Ruby note), constructor, medium (external type), caller = file-level `lib/point`. The block is evaluated in the new class, so the `def`s in it define methods of the class bound to the constant `Point`: `Point#norm`, `Point#describe` (Method: `Type#member`; Decisions pick what the code does at runtime). They are not methods of an enclosing scope, and their calls do not fold into `lib/point`. Bare `norm()` is a member of the enclosing type -> `Point#norm`, high."
+}

@@ -1,0 +1,101 @@
+{
+  "rule": "Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | **Body-less member declarations of scanned types are defined in the scan (high)**",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Svc#<init>",
+      "callee": "App.Repo#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 13
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "App.Repo#find",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 18
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "App.Greeter#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 19
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "App.Repo#save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 20
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "App.Repo#save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 21
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "App.Greeter#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 22
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "Vendor.Clock#tick",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "App/Svc.php",
+      "line": 23
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "App.Repo#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 24
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "App.Repo#find",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 25
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "App.Repo#save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 27
+    },
+    {
+      "caller": "App.Svc#handle",
+      "callee": "RuntimeException#getMessage",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "App/Svc.php",
+      "line": 29
+    }
+  ],
+  "nodes_include": [
+    "App.Greeter#greet",
+    "App.Repo#find",
+    "App.Repo#save",
+    "App.Repo#<init>"
+  ],
+  "notes": "Parameter types (Repo, Greeter, Clock), typed properties (`private Repo $repo`, nullable `?Repo` names Repo, constructor-promoted `private Greeter $greeter`), `$local = new Repo()` and the catch parameter `\\RuntimeException $e` all type their receiver (decision A). Greeter#greet is a body-less interface method of a scanned type \u2192 high (Decision 2026-11-09). Vendor\\Clock and \\RuntimeException are not scanned \u2192 medium; global-namespace class has no qualifier. The promoted-property constructor is App.Svc#<init>. `= null` is not a call. call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

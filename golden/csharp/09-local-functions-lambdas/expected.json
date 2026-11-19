@@ -1,0 +1,67 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func`, a Rust `fn` item inside a function body, a PHP `$f = function`/`fn`, a C++ `auto f = [..]`, a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty. | Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Pipeline#Apply",
+      "callee": "action",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Pipeline.cs",
+      "line": 13
+    },
+    {
+      "caller": "App.Pipeline#Run.Local",
+      "callee": "App.Pipeline#Square",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Pipeline.cs",
+      "line": 20
+    },
+    {
+      "caller": "App.Pipeline#Run.twice",
+      "callee": "App.Pipeline#Run.Local",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Pipeline.cs",
+      "line": 23
+    },
+    {
+      "caller": "App.Pipeline#Run",
+      "callee": "App.Pipeline#Apply",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Pipeline.cs",
+      "line": 24
+    },
+    {
+      "caller": "App.Pipeline#Run",
+      "callee": "App.Pipeline#Log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Pipeline.cs",
+      "line": 24
+    },
+    {
+      "caller": "App.Pipeline#Run",
+      "callee": "App.Pipeline#Run.twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Pipeline.cs",
+      "line": 25
+    },
+    {
+      "caller": "App.Pipeline#Run",
+      "callee": "App.Pipeline#Run.Local",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Pipeline.cs",
+      "line": 25
+    }
+  ],
+  "nodes_include": [
+    "App.Pipeline#Run.Local",
+    "App.Pipeline#Run.twice"
+  ],
+  "notes": "The C# local function Local (a local `func`-style declaration) and the local `twice` bound directly to a lambda are named nested functions: IDs outer.f in Python form, i.e. App.Pipeline#Run.Local / App.Pipeline#Run.twice (cf. Python `pkg.mod.C#m.inner`); calls to them are direct, high, and calls inside them have them as caller. The lambda `x => Log(x)` passed to Apply is anonymous, so Log(x) folds into Run. action(1) calls through a delegate parameter: callback, unknown."
+}

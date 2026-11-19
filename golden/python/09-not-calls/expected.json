@@ -1,0 +1,15 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. **Python**: module-qualified IDs from the package structure (directories with `__init__.py`): `pkg.mod.f`, `pkg.mod.C#m`, `pkg.mod.C#<init>`, nested functions `pkg.mod.f.inner` / `pkg.mod.C#m.inner`; module-level code's caller is the module name, class-body code's caller is `pkg.mod.C`. Imports (relative, aliased, star, re-exported via `__init__.py`) resolve to the defining module. Builtins are `builtins.len` (medium).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shop.shapes.describe",
+      "callee": "builtins.len",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "shop/shapes.py",
+      "line": 19
+    }
+  ],
+  "notes": "Only `len(...)` is a call. Not calls: imports (1-2), the class-body literal assignment (6), annotations/typespecs `List[Shape]`, `Dict[str, int]`, `-> int` (8, 12), the method reference `Shape.area` without call (13), indexing (14), field access `first.sides`, `os.sep`, `self.sides` (9, 15, 16), and the `assert`/`del` statements (17, 18), which are language constructs."
+}

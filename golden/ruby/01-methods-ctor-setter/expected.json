@@ -1,0 +1,43 @@
+{
+  "rule": "Method: `Type#member`. Nested types are dotted: `Outer.Inner#m`. Some languages prefix a module/package qualifier with dots (see per-language notes). Constructor / initializer call: `Type#<init>`. `self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. Code outside a method body: the caller is its location. Field/val initializer → `Type#field`; C# property accessor → `Type#Prop` (get) / `Type#Prop=` (set); Ruby setter → `Type#x=`; `static {}` block → `Type#<clinit>`. Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>`; lazy ones do not. Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) → `Parent#<init>`, constructor. A Ruby `initialize` / PHP `__construct` definition's ID is `Type#<init>`. **Ruby**: `Outer.Inner#method` (constants dotted); `Foo.new` → `Foo#<init>`; constants resolve lexically. A class whose ancestry reaches outside the scan — an external superclass or include, a reopened external class (`class ActiveSupport::TestCase`), or a computed superclass expression (`< Devise.parent_controller.constantize`) — names bare calls not defined by any scanned ancestor `Scope#m`, medium.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Shop#<init>",
+      "callee": "Shop#setup",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/shop.rb",
+      "line": 4
+    },
+    {
+      "caller": "Shop#setup",
+      "callee": "Shop#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/shop.rb",
+      "line": 8
+    },
+    {
+      "caller": "Shop#name=",
+      "callee": "Shop#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/shop.rb",
+      "line": 16
+    },
+    {
+      "caller": "Shop#open",
+      "callee": "Shop#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "lib/shop.rb",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "Shop#<init>",
+    "Shop#log"
+  ],
+  "notes": "`initialize` defines `Shop#<init>` (superclass-ctor rule), so code inside it has that caller. Bare `setup(name)` and `self.log(name)` are calls to members of the enclosing type -> `Shop#m`, high. A setter `def name=` has ID `Shop#name=` (\"Ruby setter → `Type#x=`\"). `def self.open` is a singleton method; companion/class members flatten onto the class -> `Shop#open`. `Shop.new` -> `Shop#<init>`, constructor, high. Ivar assignment and the bare parameter reads (`msg`) are not calls."
+}

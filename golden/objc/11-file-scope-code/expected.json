@@ -1,0 +1,67 @@
+{
+  "rule": "Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). | An empty caller or `<global>` is a wrong caller. | **Objective-C++ (.mm)**: C++ constructs follow the C++ rules (`Cls::m` definitions, member calls, constructors); message sends follow the ObjC rules.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Registry#make",
+      "callee": "Registry#alloc",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/globals.mm",
+      "line": 9
+    },
+    {
+      "caller": "Registry#make",
+      "callee": "Registry#init",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app/globals.mm",
+      "line": 9
+    },
+    {
+      "caller": "app/globals",
+      "callee": "Registry#make",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/globals.mm",
+      "line": 17
+    },
+    {
+      "caller": "app/globals",
+      "callee": "computeCount",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/globals.mm",
+      "line": 18
+    },
+    {
+      "caller": "data/tables",
+      "callee": "SQUARE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "data/tables.m",
+      "line": 3
+    },
+    {
+      "caller": "data/tables",
+      "callee": "SQUARE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "data/tables.m",
+      "line": 3
+    },
+    {
+      "caller": "tableValue",
+      "callee": "SQUARE",
+      "call_type": "macro",
+      "confidence": "high",
+      "file": "data/tables.m",
+      "line": 6
+    }
+  ],
+  "nodes_include": [
+    "Registry#make",
+    "computeCount"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. Objective-C++ allows dynamic initialization of file-scope statics, so the two initializers in app/globals.mm run code outside any function: caller = file path below the scan root without extension, `app/globals`. The macro invocations in the file-scope array initializer of data/tables.m have caller `data/tables` (two invocations on one line \u2192 two edges). In the class method `+make`, `self` is the Registry class: `[self alloc]` \u2192 `Registry#alloc` and the init runs on a Registry \u2192 `Registry#init`, both medium (inherited from NSObject, outside the scan). `computeCount` is a C++ function in the global namespace \u2192 bare."
+}

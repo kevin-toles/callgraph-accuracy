@@ -1,0 +1,71 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => …`, `local function f`, `let f x = …`, `where f = …`, local `fun`/`def`/`func`, a Rust `fn` item inside a function body, a PHP `$f = function`/`fn`, a C++ `auto f = [..]`, a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty. Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Lam.labels",
+      "callee": "Prelude.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Lam.hs",
+      "line": 6
+    },
+    {
+      "caller": "Lam.labels",
+      "callee": "Prelude.show",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Lam.hs",
+      "line": 6
+    },
+    {
+      "caller": "Lam.labels",
+      "callee": "Prelude.abs",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Lam.hs",
+      "line": 6
+    },
+    {
+      "caller": "Lam.shift",
+      "callee": "Prelude.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Lam.hs",
+      "line": 12
+    },
+    {
+      "caller": "Lam.pairs",
+      "callee": "Prelude.zip",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Lam.hs",
+      "line": 15
+    },
+    {
+      "caller": "Lam.pairs",
+      "callee": "Lam.labels",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Lam.hs",
+      "line": 15
+    },
+    {
+      "caller": "Lam.render",
+      "callee": "Prelude.unwords",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Lam.hs",
+      "line": 18
+    },
+    {
+      "caller": "Lam.render",
+      "callee": "Prelude.map",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Lam.hs",
+      "line": 18
+    }
+  ],
+  "notes": "Calls inside the lambda `\\x -> show (abs x)` fold into `Lam.labels` (anonymous functions fold into the nearest enclosing named function). `Point 0 0` is positional data construction and `(Point x y)` is a pattern: no edge (Not calls: data construction; C3: data construction or a pattern). `map succ` is a partial application of `map` (an application, so a call) while `succ` is only passed. `map show [x, y]` calls `map`; `show` is passed, not applied. The `data` declaration and signatures emit nothing."
+}

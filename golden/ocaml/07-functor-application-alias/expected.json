@@ -1,0 +1,52 @@
+{
+  "rule": "top-level `file.fun` (file basename); nested modules/functors dotted (`file.Make.connect`); local function lets `outer.f`, local value lets fold into the enclosing binding; module-level code's caller is the module. Names resolve in definition order through local bindings, local opens, enclosing structures and their opens/includes, module aliases (`module F = Filegen.Make (P)`) and dune library wrappers (`Functoria.DSL`); then Stdlib (`Stdlib.invalid_arg`), the innermost external local open, the one external open (medium); `List.length` medium; applying a parameter is unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "filegen.Make.path",
+      "callee": "Filename.concat",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "filegen.ml",
+      "line": 6
+    },
+    {
+      "caller": "filegen.Make.connect",
+      "callee": "Stdlib.print_endline",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "filegen.ml",
+      "line": 8
+    },
+    {
+      "caller": "filegen.Make.connect",
+      "callee": "filegen.Make.path",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "filegen.ml",
+      "line": 8
+    },
+    {
+      "caller": "main.start",
+      "callee": "filegen.Make.connect",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ml",
+      "line": 7
+    },
+    {
+      "caller": "main",
+      "callee": "main.start",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.ml",
+      "line": 9
+    }
+  ],
+  "nodes_include": [
+    "filegen.Make.path",
+    "filegen.Make.connect",
+    "main.start"
+  ],
+  "notes": "Functor members are dotted under the functor: `filegen.Make.connect` (OCaml note example). `module F = Filegen.Make (P)` is the spec's own example of a module alias: `F.connect` resolves through it to `filegen.Make.connect`, high. The functor application itself is a module binding, which the spec lists among the aliases names resolve through, not an invocation: no edge. `P.name` is a value reference, not a call; the `module type` and `val` are declarations."
+}

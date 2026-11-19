@@ -1,0 +1,60 @@
+{
+  "rule": "Constructor / initializer call: `Type#<init>`. | Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) \u2192 `Parent#<init>`, constructor. A Ruby `initialize` / PHP `__construct` definition's ID is `Type#<init>`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Base#<init>",
+      "callee": "App.Base#setup",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Base.php",
+      "line": 8
+    },
+    {
+      "caller": "App.Child#<init>",
+      "callee": "App.Base#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "App/Child.php",
+      "line": 13
+    },
+    {
+      "caller": "App.Child#<init>",
+      "callee": "Vendor.Mailer#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "App/Child.php",
+      "line": 14
+    },
+    {
+      "caller": "App.Child#<init>",
+      "callee": "DateTimeImmutable#<init>",
+      "call_type": "constructor",
+      "confidence": "medium",
+      "file": "App/Child.php",
+      "line": 15
+    },
+    {
+      "caller": "App.Child#make",
+      "callee": "App.Child#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "App/Child.php",
+      "line": 20
+    },
+    {
+      "caller": "App.Child#copy",
+      "callee": "App.Child#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "App/Child.php",
+      "line": 25
+    }
+  ],
+  "nodes_include": [
+    "App.Base#<init>",
+    "App.Child#<init>",
+    "App.Base#setup"
+  ],
+  "notes": "__construct definitions are Type#<init>, so calls in their bodies have caller App.Base#<init> / App.Child#<init>. parent::__construct \u2192 Parent#<init>, constructor, high because App.Base defines __construct in the scan. Vendor\\Mailer (imported, not scanned) and the global \\DateTimeImmutable are external types named statically \u2192 medium (tier: 'an external library type'); the global namespace has no qualifier, so DateTimeImmutable#<init>. `new self()` names the enclosing class (Cls resolved). Every scanned class here declares __construct, so `#<init>` is a defined constructor (high)."
+}

@@ -1,0 +1,43 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`. **Ruby**: `Outer.Inner#method` (constants dotted); `Foo.new` → `Foo#<init>`; constants resolve lexically. A class whose ancestry reaches outside the scan — an external superclass or include, a reopened external class (`class ActiveSupport::TestCase`), or a computed superclass expression (`< Devise.parent_controller.constantize`) — names bare calls not defined by any scanned ancestor `Scope#m`, medium.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Util#wrap",
+      "callee": "Util#fmt",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/util.rb",
+      "line": 7
+    },
+    {
+      "caller": "Report#render",
+      "callee": "Util#fmt",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/report.rb",
+      "line": 3
+    },
+    {
+      "caller": "Report#render",
+      "callee": "Util#wrap",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/report.rb",
+      "line": 4
+    },
+    {
+      "caller": "lib/report",
+      "callee": "Util#fmt",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/report.rb",
+      "line": 8
+    }
+  ],
+  "nodes_include": [
+    "Util#fmt",
+    "Util#wrap"
+  ],
+  "notes": "C1: `Util.fmt` is reached from its own file (bare `fmt(x)` in the singleton method `wrap`, a member of the enclosing module) and from another file (a method and top-level code); all three use `Util#fmt`. Singleton methods flatten onto the module (`Util#fmt`)."
+}

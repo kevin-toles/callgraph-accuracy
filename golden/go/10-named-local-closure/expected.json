@@ -1,0 +1,6 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func`, ...) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. | Go: ... closures `pkg.F$1`. ... A call through a function value is ONE edge whose callee is the variable/field name, callback, unknown.",
+  "source": "SPEC",
+  "spec_gap": "For Go `f := func(n int) int { \u2026 }` inside Compute, is the literal a named nested function (general rule: ID example.com/m.Compute.f, the call f(v) is direct/high to example.com/m.Compute.f, and double(n) has caller example.com/m.Compute.f) or a Go closure (Go note: ID example.com/m.Compute$1 as caller of double(n), and f(v) is a call through a function value: ONE edge, callee `f`, callback, unknown)? The general rule's list says local `func`, the Go note says closures `pkg.F$1` and function-value calls are callback/unknown; the two rules give different callers, callees, call_types and tiers for this construct.",
+  "notes": "Undecidable from SPEC: the general named-nested-function rule and the Go per-language note conflict for a short-variable declaration bound directly to a function literal."
+}

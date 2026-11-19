@@ -1,0 +1,91 @@
+{
+  "rule": "`[[T alloc] init\u2026]` is `T#alloc` plus `T#init\u2026` (the init runs on a T) | **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan. | Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` \u2014 a leading dot means \"receiver unknown\".",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Person#initWithName:",
+      "callee": ".init",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Person.m",
+      "line": 10
+    },
+    {
+      "caller": "Person#setup",
+      "callee": "Person#alloc",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Person.m",
+      "line": 14
+    },
+    {
+      "caller": "Person#setup",
+      "callee": "Person#initWithName:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Person.m",
+      "line": 14
+    },
+    {
+      "caller": "Person#setup",
+      "callee": "Person#new",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Person.m",
+      "line": 15
+    },
+    {
+      "caller": "Person#setup",
+      "callee": "NSMutableArray#alloc",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Person.m",
+      "line": 16
+    },
+    {
+      "caller": "Person#setup",
+      "callee": "NSMutableArray#init",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Person.m",
+      "line": 16
+    },
+    {
+      "caller": "Person#setup",
+      "callee": "NSMutableArray#addObject:",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Person.m",
+      "line": 17
+    },
+    {
+      "caller": "Person#setup",
+      "callee": "NSMutableArray#addObject:",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Person.m",
+      "line": 18
+    },
+    {
+      "caller": "Person#setup",
+      "callee": "NSString#stringWithUTF8String:",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Person.m",
+      "line": 19
+    },
+    {
+      "caller": "Person#setup",
+      "callee": "NSMutableArray#addObject:",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Person.m",
+      "line": 20
+    }
+  ],
+  "nodes_include": [
+    "Person#initWithName:",
+    "Person#setup"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. `[[Person alloc] initWithName:]` is `Person#alloc` plus `Person#initWithName:` (Decision 2026-10-29 ObjC). Person is in the scan but alloc/new are inherited from NSObject (outside the scan) \u2192 `Person#alloc` / `Person#new` medium (tier rule: `self.m()` inherited from a base outside the scan; C2: inherited from a base outside the scan). External classes: `NSMutableArray#alloc`, `NSMutableArray#init` (the init runs on an NSMutableArray), `NSString#stringWithUTF8String:` medium (external library type named statically). `list` is declared `NSMutableArray *` \u2192 `NSMutableArray#addObject:` medium. `[super init]`: the superclass NSObject is not in the scan \u2192 computed receiver `.init`, low. String literals `@\"a\"` are not calls."
+}

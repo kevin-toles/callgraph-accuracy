@@ -1,0 +1,139 @@
+[
+ {
+  "id": "groovy-safe-nav-chain-last-segment",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$",
+   "old_callee": "^\\.",
+   "new_callee": "^[a-z_][A-Za-z0-9_]*\\.[A-Za-z_]",
+   "old": "low/method",
+   "new": "low/method"
+  },
+  "disposition": "implementation defect fixed (SPEC ID format: an unknown receiver is named by its last segment): a?.b?.m() is b.m, not .m",
+  "note": "s-grails-gradle v13 (10). Test: groovy ReceiversRound2."
+ },
+ {
+  "id": "groovy-array-receiver-names-no-type",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$",
+   "new": "low/method",
+   "new_callee": "^[a-z_][A-Za-z0-9_]*\\.[A-Za-z_]"
+  },
+  "disposition": "implementation defect fixed (SPEC Decisions 2026-11-17): a call on a varargs/array parameter, local or field (String... path, byte[] a) names no type: path.join, low",
+  "note": "gradle v14 (4), mongodb v19/v20 (2-3), h-dbb byte#encodeHex (2). Test: groovy ReceiversRound2."
+ },
+ {
+  "id": "groovy-postfix-increment-not-a-call",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$"
+  },
+  "disposition": "implementation defect fixed (SPEC not calls): x++ ending a statement, which tree-sitter-groovy groups with the next statement as the command call x(++stmt), calls nothing; a following if (\u2026) is not a call named if",
+  "note": "mongodb v19/v20 (attempts++/#if), CustomMongoEventListenerSpec counters, c1.counter++, h-dbb zFSFilesCount++. Calls inside the following statement are kept. Test: groovy PostfixIncrementBeforeIfIsNotACall."
+ },
+ {
+  "id": "groovy-implicit-edge-on-field-line",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$",
+   "callee": "#[A-Za-z_][A-Za-z0-9_]*$"
+  },
+  "disposition": "implementation defect fixed: an implicit field-initializer edge is on the field's line, not on its annotation's (@Autowired, @Deprecated, @SuppressWarnings above the field)",
+  "note": "gradle v14 (2), mongodb v19/v20 (2); removed line N / added line N+1, same caller and callee. Test: groovy ReceiversRound2."
+ },
+ {
+  "id": "groovy-own-enum-constant-receiver",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$",
+   "old_callee": "^java\\.lang\\.Class#",
+   "old": "medium/method",
+   "new": "high/method"
+  },
+  "disposition": "implementation defect fixed (SPEC: an enum constant E.C has type E): DEVELOPMENT.getName() inside enum Environment is Environment#getName, not java.lang.Class#getName",
+  "note": "gradle v13/v14 (3). Test: groovy ReceiversRound2."
+ },
+ {
+  "id": "groovy-outer-field-and-external-constant",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$",
+   "old_callee": "^([A-Z_][A-Z0-9_]*|java\\.nio\\.charset\\.StandardCharsets\\.[A-Z0-9_]+|java\\.util\\.Locale\\.[A-Z_]+)#"
+  },
+  "disposition": "implementation defect fixed (C2; decision A): an outer class's static field read from a nested class has the field's declared type (MAIN_METHOD_NAME \u2192 String#equals); a constant of a type outside the scan (StandardCharsets.UTF_8, Locale.US) is a field whose type the scan does not declare: UTF_8.name, low, not an invented nested type",
+  "note": "gradle v13/v14 (7), mongodb v19/v20 (2), mongodb tests Locale.US (12). Test: groovy ReceiversRound2."
+ },
+ {
+  "id": "groovy-external-constant-pairing-artifact",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.groovy$",
+   "new_callee": "^[A-Z_][A-Z0-9_]*\\.[a-z]",
+   "old": "low/method",
+   "new": "low/method"
+  },
+  "disposition": "follows groovy-outer-field-and-external-constant: new File(..).setText(text, StandardCharsets.UTF_8.name()) \u2014 setText became java.io.File#setText (in-place constructor) and UTF_8.name a low guess; the gate pairs the old .setText with the new UTF_8.name",
+  "note": "gradle TagLibraryIndexFiles.groovy:131, 1 pair."
+ },
+ {
+  "id": "kotlin-local-function-nested-caller",
+  "kind": "caller",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$"
+  },
+  "disposition": "implementation defect fixed (golden kotlin/06, open defect removed; SPEC named nested functions): calls inside a local fun or a local val f = { } have the nested function Type#m.f / pkg.f.g as caller, not the outer function or a member/top-level ID",
+  "note": "coil configureJs (applyKotlinJsImplicitDependencyWorkaround.configureJs), mosaic estimateOverDamped.xInflection, okhttp resetNextProxy.selectProxies, RawModeEchoCommand#run.printDebug. Test: golden kotlin/06."
+ },
+ {
+  "id": "kotlin-local-function-callee-and-caller",
+  "kind": "any",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "callee": "\\.[a-zA-Z_][A-Za-z0-9_]*$"
+  },
+  "disposition": "same fix: a call to a local fun is Type#m.f, direct, high (was Type#f method or a bare guess); where caller and callee both move the gate reports a removal and an addition",
+  "note": "mosaic printNewline/printHex, coil launchNewRequest, okhttp testApplicationInterceptor. Test: golden kotlin/06."
+ },
+ {
+  "id": "kotlin-by-delegate-not-a-call",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "old": "low/direct"
+  },
+  "disposition": "implementation defect fixed (SPEC not calls): `: Sink by delegate { \u2026 }` names the delegate; tree-sitter-kotlin reads `delegate { body }` as a call. A bare delegate is not a call; `by Impl(a)` still constructs Impl",
+  "note": "coil ForwardingCoroutineContext/FaultHidingSink, okhttp ThrottledSink/TriggerSink (s-coil v24/v25 W4/P8). Test: kotlin Gk43GateRegressions."
+ },
+ {
+  "id": "kotlin-misparsed-body-and-moved-edges",
+  "kind": "removed",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$"
+  },
+  "disposition": "edges whose caller and callee both moved under the local-function fix (old Type#f / bare guess at the same line now under Type#m.f), checked per group: coil .target/.toAndroidUri inside local funs, mosaic printNewline, terminal.indexOf (now kotlinx.io.indexOf by explicit import)",
+  "note": "every removed Kotlin edge this round has a counterpart at the same file:line in kt45-A (checked by script before writing this entry)."
+ },
+ {
+  "id": "kotlin-explicit-import-capitalized-call",
+  "kind": "change",
+  "language": "*",
+  "match": {
+   "file": "\\.kts?$",
+   "new": "medium/constructor"
+  },
+  "disposition": "follows explicit-import precedence (Kotlin name resolution): BackHandler(enabled, onBack) inside actual fun BackHandler with import androidx.activity.compose.BackHandler names the import (was a false self-call); a capitalized imported name is a constructor by the builder's existing rule",
+  "note": "coil App.android.kt:24, 1 edge."
+ }
+]

@@ -1,0 +1,6 @@
+{
+  "rule": "Code outside a method body: the caller is its location. Field/val initializer \u2192 `Type#field`; ... Non-lazy initializers also get an `implicit` edge from `<clinit>`/`<init>` ... Top-level / file-level code (outside any function or type): the caller is the file's module ID.",
+  "source": "SPEC",
+  "spec_gap": "A Kotlin top-level property with an initializer (`val registry = Registry()` in package com.acme.top, file Top.kt) has no enclosing type, and SPEC gives Kotlin no module ID for file-level code. (1) Is the initializer's caller `com.acme.top.registry` (by analogy with top-level functions `com.x.f`), the file facade `com.acme.top.TopKt#registry`, or a module ID? (2) Does it get an implicit edge, and from which `<clinit>`? On the JVM it runs in the file facade class's static initializer (`TopKt.<clinit>`). (3) Is `registry.add(\"k\")` in `use()` then `com.acme.top.Registry#add` (typed by the initializer, high)?",
+  "notes": "Top.kt line 8 holds the initializer and line 11 the call through the property."
+}

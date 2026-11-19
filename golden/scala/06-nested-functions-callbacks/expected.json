@@ -1,0 +1,75 @@
+{
+  "rule": "A local bound directly to a function literal (`const f = () => \u2026`, `local function f`, `let f x = \u2026`, `where f = \u2026`, local `fun`/`def`/`func`, a Rust `fn` item inside a function body, a PHP `$f = function`/`fn`, a C++ `auto f = [..]`, a Kotlin `val f = { }`) is a **named nested function**: ID `outer.f` (Python form), and calls to it are high. Anonymous functions, lambdas, object-literal methods and anonymous-class members fold into the nearest enclosing named function (or the module/type at top level). A caller is never empty. Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) \u2192 callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Runner#each",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "app/Funcs.scala",
+      "line": 4
+    },
+    {
+      "caller": "app.Runner#finish",
+      "callee": "onDone",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "app/Funcs.scala",
+      "line": 8
+    },
+    {
+      "caller": "app.Runner#compute.ident",
+      "callee": "app.Runner#compute.twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/Funcs.scala",
+      "line": 12
+    },
+    {
+      "caller": "app.Runner#compute",
+      "callee": "app.Runner#each",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Funcs.scala",
+      "line": 13
+    },
+    {
+      "caller": "app.Runner#compute",
+      "callee": "app.Runner#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/Funcs.scala",
+      "line": 13
+    },
+    {
+      "caller": "app.Runner#compute",
+      "callee": "app.Runner#compute.ident",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/Funcs.scala",
+      "line": 14
+    },
+    {
+      "caller": "app.Runner#compute",
+      "callee": "app.Runner#compute.twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/Funcs.scala",
+      "line": 14
+    },
+    {
+      "caller": "app.Runner#apply2",
+      "callee": "g",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "app/Funcs.scala",
+      "line": 17
+    }
+  ],
+  "nodes_include": [
+    "app.Runner#compute.twice",
+    "app.Runner#compute.ident"
+  ],
+  "notes": "The local `def twice` and the local `val ident = (y: Int) => \u2026` (a local bound directly to a function literal) are named nested functions with Python-form IDs app.Runner#compute.twice / app.Runner#compute.ident; calls to them are high. The call inside ident's literal has caller app.Runner#compute.ident. The anonymous lambda `v => log(v)` folds into app.Runner#compute. f and g are parameters and onDone is a stored constructor property holding functions: callback, unknown, callee = the variable name. `()` is the Unit literal, not a call. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

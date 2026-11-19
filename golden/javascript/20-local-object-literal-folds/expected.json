@@ -1,0 +1,66 @@
+{
+  "rule": "JS/TS local object literals fold (SPEC Decisions 2026-11-12): an object literal bound inside a function, including an anonymous callback that folds into the module, is not named; its methods fold. Top-level and exported literals stay named.",
+  "source": "SPEC Decisions (2026-11-12): vue test files declaring const Comp = { setup() {} } per test",
+  "edges": [
+    {
+      "caller": "__tests__/a.spec",
+      "callee": "test",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "__tests__/a.spec.js",
+      "line": 2
+    },
+    {
+      "caller": "__tests__/a.spec",
+      "callee": "src/ref.ref",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "__tests__/a.spec.js",
+      "line": 3
+    },
+    {
+      "caller": "__tests__/a.spec",
+      "callee": "render",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "__tests__/a.spec.js",
+      "line": 4
+    },
+    {
+      "caller": "__tests__/a.spec",
+      "callee": "test",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "__tests__/a.spec.js",
+      "line": 6
+    },
+    {
+      "caller": "__tests__/a.spec",
+      "callee": "src/ref.ref",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "__tests__/a.spec.js",
+      "line": 7
+    },
+    {
+      "caller": "__tests__/a.spec",
+      "callee": "render",
+      "call_type": "direct",
+      "confidence": "low",
+      "file": "__tests__/a.spec.js",
+      "line": 8
+    },
+    {
+      "caller": "__tests__/a.spec.Top.setup",
+      "callee": "src/ref.ref",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "__tests__/a.spec.js",
+      "line": 10
+    }
+  ],
+  "nodes_include": [
+    "__tests__/a.spec.Top.setup"
+  ],
+  "notes": "Two tests each declare their own const Comp; naming them would give two definitions one ID (C1), so the setup bodies fold into the module (the test callbacks are anonymous). export const Top is named. test/render are unresolved globals (bare, low)."
+}

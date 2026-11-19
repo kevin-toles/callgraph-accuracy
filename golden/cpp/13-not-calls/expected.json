@@ -1,0 +1,26 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call. Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "nc.examine",
+      "callee": "method",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "notcalls.cpp",
+      "line": 16
+    },
+    {
+      "caller": "nc.examine",
+      "callee": "nc.compute",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "notcalls.cpp",
+      "line": 16
+    }
+  ],
+  "nodes_include": [
+    "nc.compute"
+  ],
+  "notes": "Not calls: '&Widget::run' (method reference), 'fn = compute' (function reference), static_cast<int>(d), (int)d and the functional cast int(d) on a scalar type (casts), sizeof(Widget) and alignof(Widget) (language constructs), decltype(d) (unevaluated type construct), 'fn != nullptr' (comparison), the declarations of method/fn/a/b/n/e. '(w.*method)()' calls through the local pointer-to-member variable 'method' → callback, unknown, callee 'method' (SPEC callback rule: local variable holding a function), not Widget#run."
+}

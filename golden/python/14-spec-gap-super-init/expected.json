@@ -1,0 +1,7 @@
+{
+  "rule": "Superclass constructor calls (`super(...)`, `: base(...)`, `: this(...)`, PHP `parent::__construct(...)`, Ruby `super` inside `initialize`) → `Parent#<init>`, constructor. A Ruby `initialize` / PHP `__construct` definition's ID is `Type#<init>`.",
+  "source": "SPEC",
+  "spec_gap": "For Python `super().__init__(name)` with the parent in the scan: is the edge only `Admin#<init>` -> `shop.accounts.User#<init>` (constructor, high), or is there also an edge for the `super()` call itself (`builtins.super`, direct, medium)? Same question for `super().m()` with the parent outside the scan (`.m` low, plus `builtins.super`?).",
+  "edges": [],
+  "notes": "SPEC's superclass-constructor rule lists `super(...)` (Java-style) but not Python's `super().__init__(...)`, where `super()` is itself a call of a builtin."
+}

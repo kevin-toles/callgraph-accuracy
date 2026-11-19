@@ -1,0 +1,31 @@
+{
+  "rule": "Generic/template type arguments are dropped from every ID (`HashSet#<init>`). | a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | A pointer, reference or smart pointer whose `->`/`.` reaches the pointee names the pointee | **medium**: the callee is named statically (Type.m(), module.f(), an import, `self.m()` inherited from a base outside the scan, an external library type) but is not defined in the scan.",
+  "source": "KNOWN_GAP: methods of some generic-instance types are misnamed at medium",
+  "edges": [
+    {
+      "caller": "app.Registry#add",
+      "callee": "std.AutoHashMap#put",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 7
+    },
+    {
+      "caller": "app.lookup",
+      "callee": "std.AutoHashMap#get",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 12
+    },
+    {
+      "caller": "app.has",
+      "callee": "std.AutoHashMap#contains",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "app.zig",
+      "line": 16
+    }
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). Receivers declared with an instantiated generic std type: field `ids` reached through `self.ids` (an `obj.field` chain whose property has a declared type), pointer parameter `*std.AutoHashMap(u32, u32)` (names the pointee), value parameter. Type arguments are dropped \u2192 `std.AutoHashMap#m`, medium. Any other name for these (e.g. carrying `(u32, u32)`, or the std implementation type `HashMap`/`HashMapUnmanaged`, which the scan cannot see) is wrong."
+}

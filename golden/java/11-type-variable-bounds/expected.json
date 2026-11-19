@@ -1,0 +1,23 @@
+{
+  "rule": "A type variable resolves to its declared bound",
+  "source": "KNOWN_GAP: type variables are used as type names instead of their bounds",
+  "edges": [
+    {
+      "caller": "com.acme.gen.Renderer#render",
+      "callee": "com.acme.gen.Widget#draw",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/gen/Renderer.java",
+      "line": 7
+    },
+    {
+      "caller": "com.acme.gen.Renderer#show",
+      "callee": "com.acme.gen.Widget#draw",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "com/acme/gen/Renderer.java",
+      "line": 11
+    }
+  ],
+  "notes": "call_type convention (SPEC names the six call_types but does not define direct vs method): a call with no written receiver is direct; a call with a written receiver (obj., this., super., a type name) is method; new/super(...)/this(...) are constructor. Field `current` is declared T where class Renderer<T extends Widget>; parameter `s` is declared S where <S extends Widget>. Each resolves to its bound Widget, so Widget#draw, high \u2014 not `T#draw` / `S#draw`. Type arguments are dropped from Renderer's ID (Generic/template type arguments are dropped from every ID)."
+}

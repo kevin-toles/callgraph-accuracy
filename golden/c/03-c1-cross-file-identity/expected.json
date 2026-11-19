@@ -1,0 +1,43 @@
+{
+  "rule": "**C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`. Vendored and third-party code (`external/`, `vendor/`, `third_party/`, `Pods/`), generated files (generator headers, protobuf/FreeGen output), fixtures (`scalafix/input`), Xcode `*Tests/` targets, `example/` (singular) and `benchmarks/` are all IN scope and judged like any other code. Free function: its name (with the language's module qualifier where it has one).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "scale_twice",
+      "callee": "scale",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "third_party/geom/scale.c",
+      "line": 8
+    },
+    {
+      "caller": "scale_twice",
+      "callee": "scale",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "third_party/geom/scale.c",
+      "line": 8
+    },
+    {
+      "caller": "main",
+      "callee": "scale",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/main.c",
+      "line": 4
+    },
+    {
+      "caller": "main",
+      "callee": "scale_twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "app/main.c",
+      "line": 5
+    }
+  ],
+  "nodes_include": [
+    "scale",
+    "scale_twice"
+  ],
+  "notes": "C1: 'scale' is defined once (third_party/geom/scale.c) and referenced from its own file and from app/main.c through the header; both references use the one ID 'scale'. Line 8 of scale.c holds two calls of scale (nested), so the multiset has that edge twice. Decisions 2026-11-09: third_party/ is in scope and judged like any other code."
+}

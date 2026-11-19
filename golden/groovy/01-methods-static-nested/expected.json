@@ -1,0 +1,67 @@
+{
+  "rule": "Method: `Type#member`. Nested types are dotted: `Outer.Inner#m`. Some languages prefix a module/package qualifier with dots (see per-language notes). `self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. **Java / Kotlin / C# / Groovy / Scala**: package/namespace-qualified: `com.x.C#m`; an external type is qualified through its explicit import. Kotlin top-level functions `com.x.f`. A Groovy script (a file with top-level code or functions) is a class named after the file: its functions are `pkg.Script#f`, its top-level code `pkg.Script#run`. Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A type variable resolves to its declared bound (C++: a concept that pins one type, `std::same_as<T>` / `derived_from<T>`; otherwise unconstrained, stays low). An enum constant `E.C` has type `E`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "shop.Store#total",
+      "callee": "shop.Store#price",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/Store.groovy",
+      "line": 5
+    },
+    {
+      "caller": "shop.Store#total",
+      "callee": "shop.Store#price",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/Store.groovy",
+      "line": 6
+    },
+    {
+      "caller": "shop.Store#price",
+      "callee": "shop.Store#base",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/Store.groovy",
+      "line": 11
+    },
+    {
+      "caller": "shop.Store#base",
+      "callee": "shop.Pricing#round",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/Store.groovy",
+      "line": 15
+    },
+    {
+      "caller": "shop.Store#open",
+      "callee": "shop.Store.Clerk#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "shop/Store.groovy",
+      "line": 19
+    },
+    {
+      "caller": "shop.Store#open",
+      "callee": "shop.Store.Clerk#serve",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/Store.groovy",
+      "line": 20
+    },
+    {
+      "caller": "shop.Store.Clerk#serve",
+      "callee": "shop.Store.Clerk#greet",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/Store.groovy",
+      "line": 25
+    }
+  ],
+  "nodes_include": [
+    "shop.Store#base",
+    "shop.Store.Clerk#serve"
+  ],
+  "notes": "Package-qualified IDs; the static nested class is shop.Store.Clerk (dotted), and the simple name Clerk inside Store resolves to it. c has declared type Clerk (decision A). Static calls Store.base() / Pricing.round(5) name the scanned class. This file has only class declarations, so it is not a script (no #run). call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

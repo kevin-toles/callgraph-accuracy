@@ -1,0 +1,44 @@
+{
+  "rule": "Method: `Type#member`. Nested types are dotted: `Outer.Inner#m`. Some languages prefix a module/package qualifier with dots (see per-language notes). **Ruby**: `Outer.Inner#method` (constants dotted); `Foo.new` → `Foo#<init>`; constants resolve lexically. A class whose ancestry reaches outside the scan — an external superclass or include, a reopened external class (`class ActiveSupport::TestCase`), or a computed superclass expression (`< Devise.parent_controller.constantize`) — names bare calls not defined by any scanned ancestor `Scope#m`, medium. Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`). Languages without one (Ruby, PHP, C, C++, ObjC, Zig file scope) use the file path below the scan root without extension (`lib/devise/rails/routes`). An empty caller or `<global>` is a wrong caller. Call on a **computed receiver** (call result, index, literal, `super` when the superclass is not in the scan): `.member` — a leading dot means \"receiver unknown\".",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Outer.Inner#run",
+      "callee": "Outer.Codec.Json#go",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "lib/outer.rb",
+      "line": 15
+    },
+    {
+      "caller": "Outer.Inner#run",
+      "callee": "Outer.Inner#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "lib/outer.rb",
+      "line": 16
+    },
+    {
+      "caller": "lib/outer",
+      "callee": "Outer.Inner#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "lib/outer.rb",
+      "line": 21
+    },
+    {
+      "caller": "lib/outer",
+      "callee": ".run",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "lib/outer.rb",
+      "line": 21
+    }
+  ],
+  "nodes_include": [
+    "Outer.Codec.Json#go",
+    "Outer.Inner#<init>",
+    "Outer.Inner#run"
+  ],
+  "notes": "Constants are dotted and resolve lexically: inside `Outer::Inner#run`, `Codec::Json` is `Outer::Codec::Json` -> `Outer.Codec.Json#go`, and `Inner` is `Outer::Inner`. Line 21 is file-level code: caller is the path below the scan root without extension, `lib/outer`. `.run` is called on a call result (`...new`) -> computed `.run`, low (Ruby has no decision-A typing)."
+}

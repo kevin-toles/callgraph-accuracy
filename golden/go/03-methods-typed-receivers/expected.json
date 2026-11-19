@@ -1,0 +1,59 @@
+{
+  "rule": "Method: `Type#member`. | Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | `self.m()` / `this.m()` / a bare call to a member of the enclosing type \u2192 `Type#m`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "example.com/m.Service#Create",
+      "callee": "example.com/m.Service#validate",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 14
+    },
+    {
+      "caller": "example.com/m.Service#Create",
+      "callee": "example.com/m.Repo#Save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 15
+    },
+    {
+      "caller": "example.com/m.audit",
+      "callee": "example.com/m.Repo#Save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 20
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Service#Create",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 25
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.audit",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 27
+    },
+    {
+      "caller": "example.com/m.main",
+      "callee": "example.com/m.Repo#Save",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "main.go",
+      "line": 28
+    }
+  ],
+  "nodes_include": [
+    "example.com/m.Repo#Save",
+    "example.com/m.Service#validate"
+  ],
+  "notes": "The method receiver s is a parameter of declared type *Service, so s.validate is Service#validate (the Go form of a call on the enclosing type). s.repo.Save is an obj.field chain whose field repo has declared type *Repo (decision A); the pointer names the pointee (Decisions 2026-10-29), so Repo#Save. Locals declared with `var s Service` / `var r Repo` are typed by their declaration. Pointer receivers do not appear in IDs."
+}

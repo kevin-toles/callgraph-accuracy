@@ -1,0 +1,67 @@
+{
+  "rule": "a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). | locals, parameters, fields, and file-scope globals/statics (C, C++, ObjC, Zig, Rust `static`). | A pointer, reference or smart pointer whose `->`/`.` reaches the pointee names the pointee | An enum constant `E.C` has type `E`. | A type alias (`using X = T;`, `typedef T X;`, Zig `const X = a.b.T`) is expanded to its target",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.sum",
+      "callee": "app.Point#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 26
+    },
+    {
+      "caller": "app.sum",
+      "callee": "app.Point#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 26
+    },
+    {
+      "caller": "app.sum",
+      "callee": "app.Point#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 28
+    },
+    {
+      "caller": "app.sum",
+      "callee": "app.Point#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 30
+    },
+    {
+      "caller": "app.sum",
+      "callee": "app.Point#len",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 33
+    },
+    {
+      "caller": "app.sum",
+      "callee": "app.Color#label",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 36
+    },
+    {
+      "caller": "app.sum",
+      "callee": "app.Color#label",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app.zig",
+      "line": 37
+    }
+  ],
+  "nodes_include": [
+    "app.Point#len",
+    "app.Color#label"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a free function (`file.f`, `std.x.f`) is `direct`. All files sit directly under src/, so the file qualifier is the basename (`app`, `util`). Declared types: pointer parameter `ptr: *Point` (names the pointee), file-scope global `origin: Point` (Decision 2026-10-29), local `q: P` with `const P = Point` expanded to Point, for-loop capture `pt` over `[]const Point`, optional-unwrap pattern binding `m` from `?Point`, local `c: Color`, and the enum constant `Color.red` (type Color). Enum methods are `app.Color#label`. `switch`, enum literals `.red`/`.green` and the `.{ .x = 0 }` literals are not calls."
+}

@@ -1,0 +1,53 @@
+{
+  "rule": "C1 Symbol identity. Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding. A definition that edges reach is listed in `nodes`, including body-less member declarations of scanned types (interface/trait/protocol methods) and module-level bindings that hold a function. A high edge's callee is always in `nodes`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Shop.Orders.Order#Total",
+      "callee": "Shop.Orders.Order#Subtotal",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Orders/Order.cs",
+      "line": 9
+    },
+    {
+      "caller": "Shop.Orders.Order#Total",
+      "callee": "Shop.Orders.Order#Tax",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Orders/Order.cs",
+      "line": 9
+    },
+    {
+      "caller": "Shop.Orders.Order#Tax",
+      "callee": "Shop.Orders.Order#Subtotal",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Orders/Order.Pricing.cs",
+      "line": 7
+    },
+    {
+      "caller": "Shop.Checkout#Pay",
+      "callee": "Shop.Orders.Order#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Checkout.cs",
+      "line": 11
+    },
+    {
+      "caller": "Shop.Checkout#Pay",
+      "callee": "Shop.Orders.Order#Total",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Checkout.cs",
+      "line": 12
+    }
+  ],
+  "nodes_include": [
+    "Shop.Orders.Order#Subtotal",
+    "Shop.Orders.Order#Tax",
+    "Shop.Orders.Order#Total",
+    "Shop.Orders.Order#<init>"
+  ],
+  "notes": "Subtotal is defined in Order.Pricing.cs and called from that file (Tax) and from Order.cs (Total): one ID Shop.Orders.Order#Subtotal (C1; the partial class is one type). Order is reached from Checkout.cs through `using Shop.Orders;` (a scanned namespace, so resolution is exact); the using directive itself is not a call."
+}

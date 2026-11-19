@@ -1,0 +1,141 @@
+{
+  "rule": "A `require(...)` call (JS) or `require \"m\"` (Lua) is an invocation of the loader: callee `require` (JS) or `_G#require` (Lua), medium, direct, on its line. The edge is not the module dependency. | The binding carries the dependency: names bound from it resolve to the defining module, using its IDs when it is scanned and the specifier as written when it is not (`node:http.createServer`, medium). A `require` whose argument is not a literal leaves its bindings unresolved (low guesses), per C4. An ESM `import` declaration is not a call. | Imports, `require`, re-exports (`export *`, `export * as`) and workspace packages (package.json `exports`) resolve to the defining module; packages outside the scan are named as written (`node:http.createServer`, `zod.z.object`, medium). | TS namespaces and named object literals (bound at the top level or exported) nest with dots (`mod.ns.f`, `mod.obj.f`); the object `module.exports`/`export default` is, is the module (`mod.f`); `module.exports = fn` is `mod.default`. | Call on a receiver of **unknown type**: `recv.member`, using the LAST receiver segment (`self.client.get()` \u2192 `client.get`; `a.b.c()` \u2192 `b.c`). | **C1 Symbol identity.** Every definition has exactly one ID. Every reference to it uses that ID: a call in the defining file, through an import, a re-export, an alias or a `require` binding.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "util.helper",
+      "callee": "s.trim",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "util.js",
+      "line": 2
+    },
+    {
+      "caller": "util.clean",
+      "callee": "util.helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "util.js",
+      "line": 7
+    },
+    {
+      "caller": "fmt",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "fmt.js",
+      "line": 1
+    },
+    {
+      "caller": "fmt.default",
+      "callee": "util.clean",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "fmt.js",
+      "line": 4
+    },
+    {
+      "caller": "main",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.js",
+      "line": 1
+    },
+    {
+      "caller": "main",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.js",
+      "line": 2
+    },
+    {
+      "caller": "main",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.js",
+      "line": 3
+    },
+    {
+      "caller": "main",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.js",
+      "line": 4
+    },
+    {
+      "caller": "main.serve",
+      "callee": "require",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.js",
+      "line": 7
+    },
+    {
+      "caller": "main.serve",
+      "callee": "plugin.init",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "main.js",
+      "line": 8
+    },
+    {
+      "caller": "main.serve",
+      "callee": "node:http.createServer",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "main.js",
+      "line": 9
+    },
+    {
+      "caller": "main.serve",
+      "callee": "server.listen",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "main.js",
+      "line": 10
+    },
+    {
+      "caller": "main.serve",
+      "callee": "util.clean",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 11
+    },
+    {
+      "caller": "main.serve",
+      "callee": "util.helper",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 11
+    },
+    {
+      "caller": "main",
+      "callee": "fmt.default",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 14
+    },
+    {
+      "caller": "main",
+      "callee": "main.serve",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "main.js",
+      "line": 14
+    }
+  ],
+  "nodes_include": [
+    "util.clean",
+    "util.helper",
+    "fmt.default",
+    "main.serve"
+  ],
+  "notes": "Each `require(...)` call is a loader invocation: callee `require`, medium, direct, on its line, with the enclosing caller (module `main`/`fmt` at top level, `main.serve` inside serve). The object assigned to `module.exports` is the module, so its method `clean` is `util.clean`, and the shorthand property `helper` exports the declaration `util.helper` (one ID, C1). `module.exports = function (s) {...}` is `fmt.default`; the binding `fmt = require(\"./fmt\")` calls it. Destructured, member and extension-bearing specifiers (`./util`, `./util.js`) all resolve to the defining module. `http = require(\"node:http\")` is not scanned: `node:http.createServer`, medium. `require(name)` has a non-literal argument, so `plugin.init()` stays `plugin.init`, low (C4). `server` is bound to an external call result -> `server.listen` low. `fmt` passed to createServer on line 9 is a reference, not a call."
+}

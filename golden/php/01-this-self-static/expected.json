@@ -1,0 +1,68 @@
+{
+  "rule": "**PHP**: namespace-qualified with dots: `App.Svc#run`; `$this->m()` \u2192 `App.Svc#m`; `Cls::m()` \u2192 resolved class `#m`. Method: `Type#member`.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Svc#run",
+      "callee": "App.Svc#prepare",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 8
+    },
+    {
+      "caller": "App.Svc#run",
+      "callee": "App.Svc#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 9
+    },
+    {
+      "caller": "App.Svc#run",
+      "callee": "App.Svc#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 10
+    },
+    {
+      "caller": "App.Svc#prepare",
+      "callee": "App.Svc#finish",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Svc.php",
+      "line": 15
+    },
+    {
+      "caller": "App.Billing.Invoice#total",
+      "callee": "App.Svc#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Billing/Invoice.php",
+      "line": 10
+    },
+    {
+      "caller": "App.Billing.Invoice#total",
+      "callee": "App.Svc#log",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Billing/Invoice.php",
+      "line": 11
+    },
+    {
+      "caller": "App.Billing.Invoice#total",
+      "callee": "App.Billing.Invoice#sum",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "App/Billing/Invoice.php",
+      "line": 12
+    }
+  ],
+  "nodes_include": [
+    "App.Svc#log",
+    "App.Svc#finish",
+    "App.Billing.Invoice#sum"
+  ],
+  "notes": "Namespace App\\Billing \u2192 dots (App.Billing.Invoice). self::log() is Cls::m() with Cls resolved to the enclosing class. `use App\\Svc` and the fully qualified `\\App\\Svc` both resolve to App.Svc (C1: one ID per definition). call_type: SPEC lists direct|method without defining them; this corpus uses method for every callee of the form Type#m / recv.m / .m (instance and static member calls) and direct for free functions, bare names and named nested functions."
+}

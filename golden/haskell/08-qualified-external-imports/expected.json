@@ -1,0 +1,39 @@
+{
+  "rule": "Bare names resolve through local bindings, the module, import lists (with `T (..)` fields and hiding), unqualified imports of scanned modules (following `module M` re-exports and export lists), the Prelude (`Prelude.show`, medium) and the one unlisted external import; qualified imports `Map.size` medium.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Index.build",
+      "callee": "Map.size",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Index.hs",
+      "line": 7
+    },
+    {
+      "caller": "Index.build",
+      "callee": "Map.fromList",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Index.hs",
+      "line": 7
+    },
+    {
+      "caller": "Index.uniq",
+      "callee": "Data.Set.size",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Index.hs",
+      "line": 10
+    },
+    {
+      "caller": "Index.uniq",
+      "callee": "Data.Set.fromList",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Index.hs",
+      "line": 10
+    }
+  ],
+  "notes": "Qualified imports of external modules are named as written and medium (Haskell note: \"qualified imports `Map.size` medium\"). Without an alias the qualifier as written is the full module name, `Data.Set.size`."
+}

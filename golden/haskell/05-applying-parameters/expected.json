@@ -1,0 +1,92 @@
+{
+  "rule": "Applying an argument is unknown. Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "Hof.apply",
+      "callee": "f",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Hof.hs",
+      "line": 4
+    },
+    {
+      "caller": "Hof.twice",
+      "callee": "g",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Hof.hs",
+      "line": 7
+    },
+    {
+      "caller": "Hof.twice",
+      "callee": "g",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Hof.hs",
+      "line": 7
+    },
+    {
+      "caller": "Hof.withLogger",
+      "callee": "logger",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "Hof.hs",
+      "line": 11
+    },
+    {
+      "caller": "Hof.withLogger",
+      "callee": "Prelude.mapM_",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Hof.hs",
+      "line": 12
+    },
+    {
+      "caller": "Hof.run",
+      "callee": "Prelude.print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Hof.hs",
+      "line": 16
+    },
+    {
+      "caller": "Hof.run",
+      "callee": "Hof.apply",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Hof.hs",
+      "line": 16
+    },
+    {
+      "caller": "Hof.run",
+      "callee": "Prelude.print",
+      "call_type": "direct",
+      "confidence": "medium",
+      "file": "Hof.hs",
+      "line": 17
+    },
+    {
+      "caller": "Hof.run",
+      "callee": "Hof.twice",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Hof.hs",
+      "line": 17
+    },
+    {
+      "caller": "Hof.run",
+      "callee": "Hof.withLogger",
+      "call_type": "direct",
+      "confidence": "high",
+      "file": "Hof.hs",
+      "line": 18
+    }
+  ],
+  "nodes_include": [
+    "Hof.apply",
+    "Hof.twice",
+    "Hof.withLogger"
+  ],
+  "notes": "Applying a parameter (`f x`, `g (g x)`, `logger \"start\"`) is a call through a value: callee = the parameter's name, callback, unknown (Haskell note: \"Applying an argument is unknown\"; callback rule). `g (g x)` is two applications on one line: two edges. `logger` passed to `mapM_`, and `negate`/`succ`/`putStrLn` passed in `run`, are references, not calls."
+}

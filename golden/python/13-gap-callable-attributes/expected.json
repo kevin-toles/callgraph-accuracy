@@ -1,0 +1,39 @@
+{
+  "rule": "Call through a parameter, local variable or stored property holding a function (callback, closure, fn pointer, delegate) → callee is the variable's name, `call_type` callback, confidence unknown. **unknown**: a dynamic call (function value, callback, closure, function pointer).",
+  "source": "KNOWN_GAP: callable attributes set by a superclass or tuple assignment are under-resolved",
+  "edges": [
+    {
+      "caller": "shop.jobs.Job#run",
+      "callee": "load",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "shop/jobs.py",
+      "line": 11
+    },
+    {
+      "caller": "shop.jobs.Job#run",
+      "callee": "save",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "shop/jobs.py",
+      "line": 12
+    },
+    {
+      "caller": "shop.jobs.Job#run",
+      "callee": "notify",
+      "call_type": "callback",
+      "confidence": "unknown",
+      "file": "shop/jobs.py",
+      "line": 13
+    },
+    {
+      "caller": "shop.jobs.Job#run",
+      "callee": "shop.jobs.Job#finish",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "shop/jobs.py",
+      "line": 14
+    }
+  ],
+  "notes": "`self.load` / `self.save` are stored properties set by a tuple assignment from parameters (8); `self.notify` is a stored property set by the scanned superclass Base from a parameter (3). None is a method of Job or Base. Calls through them are callbacks named by the property, unknown — not `Job#load` low guesses and not dropped. `self.finish()` is an ordinary method call, high."
+}

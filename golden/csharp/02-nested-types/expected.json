@@ -1,0 +1,52 @@
+{
+  "rule": "Method: `Type#member`. Nested types are dotted: `Outer.Inner#m`. | Constructor / initializer call: `Type#<init>`. | Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration \u2014 local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding \u2014 or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium).",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "App.Core.Outer.Inner#Value",
+      "callee": "App.Core.Outer#Seed",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Outer.cs",
+      "line": 13
+    },
+    {
+      "caller": "App.Core.Outer.Inner#Value",
+      "callee": "App.Core.Outer.Inner#Helper",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Outer.cs",
+      "line": 13
+    },
+    {
+      "caller": "App.Core.Outer#Use",
+      "callee": "App.Core.Outer.Inner#<init>",
+      "call_type": "constructor",
+      "confidence": "high",
+      "file": "Outer.cs",
+      "line": 22
+    },
+    {
+      "caller": "App.Core.Outer#Use",
+      "callee": "App.Core.Outer.Inner#Value",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Outer.cs",
+      "line": 23
+    },
+    {
+      "caller": "App.Core.Outer#Use",
+      "callee": "App.Core.Outer.Inner#Twice",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Outer.cs",
+      "line": 23
+    }
+  ],
+  "nodes_include": [
+    "App.Core.Outer.Inner#<init>",
+    "App.Core.Outer.Inner#Value",
+    "App.Core.Outer#Seed"
+  ],
+  "notes": "Block namespace App.Core, nested class Outer.Inner \u2192 App.Core.Outer.Inner#m. Inside Inner, bare Seed() resolves lexically to the enclosing type Outer's static member (C2: the ID names the type that defines it). `var inner = new Inner()` types inner by `= new T(...)` (decision A). Outer.Inner.Twice(2) is a static call on the nested type. Every instantiated scanned class declares its constructor explicitly, so <init> is high."
+}

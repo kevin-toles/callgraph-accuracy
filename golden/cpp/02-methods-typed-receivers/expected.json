@@ -1,0 +1,136 @@
+{
+  "rule": "Method: `Type#member`. Nested types are dotted: `Outer.Inner#m`. **C++**: namespace-qualified with dots: `ns.Class#method`, `ns.func`; `Class::static()` → `Class#static`; template arguments dropped. Typed receivers (decision A, all statically typed languages and typed PHP/Groovy declarations): a receiver whose type is given by a declaration — local, parameter, field/property (including `$var->prop` / `obj.field` chains whose property has a declared type), catch parameter, for-loop variable, pattern binding — or by `= new T(...)` gives `T#m` (high if defined in the scan, else medium). A pointer, reference or smart pointer whose `->`/`.` reaches the pointee names the pointee: C++ `unique_ptr<T>`/`shared_ptr<T>`/`T*`, Rust `Box<T>`/`Rc<T>`/`Arc<T>`/`&T` → `T#m`, unless the wrapper itself defines `m` (`p.clone()` on an `Arc` is `Arc#clone`). A container is its own type: `Option<T>#unwrap`, `Vec#push`. `self.m()` / `this.m()` / a bare call to a member of the enclosing type → `Type#m`. If `m` is defined only on a superclass that is in the scan, the callee is `Superclass#m`. **Parameterless members are typed receivers (decision A)**: a receiver that is a call of a parameterless method, a `def` without a parameter list, a property getter, or an abstract member, with a declared type (Scala `def metadata: Map[..]`, `analysis.metadata.insert(..)`), names that type: `Map#insert` — left as a `metadata.insert` low guess it is wrong.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "ui.Widget#run",
+      "callee": "ui.Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 9
+    },
+    {
+      "caller": "ui.Widget#run",
+      "callee": "ui.Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 10
+    },
+    {
+      "caller": "ui.Widget#run",
+      "callee": "ui.Engine#start",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 11
+    },
+    {
+      "caller": "ui.Widget#run",
+      "callee": "ui.Widget#draw",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 12
+    },
+    {
+      "caller": "ui.Widget#run",
+      "callee": "ui.Widget#helper",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 12
+    },
+    {
+      "caller": "ui.Widget#run",
+      "callee": "ui.Widget#draw",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 13
+    },
+    {
+      "caller": "ui.Widget#draw",
+      "callee": "ui.Widget.Painter#shared",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 17
+    },
+    {
+      "caller": "ui.Widget#draw",
+      "callee": "ui.Widget.Painter#paint",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 17
+    },
+    {
+      "caller": "ui.Widget.Painter#paint",
+      "callee": "ui.Widget#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 22
+    },
+    {
+      "caller": "drive",
+      "callee": "ui.Widget#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 28
+    },
+    {
+      "caller": "drive",
+      "callee": "ui.Widget#draw",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 29
+    },
+    {
+      "caller": "drive",
+      "callee": "ui.Widget#create",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 30
+    },
+    {
+      "caller": "drive",
+      "callee": "ui.Widget#run",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 31
+    },
+    {
+      "caller": "drive",
+      "callee": "ui.Widget.Painter#shared",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 32
+    },
+    {
+      "caller": "drive",
+      "callee": "ui.Widget.Painter#paint",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "widget.cpp",
+      "line": 32
+    }
+  ],
+  "nodes_include": [
+    "ui.Engine#start",
+    "ui.Widget#run",
+    "ui.Widget#draw",
+    "ui.Widget#helper",
+    "ui.Widget#create",
+    "ui.Widget.Painter#paint",
+    "ui.Widget.Painter#shared"
+  ],
+  "notes": "Out-of-line definitions (void Widget::run() inside namespace ui; Widget::Painter::paint) get ns.Class#m / ns.Outer.Inner#m. engine_ is a field typed Engine* (pointer reaches the pointee), backup_ a field typed Engine; this->engine_ is the same field. Bare draw()/helper() and this->draw() are members of the enclosing type. Widget::create() and Painter::shared() are static calls → Class#static. Painter::shared()->paint(...): the receiver is a call of a parameterless static method whose declared return type is Painter* (Decisions 2026-11-09, parameterless members), so ->paint names ui.Widget.Painter#paint, not '.paint'. made has declared type ui::Widget*; ref is ui::Widget&; ptr is ui::Widget*. call_type: free functions are 'direct'; calls naming a member of a type (including static members called as Class::m() and implicit-this bare member calls) are 'method'; SPEC does not define the split further."
+}

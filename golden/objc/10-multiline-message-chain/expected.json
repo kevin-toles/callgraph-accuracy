@@ -1,0 +1,43 @@
+{
+  "rule": "Each call in a multi-line method chain is reported on the line of its own method name, not the chain's first line. | `[[T alloc] init\u2026]` is `T#alloc` plus `T#init\u2026` (the init runs on a T)",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "assemble",
+      "callee": "Builder#alloc",
+      "call_type": "method",
+      "confidence": "medium",
+      "file": "Builder.m",
+      "line": 21
+    },
+    {
+      "caller": "assemble",
+      "callee": "Builder#initWithName:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Builder.m",
+      "line": 22
+    },
+    {
+      "caller": "assemble",
+      "callee": ".build",
+      "call_type": "method",
+      "confidence": "low",
+      "file": "Builder.m",
+      "line": 23
+    },
+    {
+      "caller": "assemble",
+      "callee": "Builder#setWidth:height:",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "Builder.m",
+      "line": 24
+    }
+  ],
+  "nodes_include": [
+    "Builder#initWithName:",
+    "Builder#setWidth:height:"
+  ],
+  "notes": "call_type convention used throughout this corpus: a callee that is a member of a type (`T#m`) or a receiver-qualified guess (`recv.m`, `.m`) is `method`; a C function (bare name) is `direct`. Each send of the nested chain is on the line of its own selector. `alloc` is inherited from NSObject \u2192 `Builder#alloc` medium; the init runs on a Builder \u2192 `Builder#initWithName:` high. `build` is sent to the result of `initWithName:`, a call that takes a parameter, so it is a computed receiver (call result) \u2192 `.build`, low (the parameterless-member rule does not apply). A keyword selector split over two lines is one call `setWidth:height:` on the line of its first keyword (C7: the line of the callee's name)."
+}

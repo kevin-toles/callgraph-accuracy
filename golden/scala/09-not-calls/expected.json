@@ -1,0 +1,23 @@
+{
+  "rule": "Not calls: passing a method reference (`x::m`, `self.m` without call), enum-variant/data construction (Rust `Some(x)`, `E::V(..)`, Haskell `Con {..}`), casts, language constructs (`isset`, `empty`, `sizeof`), declarations/function heads, module attributes, typespecs, field access without a call.",
+  "source": "SPEC",
+  "edges": [
+    {
+      "caller": "app.Ops#go",
+      "callee": "app.Ops#visit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/NotCalls.scala",
+      "line": 11
+    },
+    {
+      "caller": "app.Ops#go",
+      "callee": "app.Ops#visit",
+      "call_type": "method",
+      "confidence": "high",
+      "file": "app/NotCalls.scala",
+      "line": 12
+    }
+  ],
+  "notes": "`handle` has a parameter list, so a bare `handle` argument and `handle _` are eta-expansion (passing a method reference), not calls. `o.asInstanceOf[Rec]` is a cast. `r.total` reads a val (field access without a call). Class and def heads are declarations. Only the two visit(...) calls are edges. call_type convention used throughout: a call on a receiver (written, or the implicit this/object of a bare member call) is `method`; a call of a named nested function or an unresolved bare name is `direct`; `new`/super/this constructor calls are `constructor`; calls through function values are `callback`. SPEC lists the call_type values but does not define direct vs method beyond this."
+}

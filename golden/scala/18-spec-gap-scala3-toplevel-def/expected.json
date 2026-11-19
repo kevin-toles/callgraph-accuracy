@@ -1,0 +1,7 @@
+{
+  "rule": "**Java / Kotlin / C# / Groovy / Scala**: package/namespace-qualified: `com.x.C#m`; an external type is qualified through its explicit import. Kotlin top-level functions `com.x.f`. A Groovy script (a file with top-level code or functions) is a class named after the file: its functions are `pkg.Script#f`, its top-level code `pkg.Script#run`. Top-level / file-level code (outside any function or type): the caller is the file's module ID. Languages with a module qualifier use it (Python module, JS/TS module, Lua module, OCaml/Haskell module, Rust module path `crate::a::b`, Groovy `pkg.Script#run`).",
+  "source": "SPEC",
+  "spec_gap": "What is the ID of a Scala 3 top-level `def greet` in package app, file Greet.scala: `app.greet` (Kotlin form), `app.Greet#greet` (Groovy script-class form), or `app.Greet$package#greet` (the compiler's synthetic object)? And what is the caller of a top-level `val x = f()` initializer?",
+  "edges": [],
+  "notes": "Scala 3 allows top-level definitions; SPEC names Kotlin top-level functions and Groovy scripts only."
+}
